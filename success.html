@@ -60,13 +60,14 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Matching set of new, random-looking temporary codes
             const tempCodes = {
-                lens: 'TEMP-LENS',
-                nav: 'TEMP-NAV',
-                reflect: 'TEMP-REFLECT',
-                combo: 'TEMP-COMBO',
-                bundle: 'TEMP-BUNDLE',
-                default: 'TEMP-BUNDLE' // Fallback code
+                lens: 'LNS-4A9B',
+                nav: 'NAV-7C2D',
+                reflect: 'RFL-1E8F',
+                combo: 'CMB-5G3H',
+                bundle: 'BND-6K4J',
+                default: 'BND-6K4J' // Fallback code
             };
             const codeDisplay = document.getElementById('temp-code-display');
             const urlParams = new URLSearchParams(window.location.search);
