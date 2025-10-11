@@ -34,6 +34,56 @@
             color: #2c3e50;
         }
 
+        /* --- Global Header & Footer Styles --- */
+        .global-header {
+            max-width: 1400px;
+            margin: 0 auto 2.5rem auto;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .global-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: #1e3a5f;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        .logo-link img {
+            max-height: 40px;
+            border-radius: 50%;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        .nav-links a {
+            color: #475569;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .nav-links a:hover { color: #1e3a5f; }
+        .global-footer {
+            max-width: 1400px;
+            margin: 3rem auto 0 auto;
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        .global-footer p {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        .global-footer a { color: #1e3a5f; text-decoration: none; }
+        .global-footer a:hover { text-decoration: underline; }
+
         /* Main App Styles (now visible by default, launched from Hub) */
         .main-app {
             display: block;
@@ -109,8 +159,7 @@
             color: #334155;
         }
         .intro-section ul li strong {
-            color: #0891b2;
-            /* Removed markdown rendering issue by using plain text in JS */
+            color: #475569;
         }
 
         .step-title {
@@ -238,13 +287,13 @@
         }
 
         .prompt-back {
-            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
-            border-left: 4px solid #0891b2;
+            background: #f1f5f9;
+            border-left: 4px solid #475569;
         }
 
         .prompt-type {
             display: inline-block;
-            background: #14b8a6;
+            background: #475569;
             color: white;
             padding: 0.25rem 0.75rem;
             border-radius: 1rem;
@@ -257,7 +306,7 @@
         }
 
         .prompt-back .prompt-type {
-            background: #0891b2;
+            background: #64748b;
         }
         
         /* Removed .prompt-type .info-icon CSS as the modal is removed */
@@ -402,11 +451,11 @@
             box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
         }
 
-        .back-link { /* This is the back link to previous step in the same app */
+        .back-link {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            color: #0891b2;
+            color: #475569;
             text-decoration: none;
             font-weight: 600;
             margin-bottom: 1rem;
@@ -415,28 +464,28 @@
         }
 
         .back-link:hover {
-            color: #14b8a6;
+            color: #1e3a5f;
         }
 
         .teacher-reminder {
-            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
-            border: 2px solid #14b8a6;
+            background: #f0f9ff;
+            border: 2px solid #1e3a5f;
             border-radius: 0.75rem;
             padding: 1.25rem;
             margin-bottom: 2rem;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(20, 184, 166, 0.1);
+            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.1);
         }
 
         .teacher-reminder-title {
             font-weight: 700;
-            color: #0f766e;
+            color: #1e3a5f;
             margin-bottom: 0.5rem;
             font-size: 1.1rem;
         }
 
         .teacher-reminder-text {
-            color: #134e4a;
+            color: #334155;
             font-size: 0.95rem;
             line-height: 1.4;
         }
@@ -535,19 +584,6 @@
             overflow: hidden;
         }
 
-        .toggle-button:hover {
-            background: #e2e8f0;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.2);
-        }
-
-        .toggle-button:hover {
-            background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(20, 184, 166, 0.25);
-            border-color: #0891b2;
-        }
-
         .toggle-button.expanded {
             border-radius: 1rem 1rem 0 0;
             background: linear-gradient(135deg, #14b8a6 0%, #0891b2 100%);
@@ -557,12 +593,12 @@
         .toggle-content {
             display: none;
             background: white;
-            border: 2px solid #14b8a6;
+            border: 2px solid #1e3a5f;
             border-top: none;
             border-radius: 0 0 1rem 1rem;
             padding: 1.5rem;
             animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 25px rgba(20, 184, 166, 0.15);
+            box-shadow: 0 8px 25px rgba(30, 58, 95, 0.15);
         }
 
         .toggle-content.visible {
@@ -709,6 +745,19 @@
 </head>
 <body>
     <div id="mainApp" class="main-app">
+        <header class="global-header">
+        <nav class="global-nav">
+            <a href="index.html" class="logo-link">
+                <img src="logo.png" alt="Learner Threads Logo">
+                <span>Learner Threads</span>
+            </a>
+            <div class="nav-links">
+                <a href="pricing.html">Pricing</a>
+                <a href="https://blog.learnerthreads.com">Blog</a>
+                <a href="access.html">Access Tools</a>
+            </div>
+        </nav>
+        </header>
         <div class="container">
             <div class="card">
                 <div class="header-main-app">
@@ -718,7 +767,7 @@
 
                 <div id="introAndSubjectStep" class="step-container">
                     <div class="nav-buttons-top" style="text-align: right; margin-bottom: 1rem;">
-                        <button class="nav-button secondary" onclick="goToHub()">Back to Hub</button>
+                        <a href="#" class="back-link nav-button secondary" onclick="showIntroAndSubjectStep()">← Back to subjects</a>
                     </div>
 
                     <!-- Toggle for Learning Introduction -->
@@ -855,7 +904,6 @@
                 <div id="promptsStep" class="step-container" style="display: none;">
                     <div class="nav-buttons-top" style="text-align: right; margin-bottom: 1rem;">
                         <a href="#" class="back-link nav-button secondary" onclick="showDispositionStep()">← Choose a different learning power</a>
-                        <button class="nav-button secondary" onclick="goToHub()" style="margin-left: 1rem;">Back to Hub</button>
                     </div>
                     
                     <div class="teacher-reminder">
@@ -895,8 +943,8 @@
         </div>
     </div>
 
-    <footer>
-        <p class="copyright" style="text-align: center;">© Bevan Holloway | Learner Threads, powered by Smata</p>
+    <footer class="global-footer">
+        <p>&copy; 2025 Learner Threads | <a href="mailto:bevan@learnerthreads.com">Contact Support</a></p>
     </footer>
 
     <script>
