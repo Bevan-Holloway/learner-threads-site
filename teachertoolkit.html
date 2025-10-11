@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Teacher Toolkit | Learner Threads</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+        a { color: #1e3a5f; text-decoration: none; }
+
+        .global-header { padding: 1rem 2rem; border-bottom: 1px solid #e2e8f0; }
+        .global-nav { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo-link { display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 600; }
+        .logo-link img { height: 40px; width: 40px; border-radius: 50%; }
+        .nav-links a { color: #475569; font-weight: 500; margin-left: 2rem; font-size: 0.95rem; }
+        .nav-links a:hover { color: #1e3a5f; }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 1rem;
+            background: white;
+            border-radius: 1rem;
+            margin-bottom: 3rem;
+            border: 1px solid #e2e8f0;
+        }
+        .hero h1 { font-size: 3rem; color: #1e3a5f; margin-bottom: 1rem; }
+        .hero p { font-size: 1.2rem; color: #64748b; max-width: 600px; margin: 0 auto; }
+        
+        .section { margin-bottom: 3rem; }
+        .section h2 { font-size: 2rem; color: #1e3a5f; margin-bottom: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.75rem; }
+        .section p { color: #475569; margin-bottom: 1rem; }
+        
+        .dispositions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .disposition-link-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+        .disposition-link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            border-color: #1e3a5f;
+        }
+        .disposition-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .disposition-name { font-size: 1.25rem; font-weight: 600; color: #1e3a5f; }
+        
+        .disposition-detail {
+            background: white;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            border: 1px solid #e2e8f0;
+        }
+        .disposition-detail h3 { font-size: 1.75rem; color: #1e3a5f; margin-bottom: 1.5rem; }
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .detail-column h4 { font-size: 1.1rem; color: #1e3a5f; margin-bottom: 1rem; }
+        .detail-column ul { list-style: none; padding: 0; }
+        .detail-column ul li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #334155;
+        }
+        .detail-column ul li::before { content: '✓'; position: absolute; left: 0; color: #1e3a5f; font-weight: bold; }
+        
+        .tools-section { text-align: center; }
+        .tools-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .tool-card {
+            background: white; border-radius: 1rem; padding: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            display: flex; flex-direction: column; text-align: left;
+        }
+        .tool-card h3 { font-size: 1.5rem; color: #1e3a5f; margin-bottom: 0.5rem; }
+        .tool-card p { color: #475569; flex-grow: 1; margin-bottom: 1.5rem; }
+        .btn { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; transition: all 0.2s; }
+        .btn-primary { background: #1e3a5f; color: white; }
+        .btn-primary:hover { background: #2c4a6f; }
+
+        .global-footer { text-align: center; padding: 3rem 1rem; margin-top: 3rem; border-top: 1px solid #e2e8f0; font-size: 0.9rem; color: #64748b; }
+        .global-footer a { color: #475569; }
+
+        @media (max-width: 768px) {
+            .detail-grid, .tools-grid { grid-template-columns: 1fr; }
+            .hero h1, .section h2 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="global-header">
+        <nav class="global-nav">
+            <a href="index.html" class="logo-link"><img src="logo.png" alt="Learner Threads Logo"><span>Learner Threads</span></a>
+            <div class="nav-links"><a href="pricing.html">Pricing</a><a href="https://blog.learnerthreads.com">Blog</a><a href="access.html">Access Tools</a></div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>The Teacher Toolkit</h1>
+            <p>A professional resource hub for educators dedicated to nurturing the "Magnificent Seven" positive learning dispositions.</p>
+        </section>
+
+        <section class="section" id="why-dispositions">
+            <h2>Why Nurture Dispositions?</h2>
+            <p>Being a good learner has nothing to do with IQ. [cite: 22] It means engaging intelligently with things that are complicated, confusing, and challenging in order to grow ever more competent. [cite: 23] Nurturing a core set of dispositions, such as curiosity and perseverance, allows all learners to stretch their intelligence beyond what they thought possible. [cite: 24, 25]</p>
+            <p>Dispositions have a skilful component—you can get better at imagining or collaborating—but they also harbour the inclination to spot or seek opportunities to behave that way. [cite: 26] Smart learners are proactive as well as reactive. [cite: 27]</p>
+        </section>
+
+        <section class="section" id="the-seven">
+            <h2>The Magnificent Seven Dispositions</h2>
+            <p>Click on a disposition below to explore its characteristics and strategies for nurturing it in your classroom.</p>
+            <div class="dispositions-grid">
+                <a href="#curiosity" class="disposition-link-card"><div class="disposition-icon">🔍</div><div class="disposition-name">Curiosity</div></a>
+                <a href="#persistence" class="disposition-link-card"><div class="disposition-icon">💪</div><div class="disposition-name">Persistence</div></a>
+                <a href="#imagination" class="disposition-link-card"><div class="disposition-icon">💭</div><div class="disposition-name">Imagination</div></a>
+                <a href="#attention" class="disposition-link-card"><div class="disposition-icon">🎯</div><div class="disposition-name">Attention</div></a>
+                <a href="#thinking" class="disposition-link-card"><div class="disposition-icon">🧠</div><div class="disposition-name">Thinking</div></a>
+                <a href="#collaboration" class="disposition-link-card"><div class="disposition-icon">🤝</div><div class="disposition-name">Collaboration</div></a>
+                <a href="#craftsmanship" class="disposition-link-card"><div class="disposition-icon">⭐</div><div class="disposition-name">Craftsmanship</div></a>
+            </div>
+        </section>
+
+        <div id="disposition-details">
+            <section class="disposition-detail" id="curiosity">
+                <h3>🔍 Curiosity: The Engine of Learning [cite: 36]</h3>
+                <div class="detail-grid">
+                    <div class="detail-column">
+                        <h4>Curious Learners...</h4>
+                        <ul>
+                            <li>Have a questioning and positive attitude to learning. [cite: 124]</li>
+                            <li>Like exploring new things and meeting new people. [cite: 126]</li>
+                            <li>Relish being amazed. [cite: 127]</li>
+                            <li>Enjoy researching and use the skills needed to do so effectively. [cite: 128]</li>
+                        </ul>
+                    </div>
+                    <div class="detail-column">
+                        <h4>To Stretch Curiosity, Try...</h4>
+                        <ul>
+                            <li>Asking questions like "What does that make you wonder?" [cite: 132] or "What's missing here?". [cite: 140]</li>
+                            <li>Using strategies like provocations, inquiry learning, and journaling. [cite: 142, 144, 146]</li>
+                            <li>Fostering a culture that values playfulness and taking risks. [cite: 149, 150]</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="disposition-detail" id="persistence">
+                <h3>💪 Persistence: Staying Engaged [cite: 40]</h3>
+                <div class="detail-grid">
+                    <div class="detail-column">
+                        <h4>Persistent Learners...</h4>
+                        <ul>
+                            <li>Are willing to "have a go" and take risks. [cite: 163]</li>
+                            <li>Don't panic when they don't immediately have an answer. [cite: 164, 165, 166]</li>
+                            <li>Put in the time to practise hard skills. [cite: 168]</li>
+                            <li>Know when to take a break and return refreshed. [cite: 171]</li>
+                        </ul>
+                    </div>
+                    <div class="detail-column">
+                        <h4>To Stretch Persistence, Try...</h4>
+                        <ul>
+                            <li>Asking questions like "What resources could help you?" [cite: 180, 181] or "Is there a smaller step here?". [cite: 178]</li>
+                            <li>Using strategies like puzzles, riddles, and learning stories. [cite: 184, 185]</li>
+                            <li>Fostering a culture that values seeing things through and psychological safety. [cite: 187, 189]</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            </div>
+
+        <section class="section tools-section" id="tools-in-practice">
+            <h2>Putting Theory into Practice</h2>
+            <p>The Magnificent Seven framework is baked into our Dispositions Hub tools, allowing you to observe, document, and strengthen these powers with your students.</p>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <h3>🎯 Learning Navigator</h3>
+                    <p>Helps students find their next learning move by providing targeted, disposition-based strategies for any subject.</p>
+                    <a href="navigator-demo.html" class="btn btn-primary">Try the Free Version</a>
+                </div>
+                <div class="tool-card">
+                    <h3>✨ Learning Reflections</h3>
+                    <p>A guided tool for students to create powerful learning stories, identify the dispositions they used, and document their growth.</p>
+                    <a href="reflections-tour.html" class="btn btn-primary">Take the Interactive Tour</a>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="global-footer">
+        <p>&copy; 2025 Learner Threads | <a href="mailto:bevan@learnerthreads.com">Contact Support</a></p>
+    </footer>
+</body>
+</html>
