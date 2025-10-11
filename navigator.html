@@ -306,85 +306,6 @@
         .prompt-back .prompt-type {
             background: #64748b;
         }
-        
-        /* Removed .prompt-type .info-icon CSS as the modal is removed */
-
-        /* Modal for Hand/Heart/Head explanation - Removed HTML */
-        /* These CSS rules for modal are now unused as the modal HTML is removed */
-        .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 100; 
-            left: 0;
-            top: 0;
-            width: 100%; 
-            height: 100%; 
-            overflow: auto; 
-            background-color: rgba(0,0,0,0.4); 
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            max-width: 500px;
-            width: 90%;
-            position: relative;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .modal-content h3 {
-            color: #0f766e;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-        }
-
-        .modal-content ul {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 20px;
-        }
-
-        .modal-content ul li {
-            background-color: #e0f2f7;
-            border-left: 3px solid #0891b2;
-            padding: 10px 15px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            font-size: 0.95rem;
-            color: #134e4a;
-        }
-
-        .modal-content ul li strong {
-            color: #0891b2;
-        }
-
-        .close-button {
-            color: #aaa;
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-
-        .close-button:hover,
-        .close-button:focus {
-            color: #333;
-            text-decoration: none;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
 
         .prompt-text {
             font-size: 0.95rem;
@@ -760,16 +681,16 @@
 <body>
     <div id="mainApp" class="main-app">
         <header class="global-header">
-        <nav class="global-nav">
-            <a href="index.html" class="logo-link">
-                <img src="logo.png" alt="Learner Threads Logo">
-                <span>Learner Threads</span>
-            </a>
-            <div class="nav-links">
-                <a href="dashboard.html">Dashboard</a>
-                <button class="logout-btn" onclick="handleLogout()">Log Out</button>
-            </div>
-        </nav>
+            <nav class="global-nav">
+                <a href="dashboard.html" class="logo-link"> 
+                    <img src="logo.png" alt="Learner Threads Logo"> 
+                    <span>Learner Threads</span> 
+                </a>
+                <div class="nav-links"> 
+                    <a href="dashboard.html">Dashboard</a>
+                    <button class="logout-btn" onclick="handleLogout()">Log Out</button>
+                </div>
+            </nav>
         </header>
         <div class="container">
             <div class="card">
@@ -822,41 +743,41 @@
                     <p class="step-description">Choose the subject where you're looking to power up your thinking.</p>
                     
                     <div class="options-grid">
-                        <div class="option-card" onclick="selectSubject('english')">
+                        <div class="option-card" onclick="selectSubject('english', this)">
                             <span class="option-icon">📚</span>
                             <div class="option-title">English</div>
                             <div class="option-description">Reading, writing, communication, film, literature</div>
                         </div>
-                        <div class="option-card" onclick="selectSubject('math')">
+                        <div class="option-card" onclick="selectSubject('math', this)">
                             <span class="option-icon">🔢</span> <div class="option-title">Mathematics</div>
                             <div class="option-description">Numbers, patterns, problem-solving, logic</div>
                         </div>
-                        <div class="option-card" onclick="selectSubject('science')">
+                        <div class="option-card" onclick="selectSubject('science', this)">
                             <span class="option-icon">🔬</span>
                             <div class="option-title">Science</div>
                             <div class="option-description">Investigation, experimentation, understanding the world</div>
                         </div>
-                        <div class="option-card" onclick="selectSubject('history')">
+                        <div class="option-card" onclick="selectSubject('history', this)">
                             <span class="option-icon">📜</span>
                             <div class="option-title">Social Studies</div>
                             <div class="option-description">Understanding the past, cultures, and societies</div>
                         </div>
-                         <div class="option-card" onclick="selectSubject('art')">
+                         <div class="option-card" onclick="selectSubject('art', this)">
                             <span class="option-icon">🎨</span>
                             <div class="option-title">Visual Arts</div>
                             <div class="option-description">Art, photography, multi-media, design</div>
                         </div>
-                        <div class="option-card" onclick="selectSubject('technology')">
+                        <div class="option-card" onclick="selectSubject('technology', this)">
                             <span class="option-icon">💻</span>
                             <div class="option-title">Technology & Digital</div>
                             <div class="option-description">Coding, digital literacy, problem-solving</div>
                         </div>
-                        <div class="option-card" onclick="selectSubject('performing_arts')">
+                        <div class="option-card" onclick="selectSubject('performing_arts', this)">
                             <span class="option-icon">🎭</span>
                             <div class="option-title">Performing Arts</div>
                             <div class="option-description">Music, drama, dance</div>
                         </div>
-                         <div class="option-card" onclick="selectSubject('physical_education')">
+                         <div class="option-card" onclick="selectSubject('physical_education', this)">
                             <span class="option-icon">🏃‍♀️</span>
                             <div class="option-title">Physical Education</div>
                             <div class="option-description">Movement, sport, wellbeing, strategy</div>
@@ -872,37 +793,37 @@
                     <p class="step-description">Choose a "Magnificent Seven" disposition that feels right for powering your learning.</p>
                     
                     <div class="options-grid">
-                        <div class="option-card" onclick="selectDisposition('curiosity')">
+                        <div class="option-card" onclick="selectDisposition('curiosity', this)">
                             <span class="option-icon">🔍</span>
                             <div class="option-title">Curiosity</div>
                             <div class="option-description">Your engine for exploration and wonder.</div>
                         </div>
-                        <div class="option-card" onclick="selectDisposition('persistence')">
+                        <div class="option-card" onclick="selectDisposition('persistence', this)">
                             <span class="option-icon">💪</span>
                             <div class="option-title">Persistence</div>
                             <div class="option-description">Helps you stay engaged even when it's tough.</div>
                         </div>
-                        <div class="option-card" onclick="selectDisposition('imagination')">
+                        <div class="option-card" onclick="selectDisposition('imagination', this)">
                             <span class="option-icon">💭</span>
                             <div class="option-title">Imagination</div>
                             <div class="option-description">Where you play with ideas and possibilities.</div>
                         </div>
-                        <div class="option-card" onclick="selectDisposition('attention')">
+                        <div class="option-card" onclick="selectDisposition('attention', this)">
                             <span class="option-icon">🎯</span>
                             <div class="option-title">Attention</div>
                             <div class="option-description">Helps you focus on what truly matters.</div>
                         </div>
-                        <div class="option-card" onclick="selectDisposition('thinking')">
+                        <div class="option-card" onclick="selectDisposition('thinking', this)">
                             <span class="option-icon">🧠</span>
                             <div class="option-title">Thinking</div>
                             <div class="option-description">How you sharpen ideas and make connections.</div>
                         </div>
-                        <div class="option-card" onclick="selectDisposition('collaboration')">
+                        <div class="option-card" onclick="selectDisposition('collaboration', this)">
                             <span class="option-icon">🤝</span>
                             <div class="option-title">Communication & Collaboration</div>
                             <div class="option-description">Connects you effectively to others.</div>
                         </div>
-                        <div class="option-card" onclick="selectDisposition('craftsmanship')">
+                        <div class="option-card" onclick="selectDisposition('craftsmanship', this)">
                             <span class="option-icon">⭐</span>
                             <div class="option-title">Craftsmanship</div>
                             <div class="option-description">Drives you toward mastery and quality.</div>
@@ -1583,13 +1504,13 @@
         let currentFilter = 'all'; // Default filter
 
         // Functions for navigation between steps
-        function selectSubject(subject) {
+        function selectSubject(subject, clickedElement) {
             selectedSubject = subject;
             // Add 'selected' class to the clicked card
             document.querySelectorAll('#introAndSubjectStep .option-card').forEach(card => {
                 card.classList.remove('selected');
             });
-            event.target.closest('.option-card').classList.add('selected');
+            clickedElement.classList.add('selected');
             
             // Smooth transition to next step
             setTimeout(() => {
@@ -1603,13 +1524,13 @@
             }, 100);
         }
 
-        function selectDisposition(disposition) {
+        function selectDisposition(disposition, clickedElement) {
             selectedDisposition = disposition;
             // Add 'selected' class to the clicked card
             document.querySelectorAll('#dispositionStep .option-card').forEach(card => {
                 card.classList.remove('selected');
             });
-            event.target.closest('.option-card').classList.add('selected');
+            clickedElement.classList.add('selected');
 
             // Smooth transition to prompts step
             setTimeout(() => {
@@ -1808,7 +1729,6 @@
                 window.location.href = 'index.html';
             }
         }
-        */
     </script>
     <footer class="global-footer">
         <p>&copy; 2025 Learner Threads | <a href="mailto:bevan@learnerthreads.com">Contact Support</a></p>
