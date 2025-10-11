@@ -1737,7 +1737,7 @@
                 if (reflection.evidenceFile && reflection.evidenceFile.type.startsWith('image/')) {
                     try {
                         const base64Data = await fileToBase64(reflection.evidenceFile);
-                        imagesHtml = `<div style="text-align: left; margin: 1rem 0; page-break-inside: avoid;"><img src="${base64Data}" alt="Learning Evidence" style="max-width: 100%; max-height: 300px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;"></div>`;
+                        imagesHtml = `<div style="text-align: center; margin: 1rem 0; page-break-inside: avoid;"><img src="${base64Data}" alt="Learning Evidence" style="max-width: 100%; max-height: 300px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;"></div>`;
                     } catch (error) {
                         imagesHtml = `<div style="background-color: #dbeafe; border: 1px solid #93c5fd; padding: 0.75rem; border-radius: 6px; margin: 1rem; font-size: 13px; color: #1e40af;">📎 Evidence: ${reflection.evidenceFileName}</div>`;
                     }
