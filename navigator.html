@@ -28,13 +28,15 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f0f9ff; /* Consistent light background */
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
             min-height: 100vh;
+            padding: 2rem;
+            color: #2c3e50;
         }
 
         /* Main App Styles (now visible by default, launched from Hub) */
         .main-app {
-            display: block; /* Changed from none to block */
+            display: block;
             padding: 1.5rem;
         }
 
@@ -54,11 +56,11 @@
         }
 
         .header-main-app {
-            background: linear-gradient(135deg, #14b8a6, #0891b2);
+            background: #1e3a5f;
             color: white;
             padding: 2rem;
             text-align: center;
-            position: relative; /* Crucial for absolute positioning of back button */
+            position: relative;
         }
 
         .header-main-app h1 {
@@ -68,7 +70,7 @@
         }
 
         .header-main-app p {
-            color: #bae6fd;
+            color: #cbd5e1;
             font-size: 1.1rem;
         }
 
@@ -78,19 +80,19 @@
 
         /* Intro Section for Hand/Head/Heart */
         .intro-section {
-            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
-            border-left: 4px solid #14b8a6;
+            background: #f1f5f9;
+            border-left: 4px solid #1e3a5f;
             padding: 1.5rem;
             border-radius: 0.5rem;
             margin-bottom: 2rem;
         }
         .intro-section h2 {
-            color: #0f766e;
+            color: #1e3a5f;
             font-size: 1.25rem;
             margin-bottom: 0.5rem;
         }
         .intro-section p {
-            color: #0f766e;
+            color: #475569;
             line-height: 1.6;
             margin-bottom: 1rem;
         }
@@ -99,13 +101,12 @@
             padding-left: 0;
         }
         .intro-section ul li {
-            background-color: #e0f2f7; /* Lighter background for list items */
-            border-left: 3px solid #0891b2; /* Secondary brand color highlight */
-            padding: 0.75rem 1rem;
+            background-color: #e0e7ef;
+            border-left: 3px solid #475569;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
             margin-bottom: 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.95rem;
-            color: #134e4a;
+            color: #334155;
         }
         .intro-section ul li strong {
             color: #0891b2;
@@ -144,23 +145,23 @@
         }
 
         .option-card:hover {
-            border-color: #14b8a6;
+            border-color: #1e3a5f;
             transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(20, 184, 166, 0.15);
+            box-shadow: 0 8px 25px rgba(30, 58, 95, 0.15);
         }
 
         .option-card.selected {
-            border-color: #14b8a6;
-            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+            border-color: #1e3a5f;
+            background: #f1f5f9;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.2);
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.2);
         }
 
         .option-icon {
             font-size: 2.2rem;
             margin-bottom: 0.5rem;
             display: block;
-            color: #0891b2;
+            color: #475569;
         }
 
         .option-title {
@@ -391,13 +392,14 @@
         }
 
         .nav-button.primary {
-            background: linear-gradient(135deg, #14b8a6, #0891b2);
+            background: #1e3a5f;
             color: white;
         }
 
         .nav-button.primary:hover {
+            background: #2c4a6f;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
         }
 
         .back-link { /* This is the back link to previous step in the same app */
@@ -473,7 +475,7 @@
         }
 
         .filter-tab.active {
-            background-color: #14b8a6;
+            background-color: #1e3a5f;
             color: white;
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
@@ -485,12 +487,12 @@
 
         /* Filter Intro Text */
         .filter-intro-text {
-            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
-            border-left: 4px solid #0891b2; /* Use a complementary color */
+            background: #f1f5f9;
+            border-left: 4px solid #64748b;
             padding: 1rem 1.5rem;
             border-radius: 0.5rem;
             margin-bottom: 1.5rem;
-            color: #134e4a;
+            color: #334155;
             font-size: 0.95rem;
             line-height: 1.6;
         }
@@ -517,10 +519,10 @@
         .toggle-button {
             width: 100%;
             padding: 1rem;
-            background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
-            border: 2px solid #14b8a6;
+            background: #f1f5f9;
+            border: 2px solid #1e3a5f;
             border-radius: 1rem;
-            color: #0f766e;
+            color: #1e3a5f;
             font-weight: 600;
             font-size: 0.95rem;
             cursor: pointer;
@@ -533,19 +535,10 @@
             overflow: hidden;
         }
 
-        .toggle-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .toggle-button:hover::before {
-            left: 100%;
+        .toggle-button:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.2);
         }
 
         .toggle-button:hover {
