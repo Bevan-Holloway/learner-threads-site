@@ -30,7 +30,6 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
             min-height: 100vh;
-            padding: 2rem;
             color: #2c3e50;
         }
 
@@ -87,13 +86,12 @@
         /* Main App Styles (now visible by default, launched from Hub) */
         .main-app {
             display: block;
-            padding: 1.5rem;
         }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
-            padding: 0;
+            padding: 0 2rem 2rem 2rem;
         }
 
         .card {
@@ -602,7 +600,7 @@
 
         .toggle-button.expanded {
             border-radius: 1rem 1rem 0 0;
-            background: linear-gradient(135deg, #14b8a6 0%, #0891b2 100%);
+            background: #1e3a5f;
             color: white;
         }
 
@@ -781,9 +779,6 @@
                 </div>
 
                 <div id="introAndSubjectStep" class="step-container">
-                    <div class="nav-buttons-top" style="text-align: right; margin-bottom: 1rem;">
-                        <a href="#" class="back-link nav-button secondary" onclick="showIntroAndSubjectStep()">← Back to subjects</a>
-                    </div>
 
                     <!-- Toggle for Learning Introduction -->
                     <div class="toggle-section" style="margin-bottom: 2rem;">
@@ -793,29 +788,29 @@
                         </button>
                         <div class="toggle-content" id="learningIntroContent">
                             <div class="intro-section" style="margin: 0; border: none; padding: 0; background: transparent;">
-                                <h2 style="color: #0f766e; font-size: 1.1rem; margin-bottom: 1rem;">Discover Who You Are as a Learner</h2>
-                                <p style="color: #0f766e; line-height: 1.6; margin-bottom: 1rem;">This tool helps you discover your identity as a thinker by helping you develop seven core learning dispositions that power all great thinking. Whether someone becomes a brilliant scientist, creative artist, insightful historian, or innovative mathematician, they all draw on the same fundamental learning powers.</p>
+                                <h2 style="color: #1e3a5f; font-size: 1.1rem; margin-bottom: 1rem;">Discover Who You Are as a Learner</h2>
+                                <p style="color: #475569; line-height: 1.6; margin-bottom: 1rem;">This tool helps you discover your identity as a thinker by helping you develop seven core learning dispositions that power all great thinking. Whether someone becomes a brilliant scientist, creative artist, insightful historian, or innovative mathematician, they all draw on the same fundamental learning powers.</p>
 
-                                <div style="background: #f0fdfa; border: 1px solid #14b8a6; padding: 1rem; border-radius: 0.5rem; margin: 1.5rem 0;">
-                                    <p style="margin: 0; font-weight: 600; color: #0f766e; text-align: center;">
+                                <div style="background: #f0f9ff; border: 1px solid #1e3a5f; padding: 1rem; border-radius: 0.5rem; margin: 1.5rem 0;">
+                                    <p style="margin: 0; font-weight: 600; color: #1e3a5f; text-align: center;">
                                         <strong>The Magnificent Seven Learning Dispositions:</strong><br>
                                         Curiosity • Persistence • Imagination • Attention • Thinking • Collaboration • Craftsmanship
                                     </p>
                                 </div>
 
-                                <p style="color: #0f766e; line-height: 1.6; margin-bottom: 1rem;">Here's the powerful secret: when you choose to be <strong>curious like a scientist</strong>, <strong>persistent like an athlete</strong>, or <strong>imaginative like an artist</strong>, you're not just solving problems – you're becoming someone who thinks like them. You're developing your identity as a learner who can think like an expert in any field.</p>
+                                <p style="color: #475569; line-height: 1.6; margin-bottom: 1rem;">Here's the powerful secret: when you choose to be <strong>curious like a scientist</strong>, <strong>persistent like an athlete</strong>, or <strong>imaginative like an artist</strong>, you're not just solving problems — you're becoming someone who thinks like them. You're developing your identity as a learner who can think like an expert in any field.</p>
 
-                                <h3 style="color: #0891b2; margin: 1.5rem 0 1rem 0; font-size: 1.1rem;">How Each Disposition Works Through Head, Heart & Hand</h3>
-                                <p style="color: #0f766e; line-height: 1.6; margin-bottom: 1rem;">Each learning disposition can be expressed in three different ways, and every field uses them uniquely:</p>
+                                <h3 style="color: #1e3a5f; margin: 1.5rem 0 1rem 0; font-size: 1.1rem;">How Each Disposition Works Through Head, Heart & Hand</h3>
+                                <p style="color: #475569; line-height: 1.6; margin-bottom: 1rem;">Each learning disposition can be expressed in three different ways, and every field uses them uniquely:</p>
 
                                 <ul style="list-style: none; padding-left: 0;">
-                                    <li style="background-color: #e0f2f7; border-left: 3px solid #0891b2; padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 0.25rem; font-size: 0.95rem; color: #134e4a;"><strong style="color: #0891b2;">Hand:</strong> Action and doing – how scientists experiment, artists create, or mathematicians build with materials. Your hands engage your thinking through making and moving.</li>
-                                    <li style="background-color: #e0f2f7; border-left: 3px solid #0891b2; padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 0.25rem; font-size: 0.95rem; color: #134e4a;"><strong style="color: #0891b2;">Heart:</strong> Emotion and motivation – how historians connect personally with stories, or writers find meaning in their work. Your heart drives your passion and purpose.</li>
-                                    <li style="background-color: #e0f2f7; border-left: 3px solid #0891b2; padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 0.25rem; font-size: 0.95rem; color: #134e4a;"><strong style="color: #0891b2;">Head:</strong> Analysis and deep thinking – how scientists look for patterns, artists study composition, or historians examine evidence. Your head connects and sharpens ideas.</li>
+                                    <li style="background-color: #e0e7ef; border-left: 3px solid #475569; padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 0.25rem; font-size: 0.95rem; color: #334155;"><strong style="color: #475569;">Hand:</strong> Action and doing — how scientists experiment, artists create, or mathematicians build with materials. Your hands engage your thinking through making and moving.</li>
+                                    <li style="background-color: #e0e7ef; border-left: 3px solid #475569; padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 0.25rem; font-size: 0.95rem; color: #334155;"><strong style="color: #475569;">Heart:</strong> Emotion and motivation — how historians connect personally with stories, or writers find meaning in their work. Your heart drives your passion and purpose.</li>
+                                    <li style="background-color: #e0e7ef; border-left: 3px solid #475569; padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 0.25rem; font-size: 0.95rem; color: #334155;"><strong style="color: #475569;">Head:</strong> Analysis and deep thinking — how scientists look for patterns, artists study composition, or historians examine evidence. Your head connects and sharpens ideas.</li>
                                 </ul>
 
-                                <div style="background: linear-gradient(135deg, #e0f2f7, #ccfbf1); border: 1px solid #0891b2; padding: 1.25rem; border-radius: 0.5rem; margin-top: 1.5rem;">
-                                    <p style="margin: 0; font-weight: 600; color: #0f766e; font-size: 1rem;">
+                                <div style="background: #f1f5f9; border: 1px solid #1e3a5f; padding: 1.25rem; border-radius: 0.5rem; margin-top: 1.5rem;">
+                                    <p style="margin: 0; font-weight: 600; color: #1e3a5f; font-size: 1rem;">
                                         🌟 <strong>The magic happens when:</strong> You choose a learning disposition (like curiosity) in a subject (like science) and discover specific ways to express it through your head, heart, and hands. This is how you develop your identity as someone who can think like a scientist, artist, historian, or mathematician.
                                     </p>
                                 </div>
@@ -872,7 +867,6 @@
                 <div id="dispositionStep" class="step-container" style="display: none;">
                     <div class="nav-buttons-top" style="text-align: right; margin-bottom: 1rem;">
                         <a href="#" class="back-link nav-button secondary" onclick="showIntroAndSubjectStep()">← Back to subjects</a>
-                        <button class="nav-button secondary" onclick="goToHub()" style="margin-left: 1rem;">Back to Hub</button>
                     </div>
                     <h2 class="step-title">Which learning power do you need right now?</h2>
                     <p class="step-description">Choose a "Magnificent Seven" disposition that feels right for powering your learning.</p>
@@ -1801,23 +1795,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Removed Modal Functions for Hand/Heart/Head Explanation as per your instruction
-        /*
-        function showInfoModal(event) {
-            event.stopPropagation(); // Prevent the card from flipping when clicking the info icon
-            document.getElementById('infoModal').style.display = 'flex';
-        }
-
-        function closeInfoModal() {
-            document.getElementById('infoModal').style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('infoModal');
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
         function handleLogout() {
             // Confirm logout
             if (confirm('Are you sure you want to log out?')) {
