@@ -89,9 +89,8 @@
             lens: new Set(['PC2025', 'O$2TE@7B']),
             navigator: new Set(['NAVIGATOR2025']),
             reflections: new Set(['REFLECT2025']),
-            suite: new Set(['SUITE2025']),
-            // Example of a combo code for two products
-            lensAndHub: new Set(['COMBO2025']) 
+            bundle: new Set(['SUITE2025']),
+            lensAndHub: new Set(['COMBO2025'])
         };
 
         function checkAccessCode() {
@@ -101,7 +100,7 @@
             
             errorMessage.classList.remove('show');
 
-            if (VALID_CODES.suite.has(code)) {
+            if (VALID_CODES.bundle.has(code)) {
                 localStorage.setItem(ACCESS_KEYS.lens, code);
                 localStorage.setItem(ACCESS_KEYS.navigator, code);
                 localStorage.setItem(ACCESS_KEYS.reflections, code);
@@ -112,8 +111,8 @@
                 localStorage.setItem(ACCESS_KEYS.lens, code);
                 localStorage.setItem(ACCESS_KEYS.navigator, code);
                 localStorage.setItem(ACCESS_KEYS.reflections, code);
-                alert("Success! You've unlocked Language Lens and the Dispositions Hub.");
-                window.location.href = 'dispositionshub.html';
+                alert("Success! You've unlocked Language Lens and the Dispositions Hub tools.");
+                window.location.href = 'bundle.html'; // Also send them to the main dashboard
 
             } else if (VALID_CODES.lens.has(code)) {
                 localStorage.setItem(ACCESS_KEYS.lens, code);
