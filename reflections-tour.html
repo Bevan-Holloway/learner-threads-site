@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Reflections Tour - Learner Threads</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #2c3e50;
+        }
+
+        /* --- Global Header & Footer Styles --- */
+        .global-header {
+            max-width: 1400px;
+            margin: 0 auto 2.5rem auto;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .global-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: #1e3a5f;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        .logo-link img {
+            max-height: 40px;
+            border-radius: 50%;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        .nav-links a {
+            color: #475569;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .nav-links a:hover { color: #1e3a5f; }
+        .global-footer {
+            max-width: 1400px;
+            margin: 3rem auto 0 auto;
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        .global-footer p {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        .global-footer a { color: #1e3a5f; text-decoration: none; }
+        .global-footer a:hover { text-decoration: underline; }
+
+        .tour-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .tour-header {
+            background: #1e3a5f; /* RE-BRANDED */
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .tour-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .tour-header .subtitle {
+            font-size: 1.2rem;
+            color: #cbd5e1; /* RE-BRANDED */
+            margin-bottom: 1rem;
+        }
+
+        .tour-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1.25rem;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 2rem;
+        }
+
+        .progress-container {
+            background: #f8fafc;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #1e3a5f; /* RE-BRANDED */
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 8px;
+        }
+        
+        .progress-text {
+            font-size: 0.875rem;
+            color: #64748b;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .content {
+            padding: 2.5rem;
+        }
+
+        .step-intro {
+            background: #f1f5f9; /* RE-BRANDED */
+            border-left: 5px solid #1e3a5f; /* RE-BRANDED */
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-bottom: 2.5rem;
+        }
+        .step-intro h2 { color: #1e3a5f; /* RE-BRANDED */ font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem; }
+        .step-intro p { color: #475569; /* RE-BRANDED */ line-height: 1.7; font-weight: 500; }
+        .form-demo { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 1rem; padding: 2rem; margin-bottom: 2rem; }
+        .form-group { margin-bottom: 2rem; }
+        .form-label { display: block; font-size: 1rem; font-weight: 600; color: #374151; margin-bottom: 1rem; }
+        .form-input, .form-select, .form-textarea { width: 100%; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; font-size: 1rem; font-family: inherit; background: white; color: #374151; cursor: default; }
+        .form-textarea { min-height: 120px; line-height: 1.6; resize: none; }
+        .input-guidance { font-size: 0.875rem; color: #6b7280; margin-bottom: 0.5rem; line-height: 1.4; }
+        .text-fields-container { background: #f8fafc; border-top: 2px solid #e2e8f0; padding: 2rem; margin-top: 2rem; }
+        
+        .file-uploaded { background: #f0f9ff; /* RE-BRANDED */ border: 2px solid #1e3a5f; /* RE-BRANDED */ padding: 1rem; border-radius: 0.5rem; display: flex; align-items: center; gap: 1rem; }
+        .file-preview { width: 80px; height: 60px; background: #e2e8f0; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+
+        .dispositions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
+        .disposition-card {
+            border: 2px solid #1e3a5f; /* RE-BRANDED */
+            border-radius: 1rem; padding: 1.5rem; text-align: center;
+            background: #f0f9ff; /* RE-BRANDED */
+            box-shadow: 0 12px 32px rgba(30, 58, 95, 0.25); /* RE-BRANDED */
+            position: relative;
+        }
+        .disposition-card::before {
+            content: '✓'; position: absolute; top: 0.5rem; right: 0.5rem; background: #1e3a5f; /* RE-BRANDED */
+            color: white; width: 24px; height: 24px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold;
+        }
+        .disposition-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+        .disposition-name { font-weight: 700; color: #0f172a; margin-bottom: 0.5rem; font-size: 1.1rem; }
+        .disposition-desc { font-size: 0.875rem; color: #64748b; line-height: 1.5; }
+
+        .annotation { background: linear-gradient(135deg, #fef3c7, #fbbf24); border: 2px solid #f59e0b; border-radius: 1rem; padding: 1.5rem; margin: 2rem 0; position: relative; }
+        .annotation::before { content: '💡'; position: absolute; top: -12px; left: 20px; background: #f59e0b; padding: 0.5rem; border-radius: 50%; font-size: 1.2rem; }
+        .annotation h3 { color: #92400e; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; margin-left: 1rem; }
+        .annotation p { color: #92400e; line-height: 1.6; margin-left: 1rem; }
+
+        .reflection-preview { background: white; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 2rem; margin-bottom: 2rem; }
+        .reflection-title { font-size: 2rem; color: #0f172a; margin-bottom: 0.5rem; text-align: center; }
+        .reflection-subtitle { font-size: 1.25rem; color: #1e3a5f; /* RE-BRANDED */ text-align: center; margin-bottom: 1rem; }
+        .reflection-meta { text-align: center; font-size: 0.95rem; color: #64748b; margin-bottom: 2rem; padding: 1.5rem; background: #f1f5f9; border-radius: 0.5rem; border: 1px solid #1e3a5f; /* RE-BRANDED */ }
+        .reflection-meta-label { font-weight: 600; color: #1e3a5f; /* RE-BRANDED */ }
+        .reflection-section { margin-bottom: 2rem; padding: 1.5rem; background: #f8fafc; border-radius: 0.5rem; border: 1px solid #e2e8f0; border-left: 4px solid #1e3a5f; /* RE-BRANDED */ }
+        .reflection-section h3 { font-weight: 700; font-size: 1.25rem; margin: -1.5rem -1.5rem 1rem -1.5rem; padding: 1rem 1.5rem; background: #1e3a5f; /* RE-BRANDED */ color: white; border-radius: 0.5rem 0.5rem 0 0; }
+        .reflection-content { color: #374151; line-height: 1.8; font-size: 1rem; }
+
+        .navigation { background: #f8fafc; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; border-top: 1px solid #e2e8f0; border-radius: 0 0 1.25rem 1.25rem; }
+        .nav-left, .nav-right { display: flex; gap: 1rem; align-items: center; }
+        .btn { display: inline-flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; border: none; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: all 0.3s; text-decoration: none; }
+        .btn-primary { background: #1e3a5f; /* RE-BRANDED */ color: white; }
+        .btn-primary:hover { background: #2c4a6f; /* RE-BRANDED */ transform: translateY(-2px); }
+        .btn-secondary { background: #64748b; color: white; }
+        .btn-secondary:hover { background: #475569; transform: translateY(-2px); }
+
+        .completion-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
+        .completion-content { background: white; border-radius: 1.5rem; padding: 2rem; max-width: 600px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); max-height: 90vh; overflow-y: auto; margin: auto; }
+        .completion-title { font-size: 2rem; font-weight: 800; color: #1e3a5f; /* RE-BRANDED */ margin-bottom: 1rem; }
+        .completion-subtitle { color: #64748b; font-size: 1.1rem; margin-bottom: 2rem; line-height: 1.6; }
+        .benefits-list { text-align: left; margin: 2rem 0; }
+        .benefit-item { background: #f0f9ff; /* RE-BRANDED */ padding: 1rem; border-radius: 0.75rem; margin-bottom: 1rem; border-left: 4px solid #1e3a5f; /* RE-BRANDED */ }
+        .benefit-title { font-weight: 700; color: #1e3a5f; /* RE-BRANDED */ margin-bottom: 0.25rem; }
+        .benefit-desc { color: #334155; /* RE-BRANDED */ font-size: 0.95rem; line-height: 1.5; }
+        .completion-cta { color: #1e3a5f; /* RE-BRANDED */ font-size: 1.1rem; font-weight: 600; margin: 2rem 0 1rem 0; }
+        .completion-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .tour-container { padding: 0; }
+            .content { padding: 1.5rem; }
+            .dispositions-grid { grid-template-columns: 1fr; }
+            .navigation { flex-direction: column; gap: 1rem; }
+            .nav-left, .nav-right { width: 100%; justify-content: center; }
+            .tour-header h1 { font-size: 2rem; }
+            .completion-content { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="global-header">
+        <nav class="global-nav">
+            <a href="index.html" class="logo-link">
+                <img src="logo.png" alt="Learner Threads Logo">
+                <span>Learner Threads</span>
+            </a>
+            <div class="nav-links">
+                <a href="pricing.html">Pricing</a>
+                <a href="https://blog.learnerthreads.com">Blog</a>
+                <a href="access.html">Sign In</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="tour-container">
+        <div class="tour-header">
+            <h1>Learning Reflections Tour</h1>
+            <p class="subtitle">See how students create powerful learning stories</p>
+            <div class="tour-badge">Interactive Demo • No Account Required</div>
+        </div>
+
+        <div class="card">
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText"></div>
+            </div>
+
+            <div class="content" id="content">
+            </div>
+
+            <div class="navigation">
+                <div class="nav-left">
+                    <button class="btn btn-secondary" id="prevBtn" onclick="previousStep()"></button>
+                </div>
+                <div class="nav-right">
+                    <button class="btn btn-primary" id="nextBtn" onclick="nextStep()"></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="completion-modal" id="completionModal">
+            <div class="completion-content">
+                <div class="completion-title">🎉 Tour Complete!</div>
+                <p class="completion-subtitle">You've seen how Learning Reflections transforms simple activities into powerful learning stories.</p>
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <div class="benefit-title">✨ Student Agency</div>
+                        <div class="benefit-desc">Learners develop metacognitive awareness of their own growth and learning strengths.</div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-title">⭐ Visible Learning Dispositions</div>
+                        <div class="benefit-desc">The "Magnificent Seven" become tangible learning powers students can name and develop.</div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-title">📈 Evidence of Growth Over Time</div>
+                        <div class="benefit-desc">Rich reflections show learning journey progression and celebrate breakthrough moments.</div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-title">🤝 Collaborative Learning Stories</div>
+                        <div class="benefit-desc">Teachers and families become part of the narrative, creating shared celebration of growth.</div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-title">📄 Beautiful Learning Documentation</div>
+                        <div class="benefit-desc">Professional PDFs are perfect for portfolios, conferences, and sharing learning stories.</div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-title">💡 Guided Learning with Examples</div>
+                        <div class="benefit-desc">Students learn from peer examples and reflection prompts that scaffold meaningful thinking.</div>
+                    </div>
+                </div>
+                <p class="completion-cta">Ready to see your students create their own powerful learning stories?</p>
+                <div class="completion-buttons">
+                    <a href="purchase.html" class="btn btn-primary">Unlock Access to the App</a>
+                    <button class="btn btn-secondary" onclick="window.location.reload()">Restart Tour</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="global-footer">
+        <p>&copy; 2025 Learner Threads | <a href="mailto:bevan@learnerthreads.com">Contact Support</a></p>
+    </footer>
+
+    <script>
+        let currentStep = 0;
+        const totalSteps = 5;
+
+        const tourSteps = [
+            {
+                title: "Getting Started",
+                content: `
+                    <div class="step-intro">
+                        <h2>Let's Start Your Learning Reflection</h2>
+                        <p>Students begin by entering basic information about their learning experience. This helps create a personalised reflection journey.</p>
+                    </div>
+
+                    <div class="annotation">
+                        <h3>What makes this powerful</h3>
+                        <p>The app adapts examples based on the student's year level and subject, making the reflection process more relevant and engaging.</p>
+                    </div>
+
+                    <div class="form-demo">
+                        <div class="form-group">
+                            <label class="form-label">Your Name</label>
+                            <input type="text" class="form-input" value="Alex" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Year Level</label>
+                            <select class="form-select" disabled>
+                                <option>Year 9</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Date</label>
+                            <input type="date" class="form-input" value="2025-07-08" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Subject Area</label>
+                            <select class="form-select" disabled>
+                                <option>Science</option>
+                            </select>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "What I Did",
+                content: `
+                    <div class="step-intro">
+                        <h2>What I Did</h2>
+                        <p>Students describe their learning experience in detail. They can also upload a photo as evidence of their work.</p>
+                    </div>
+
+                    <div class="annotation">
+                        <h3>Smart scaffolding</h3>
+                        <p>The app provides examples from other students at similar year levels to inspire and guide reflection. Students see real examples of how their peers describe their learning work.</p>
+                    </div>
+                    
+                    <div class="form-demo">
+                        <div class="form-group">
+                            <label class="form-label">Describe what you worked on</label>
+                            <textarea class="form-textarea" readonly>We completed a chemistry experiment to test how different acids react with metals. I had to design the experiment, collect data over three trials, and create graphs to show the reaction rates. This took about two weeks and was part of our unit on chemical reactions. I'm particularly proud of how I organised my data and spotted patterns that others missed.</textarea>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "How I Grew as a Learner",
+                content: `
+                    <div class="step-intro">
+                        <h2>How I Grew as a Learner</h2>
+                        <p>Students explore the seven learning dispositions and identify which ones powered their learning. This develops metacognitive awareness.</p>
+                    </div>
+
+                    <div class="annotation">
+                        <h3>The Magnificent Seven Dispositions</h3>
+                        <p>These dispositions help students understand how they learn best. Each comes with prompts and age-appropriate examples to support their reflection.</p>
+                    </div>
+
+                    <div class="dispositions-grid">
+                        <div class="disposition-card">
+                            <div class="disposition-icon">🎯</div>
+                            <div class="disposition-name">Attention</div>
+                            <div class="disposition-desc">Focusing deeply</div>
+                        </div>
+                        <div class="disposition-card">
+                            <div class="disposition-icon">🧠</div>
+                            <div class="disposition-name">Thinking</div>
+                            <div class="disposition-desc">Making connections</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-demo">
+                        <div class="form-group">
+                            <label class="form-label">How I Used These Powers</label>
+                            <textarea class="form-textarea" readonly>Attention helped my learning because I had to focus really carefully on measuring the chemicals precisely. When I slowed down, my results became much more accurate. Thinking powered my learning when I started looking for patterns in my data.</textarea>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Where This Could Take Me",
+                content: `
+                    <div class="step-intro">
+                        <h2>Where This Could Take Me</h2>
+                        <p>Students reflect on future possibilities and connections. This step develops forward-thinking and helps students see learning as an ongoing journey.</p>
+                    </div>
+
+                    <div class="annotation">
+                        <h3>Future-focused reflection</h3>
+                        <p>Students choose from prompts that encourage them to think about applications, new questions, and personal growth. This builds agency and ownership of learning.</p>
+                    </div>
+                    
+                    <div class="form-demo">
+                         <div class="form-group">
+                            <label class="form-label">Future Possibilities</label>
+                            <textarea class="form-textarea" readonly>This experiment made me really curious about how chemical reactions happen in our bodies. I want to learn more about biochemistry and maybe study medicine someday. I also discovered that I'm good at spotting patterns in data.</textarea>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Final Learning Story",
+                content: `
+                    <div class="step-intro">
+                        <h2>Your Complete Learning Story</h2>
+                        <p>The app compiles everything into a beautiful, professional learning story that students can save as a PDF and share with teachers, parents, or keep for their portfolio.</p>
+                    </div>
+
+                    <div class="annotation">
+                        <h3>More than just a worksheet</h3>
+                        <p>This isn't busy work – it's a powerful tool that helps students understand how they learn, celebrate their growth, and develop agency over their learning journey.</p>
+                    </div>
+
+                    <div class="reflection-preview">
+                        <div class="reflection-title">Learning Reflection</div>
+                        <div class="reflection-subtitle">Alex</div>
+                        <div class="reflection-meta">
+                            <div class="reflection-meta-item">
+                                <span class="reflection-meta-label">Date:</span> 8 July 2025 | <span class="reflection-meta-label">Year:</span> 9 | <span class="reflection-meta-label">Subject:</span> Science
+                            </div>
+                        </div>
+
+                        <div class="reflection-section">
+                            <h3>📝 What I Did</h3>
+                            <div class="reflection-content">We completed a chemistry experiment to test how different acids react with metals...</div>
+                        </div>
+
+                        <div class="reflection-section">
+                            <h3>⭐ How I Grew</h3>
+                            <div class="reflection-content">Attention helped my learning because I had to focus really carefully on measuring the chemicals precisely...</div>
+                        </div>
+
+                        <div class="reflection-section">
+                            <h3>🚀 Where This Could Take Me</h3>
+                            <div class="reflection-content">This experiment made me really curious about how chemical reactions happen in our bodies. I want to learn more about biochemistry...</div>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            const percentage = ((currentStep + 1) / totalSteps) * 100;
+            
+            progressFill.style.width = percentage + '%';
+            
+            const stepNames = ['Setup', 'What I Did', 'How I Grew', 'Future Possibilities', 'Final Story'];
+            progressText.textContent = `Step ${currentStep + 1} of ${totalSteps} - ${stepNames[currentStep]}`;
+        }
+
+        function renderStep() {
+            const content = document.getElementById('content');
+            content.innerHTML = tourSteps[currentStep].content;
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.innerHTML = '← Previous'; // Add text to the button
+            prevBtn.style.display = currentStep === 0 ? 'none' : 'inline-flex';
+            
+            if (currentStep === totalSteps - 1) {
+                nextBtn.innerHTML = '🎉 Complete Tour';
+                nextBtn.onclick = showCompletionModal;
+            } else {
+                nextBtn.innerHTML = 'Next Step →';
+                nextBtn.onclick = nextStep;
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps - 1) {
+                currentStep++;
+                renderStep();
+                updateProgress();
+                updateNavigation();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                renderStep();
+                updateProgress();
+                updateNavigation();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function init() {
+            renderStep();
+            updateProgress();
+            updateNavigation();
+        }
+
+        function showCompletionModal() {
+            document.getElementById('completionModal').style.display = 'flex';
+        }
+        
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

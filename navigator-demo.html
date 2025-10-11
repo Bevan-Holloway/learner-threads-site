@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Navigator Demo - Learner Threads</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #2c3e50;
+        }
+        
+        /* --- Global Header & Footer Styles --- */
+        .global-header {
+            max-width: 1400px;
+            margin: 0 auto 2.5rem auto;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .global-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: #1e3a5f;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        .logo-link img {
+            max-height: 40px;
+            border-radius: 50%;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        .nav-links a {
+            color: #475569;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .nav-links a:hover { color: #1e3a5f; }
+        .global-footer {
+            max-width: 1400px;
+            margin: 3rem auto 0 auto;
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        .global-footer p {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        .global-footer a { color: #1e3a5f; text-decoration: none; }
+        .global-footer a:hover { text-decoration: underline; }
+
+        .main-app {
+            display: block;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .header-main-app {
+            background: #1e3a5f; /* RE-BRANDED */
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .demo-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.1); /* Adjusted */
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header-main-app h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-main-app p {
+            color: #cbd5e1; /* RE-BRANDED */
+            font-size: 1.1rem;
+        }
+
+        .step-container {
+            padding: 2rem;
+        }
+
+        .intro-section {
+            background: #f1f5f9; /* RE-BRANDED */
+            border-left: 4px solid #1e3a5f; /* RE-BRANDED */
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .intro-section h2 {
+            color: #1e3a5f; /* RE-BRANDED */
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .intro-section p {
+            color: #475569; /* RE-BRANDED */
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .demo-info {
+            background: #f0f9ff; /* RE-BRANDED */
+            border: 2px solid #1e3a5f; /* RE-BRANDED */
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .demo-info h3 {
+            color: #1e3a5f; /* RE-BRANDED */
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .demo-info p {
+            color: #334155; /* RE-BRANDED */
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .step-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: #0f172a; }
+        .step-description { color: #64748b; margin-bottom: 2rem; line-height: 1.6; }
+        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .option-card {
+            background: white; border: 2px solid #e2e8f0; border-radius: 0.75rem;
+            padding: 1.25rem; text-align: center; cursor: pointer; transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .option-card:hover {
+            border-color: #1e3a5f; /* RE-BRANDED */
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(30, 58, 95, 0.15); /* RE-BRANDED */
+        }
+        .option-card.selected {
+            border-color: #1e3a5f; /* RE-BRANDED */
+            background: #f0f9ff; /* RE-BRANDED */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.2); /* RE-BRANDED */
+        }
+        .option-icon { font-size: 2.2rem; margin-bottom: 0.5rem; display: block; color: #1e3a5f; /* RE-BRANDED */ }
+        .option-title { font-weight: 600; color: #0f172a; margin-bottom: 0.25rem; font-size: 1rem; }
+        .option-description { font-size: 0.85rem; color: #64748b; line-height: 1.4; }
+
+        .prompts-container { background: #f8fafc; border-radius: 0.75rem; padding: 2rem; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 1rem; }
+        .prompt-card {
+            background: white; border-left: 4px solid #1e3a5f; /* RE-BRANDED */
+            border-radius: 0.5rem; padding: 0; transition: all 0.3s ease; cursor: pointer;
+            perspective: 1000px; position: relative; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            min-height: 140px; width: 100%;
+        }
+        .prompt-card .prompt-front, .prompt-card .prompt-back {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0; padding: 1.25rem; 
+            border-radius: 0.5rem; backface-visibility: hidden; transition: transform 0.6s;
+            display: flex; flex-direction: column; justify-content: space-between; min-height: 100%;
+        }
+        .prompt-back { display: flex; transform: rotateY(180deg); }
+        .prompt-card.flipped .prompt-front { transform: rotateY(-180deg); }
+        .prompt-card.flipped .prompt-back { transform: rotateY(0deg); }
+        .prompt-front { transform: rotateY(0deg); background: inherit; }
+        .prompt-back {
+            background: #f0f9ff; /* RE-BRANDED */
+            border-left: 4px solid #475569; /* RE-BRANDED */
+        }
+        .prompt-type {
+            display: inline-block; background: #1e3a5f; /* RE-BRANDED */
+            color: white; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.75rem;
+            font-weight: 600; margin-bottom: 0.5rem; align-self: flex-start;
+        }
+        .prompt-back .prompt-type { background: #475569; /* RE-BRANDED */ }
+        .prompt-text { font-size: 0.95rem; line-height: 1.5; color: #374151; flex-grow: 1; }
+        .prompt-back .prompt-text { font-size: 0.875rem; line-height: 1.6; color: #475569; }
+        .flip-instruction, .back-instruction { font-size: 0.75rem; color: #64748b; font-weight: 500; align-self: flex-end; margin-top: 0.5rem; }
+
+        .filter-tabs { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; background: #e2e8f0; border-radius: 0.75rem; padding: 0.5rem; flex-wrap: wrap; }
+        .filter-tab { padding: 0.6rem 1.2rem; border: none; border-radius: 0.5rem; background-color: transparent; color: #475569; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+        .filter-tab.active { background-color: #1e3a5f; /* RE-BRANDED */ color: white; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        .filter-tab:hover:not(.active) { background-color: #cbd5e1; color: #374151; }
+
+        .filter-intro-text {
+            background: #f1f5f9; /* RE-BRANDED */
+            border-left: 4px solid #64748b; /* RE-BRANDED */
+            padding: 1rem 1.5rem; border-radius: 0.5rem; margin-bottom: 1.5rem;
+            color: #334155; font-size: 0.95rem; line-height: 1.6;
+        }
+
+        .navigation { background: #f8fafc; padding: 1.5rem 2rem; display: flex; justify-content: center; gap: 1rem; border-top: 1px solid #e2e8f0; border-radius: 0 0 1rem 1rem; }
+        .nav-button { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+        .nav-button.secondary { background: #cbd5e1; color: #475569; }
+        .nav-button.secondary:hover { background: #aabdd4; color: #334155; transform: translateY(-1px); }
+        .nav-button.primary { background: #1e3a5f; /* RE-BRANDED */ color: white; }
+        .nav-button.primary:hover { background: #2c4a6f; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3); }
+
+        .upgrade-cta {
+            background: #f0f9ff; /* RE-BRANDED */
+            border: 2px solid #1e3a5f; /* RE-BRANDED */
+            border-radius: 0.75rem; padding: 1.5rem; margin-top: 2rem; text-align: center;
+        }
+        .upgrade-cta h3 { color: #1e3a5f; /* RE-BRANDED */ font-weight: 700; margin-bottom: 0.5rem; font-size: 1.1rem; }
+        .upgrade-cta p { color: #334155; /* RE-BRANDED */ font-size: 0.95rem; line-height: 1.4; margin-bottom: 1rem; }
+        .upgrade-button {
+            background: #1e3a5f; /* RE-BRANDED */ color: white; border: none; padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+            text-decoration: none; display: inline-block;
+        }
+        .upgrade-button:hover { background: #2c4a6f; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3); color: white; }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .container { padding: 0; }
+            .navigation { flex-direction: column; align-items: center; }
+            .prompt-text { font-size: 0.85rem; line-height: 1.4; }
+            .prompt-back .prompt-text { font-size: 0.75rem; line-height: 1.5; }
+            .prompt-card { min-height: auto; }
+            .prompt-front, .prompt-back { position: static !important; transform: none !important; backface-visibility: visible; min-height: auto; padding: 1rem; }
+            .prompt-card .prompt-front { display: flex; flex-direction: column; justify-content: space-between; }
+            .prompt-card .prompt-back { display: none; flex-direction: column; justify-content: space-between; }
+            .prompt-card.flipped .prompt-front { display: none; }
+            .prompt-card.flipped .prompt-back { display: flex; }
+        }
+    </style>
+</head>
+<body>
+    <header class="global-header">
+        <nav class="global-nav">
+            <a href="index.html" class="logo-link">
+                <img src="logo.png" alt="Learner Threads Logo">
+                <span>Learner Threads</span>
+            </a>
+            <div class="nav-links">
+                <a href="pricing.html">Pricing</a>
+                <a href="https://blog.learnerthreads.com">Blog</a>
+                <a href="access.html">Sign In</a>
+            </div>
+        </nav>
+    </header>
+
+    <div id="mainApp" class="main-app">
+        <div class="container">
+            <div class="card">
+                <div class="header-main-app">
+                    <div class="demo-badge">FREE VERSION</div>
+                    <h1>Learning Navigator</h1>
+                    <p>Experience the power of learning dispositions</p>
+                </div>
+
+                <div id="introAndSubjectStep" class="step-container">
+                    <div class="demo-info">
+                        <h3>Welcome to the free version of Learning Navigator!</h3>
+                        <p>Get to see how the Navigator works with 2 subjects and 3 prompts per disposition. The full version includes 8 subjects and 9 carefully crafted prompts for each learning power.</p>
+                    </div>
+
+                    <div class="intro-section">
+                        <h2>Discover Your Learning Identity</h2>
+                        <p>The Navigator helps you to think like an expert in any field by developing seven core learning dispositions. When you're looking for your next learning move, the Navigator gives you strategies to express a different disposition through your Head (thinking), Heart (emotion), or Hand (action).</p>
+                    </div>
+
+                    <h2 class="step-title">Choose a subject to explore</h2>
+                    <p class="step-description">Start with one of these demo subjects.</p>
+                    
+                    <div class="options-grid">
+                        <div class="option-card" onclick="selectSubject('english')">
+                            <span class="option-icon">📚</span>
+                            <div class="option-title">English</div>
+                            <div class="option-description">Reading, writing, communication, film, literature</div>
+                        </div>
+                        <div class="option-card" onclick="selectSubject('math')">
+                            <span class="option-icon">🔢</span>
+                            <div class="option-title">Mathematics</div>
+                            <div class="option-description">Numbers, patterns, problem-solving, logic</div>
+                        </div>
+                    </div>
+
+                    <div class="upgrade-cta">
+                        <h3>🚀 Want More Subjects?</h3>
+                        <p>The full Navigator includes Science, Social Studies, Arts, Technology, and Physical Education with comprehensive strategies for each.</p>
+                        <a href="pricing.html" class="upgrade-button">Unlock the Full Navigator</a>
+                    </div>
+                </div>
+
+                <div id="dispositionStep" class="step-container" style="display: none;">
+                    <a href="#" class="nav-button secondary" onclick="showIntroAndSubjectStep()" style="display: inline-block; margin-bottom: 1rem;">← Back to subjects</a>
+                    <h2 class="step-title">Which learning power do you need?</h2>
+                    <p class="step-description">Choose one of the "Magnificent Seven" dispositions to power your learning.</p>
+                    <div class="options-grid">
+                        <div class="option-card" onclick="selectDisposition('curiosity')"> <span class="option-icon">🔍</span> <div class="option-title">Curiosity</div> <div class="option-description">Your engine for exploration and wonder</div> </div>
+                        <div class="option-card" onclick="selectDisposition('persistence')"> <span class="option-icon">💪</span> <div class="option-title">Persistence</div> <div class="option-description">Helps you stay engaged when it's tough</div> </div>
+                        <div class="option-card" onclick="selectDisposition('imagination')"> <span class="option-icon">💭</span> <div class="option-title">Imagination</div> <div class="option-description">Where you play with ideas and possibilities</div> </div>
+                        <div class="option-card" onclick="selectDisposition('attention')"> <span class="option-icon">🎯</span> <div class="option-title">Attention</div> <div class="option-description">Helps you focus on what truly matters</div> </div>
+                        <div class="option-card" onclick="selectDisposition('thinking')"> <span class="option-icon">🧠</span> <div class="option-title">Thinking</div> <div class="option-description">How you sharpen ideas and make connections</div> </div>
+                        <div class="option-card" onclick="selectDisposition('collaboration')"> <span class="option-icon">🤝</span> <div class="option-title">Communication & Collaboration</div> <div class="option-description">Connects you effectively to others</div> </div>
+                        <div class="option-card" onclick="selectDisposition('craftsmanship')"> <span class="option-icon">⭐</span> <div class="option-title">Craftsmanship</div> <div class="option-description">Drives you toward mastery and quality</div> </div>
+                    </div>
+                </div>
+
+                <div id="promptsStep" class="step-container" style="display: none;">
+                    <a href="#" class="nav-button secondary" onclick="showDispositionStep()" style="display: inline-block; margin-bottom: 1rem;">← Choose a different power</a>
+                    <h2 class="step-title" id="promptsTitle">Your Learning Moves</h2>
+                    <p class="step-description" id="promptsDescription"> Here are strategies to use <span id="currentDispositionName"></span> in <span id="currentSubjectName"></span>. Click any card to flip and see more details!</p>
+                    <div class="filter-tabs" id="filterTabs">
+                        <button class="filter-tab active" data-filter="all">All</button>
+                        <button class="filter-tab" data-filter="Head">Head</button>
+                        <button class="filter-tab" data-filter="Heart">Heart</button>
+                        <button class="filter-tab" data-filter="Hand">Hand</button>
+                    </div>
+                    <div class="filter-intro-text" id="filterIntroText"></div>
+                    <div class="prompts-container" id="promptsContainer"></div>
+                    <div class="upgrade-cta">
+                        <h3>💡 Want More Strategies?</h3>
+                        <p>This demo shows 3 strategies per disposition. The full Navigator has 9 carefully crafted prompts for each learning power.</p>
+                        <a href="purchase.html" class="upgrade-button">Unlock the Full Navigator</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="global-footer">
+        <p>&copy; 2025 Learner Threads | <a href="mailto:bevan@learnerthreads.com">Contact Support</a></p>
+    </footer>
+
+    <script>
+        const demoPrompts = {
+            english: {
+                curiosity: [ { type: 'Head', text: 'Ask "How did they create that effect?" when you see writing you love.', instruction: 'When you read a passage, watch a scene, or see an image that amazes you, investigate how the creator made it. What specific words, techniques, or choices did they use to create that impact in your mind?' }, { type: 'Heart', text: 'Collect words, images, and ideas that fascinate you.', instruction: 'Start collections of interesting words from poems, powerful photos from magazines, or cool facts from articles. Gather the bits of language and media that spark your curiosity.' }, { type: 'Hand', text: 'Explore different ways of creating and sharing your ideas.', instruction: 'Try writing stories, making comics, creating videos, recording podcasts, or designing posters. Let your hands help you discover new ways to communicate and create.' } ],
+                persistence: [ { type: 'Head', text: 'Break challenging texts into smaller pieces you can handle.', instruction: 'If a book, article, or poem feels too hard, focus on one paragraph, one verse, or one section at a time. Build your understanding piece by piece rather than getting overwhelmed.' }, { type: 'Heart', text: 'Take a conscious break to let ideas simmer.', instruction: 'Set a timer for 5-10 minutes. Step away from your work – walk, stretch, or simply close your eyes. Allow your mind to wander, then return refreshed.' }, { type: 'Hand', text: 'Try different ways of engaging when reading or writing feels stuck.', instruction: 'If silent reading isn\'t working, try reading aloud or listening to audio. If writing isn\'t flowing, try drawing your ideas first or handwriting instead of typing.' } ],
+                imagination: [ { type: 'Head', text: 'Imagine how the same story could be told in completely different ways.', instruction: 'If you\'re reading facts about animals, imagine them as a comic strip. If it\'s a news article, imagine it as a song. How could the same information tell a different story or reach different people?' }, { type: 'Heart', text: 'Express your ideas through multimedia storytelling and creation.', instruction: 'Combine writing with drawings, photos, videos, or sound. Create digital stories, illustrated poems, zines, or photo essays. There are multiple ways to share your ideas.' }, { type: 'Hand', text: 'Transform texts by acting them out, illustrating them, or recreating them.', instruction: 'Turn a poem into a performance, illustrate a set of instructions, or recreate a story as a comic. Use your whole body and creativity to bring texts to life in new ways.' } ],
+                attention: [ { type: 'Head', text: 'Focus on the most important message in any text you encounter.', instruction: 'Whether reading a story, article, or advertisement, ask: "What\'s the main thing this wants me to understand or do?" Cut through distractions to find the heart of the message.' }, { type: 'Heart', text: 'Keep a journal, notebook, or diary for capturing ideas.', instruction: 'Carry it everywhere and use it to note down ideas, thoughts, interesting phrases, or things you see and hear. Write, draw, scribble, map, and doodle to stay connected to language.' }, { type: 'Hand', text: 'Create a special space where you can focus on reading and writing.', instruction: 'Set up a comfortable spot for literacy work with good lighting, your favourite tools, and minimal distractions. Make it a place where your mind can concentrate and create.' } ],
+                thinking: [ { type: 'Head', text: 'Question what you read - ask if it makes sense and seems fair.', instruction: 'Don\'t believe everything just because it\'s written down. Ask: "Is this accurate?" "Whose perspective is missing?" "What might be biased here?" Be a critical, thoughtful reader.' }, { type: 'Heart', text: 'Pay attention to how different texts make you feel and think.', instruction: 'Notice your reactions as you read stories, watch videos, or look at websites. Your feelings are important clues about what the text is doing and how it\'s trying to influence you.' }, { type: 'Hand', text: 'Make connections between different texts by creating visual maps.', instruction: 'Draw connections between books you\'ve read, articles on similar topics, or different versions of the same story. Show how texts talk to each other using lines, colours, and symbols.' } ],
+                collaboration: [ { type: 'Head', text: 'Learn from community members who have different experiences.', instruction: 'Interview people from different backgrounds, ages, or cultures in your community. What can their experiences teach you about how stories work and how society is changing?' }, { type: 'Heart', text: 'Share your favourite texts and creative work with people you trust.', instruction: 'Tell others about books, articles, videos, or websites you love. Share your own writing and creative projects. Exchanging ideas makes literacy richer for everyone.' }, { type: 'Hand', text: 'Create collaborative stories, websites, or multimedia projects together.', instruction: 'Work with others to write shared stories, make group presentations, or create collaborative blogs. Combine your different talents and perspectives to make something amazing.' } ],
+                craftsmanship: [ { type: 'Head', text: 'Look for one thing you can make better in your writing.', instruction: 'Read through your writing and find one thing you could improve - maybe a word you could change, a sentence you could fix, or an idea you could explain better. Focus on small, specific improvements.' }, { type: 'Heart', text: 'Choose words that show your own voice and style.', instruction: 'Write in a way that sounds like you. Choose words that feel right to you. Let your personality come through in your writing - that\'s what makes it special and authentic.' }, { type: 'Hand', text: 'Read your writing out loud to hear how it sounds.', instruction: 'After you write something, read it out loud to yourself. Listen for parts that sound bumpy or confusing. Your ears can catch things your eyes miss, helping you polish your work.' } ]
+            },
+            math: {
+                curiosity: [ { type: 'Head', text: 'Ask "What patterns can I find in these numbers?"', instruction: 'Look at number sequences, times tables, or shapes around you. What patterns do you notice? What comes next? Math is full of hidden patterns waiting to be discovered.' }, { type: 'Heart', text: 'Find math that connects to something you love.', instruction: 'Think about your hobbies, sports, or interests. Where does math show up there? Maybe in cooking recipes, sports scores, or building things. Math is everywhere in your world!' }, { type: 'Hand', text: 'Explore math using things you can touch and move.', instruction: 'Use blocks, coins, beans, or toys to explore number problems. Move them around, group them, count them. Let your hands help your brain understand math concepts.' } ],
+                persistence: [ { type: 'Head', text: 'Break tricky problems into smaller steps you can handle.', instruction: 'When math feels too hard, find smaller parts you can solve first. What do you know? What can you figure out step by step? Even big problems are made of little ones you can tackle.' }, { type: 'Heart', text: 'Remember that mistakes help your mathematical brain grow stronger.', instruction: 'When you get something wrong, your brain is actually learning! Think of mistakes as your brain doing push-ups to get stronger at math thinking.' }, { type: 'Hand', text: 'Try the same problem using different materials or methods.', instruction: 'If one way isn\'t working, try drawing it, building it with blocks, or using different objects. There are often many paths to the same mathematical answer.' } ],
+                imagination: [ { type: 'Head', text: 'Imagine "What if?" with numbers, shapes, or mathematical rules.', instruction: 'What if numbers worked differently? What if triangles had four sides? What if we counted in different ways? Let your mind play with mathematical possibilities and see where they lead.' }, { type: 'Heart', text: 'Create story problems starring your favourite characters or pets.', instruction: 'Turn your math into adventures! Have your pet solve geometry puzzles, or your favourite character go on number quests. Make math magical and personally meaningful.' }, { type: 'Hand', text: 'Build mathematical worlds using blocks, paper, or craft materials.', instruction: 'Construct 3D shapes with marshmallows and toothpicks, design tessellation cities with paper, or build fraction pizzas with playdough. Create math you can touch!' } ],
+                attention: [ { type: 'Head', text: 'Focus on the mathematical question hidden in the problem.', instruction: 'Read carefully and ask: "What is this really asking me to find?" Look past the story to find the number question, shape challenge, or pattern puzzle underneath.' }, { type: 'Heart', text: 'Notice which types of math problems spark your curiosity most.', instruction: 'Pay attention to what makes you excited about math. Do you love number puzzles, shape challenges, or pattern games? Follow your mathematical interests and let them guide your learning.' }, { type: 'Hand', text: 'Organize your workspace so you can think clearly about math.', instruction: 'Set up your space with the tools you need - pencils, paper, blocks, or measuring tools. A tidy workspace helps your mind focus on mathematical thinking.' } ],
+                thinking: [ { type: 'Head', text: 'Check if your answer makes sense in the real world.', instruction: 'Look at your answer and think: "Does this seem reasonable? If this was about real things, would this answer make sense?" Your mathematical intuition is important for checking your work.' }, { type: 'Heart', text: 'Think about why mathematical rules and patterns work the way they do.', instruction: 'Don\'t just follow steps - wonder why they work. Why do we line up place values? Why do angles in triangles add up? Understanding the "why" makes math meaningful.' }, { type: 'Hand', text: 'Show your mathematical thinking through pictures, models, and words.', instruction: 'Explain your math in different ways. Draw diagrams, build number models, write about patterns. This helps you understand your own thinking and communicate it to others.' } ],
+                collaboration: [ { type: 'Head', text: 'Compare your mathematical method with a friend\'s approach.', instruction: 'Show someone else how you solved a problem, then look at how they solved it. Did you both get the same answer using different mathematical thinking? Both ways can be right!' }, { type: 'Heart', text: 'Help someone understand a mathematical idea you\'ve figured out.', instruction: 'When you understand something in math, try teaching it to a friend or family member. Explaining mathematical thinking to others helps you understand it even better yourself.' }, { type: 'Hand', text: 'Work together building, measuring, or creating mathematical models.', instruction: 'Use blocks, rulers, or art materials together to explore math. Build geometric structures, measure playground equipment, or create fraction art as a team.' } ],
+                craftsmanship: [ { type: 'Head', text: 'Double-check your mathematical work using different approaches.', instruction: 'After you solve a problem, try a different method to check your answer. If estimation matches calculation, or if two different methods give the same result, you can feel confident.' }, { type: 'Heart', text: 'Take pride in mathematical work that clearly shows your thinking.', instruction: 'Make your math work neat and easy to follow. Show your steps clearly so others can understand your mathematical journey and learn from your methods.' }, { type: 'Hand', text: 'Present your mathematical work so others can easily follow your thinking.', instruction: 'Write numbers clearly, draw neat diagrams, and label your work. Good mathematical craftsmanship means others can follow your reasoning and learn from your approach.' } ]
+            }
+        };
+
+        let selectedSubject = '';
+        let selectedDisposition = '';
+        let currentFilter = 'all';
+
+        function selectSubject(subject) {
+            selectedSubject = subject;
+            document.querySelectorAll('#introAndSubjectStep .option-card').forEach(card => card.classList.remove('selected'));
+            event.target.closest('.option-card').classList.add('selected');
+            setTimeout(() => {
+                document.getElementById('introAndSubjectStep').style.display = 'none';
+                document.getElementById('dispositionStep').style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 300);
+        }
+
+        function selectDisposition(disposition) {
+            selectedDisposition = disposition;
+            document.querySelectorAll('#dispositionStep .option-card').forEach(card => card.classList.remove('selected'));
+            event.target.closest('.option-card').classList.add('selected');
+            setTimeout(() => {
+                showPrompts();
+                document.getElementById('dispositionStep').style.display = 'none';
+                document.getElementById('promptsStep').style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 300);
+        }
+
+        function showPrompts() {
+            const subjectDisplayNames = { 'english': 'English / Literacy', 'math': 'Mathematics' };
+            const dispositionDisplayNames = { 'curiosity': 'Curiosity', 'persistence': 'Persistence', 'imagination': 'Imagination', 'attention': 'Attention', 'thinking': 'Thinking', 'collaboration': 'Communication & Collaboration', 'craftsmanship': 'Craftsmanship' };
+
+            document.getElementById('currentDispositionName').textContent = dispositionDisplayNames[selectedDisposition];
+            document.getElementById('currentSubjectName').textContent = subjectDisplayNames[selectedSubject];
+
+            const filterTabsContainer = document.getElementById('filterTabs');
+            const oldTabs = filterTabsContainer.querySelectorAll('.filter-tab');
+            oldTabs.forEach(oldTab => { const newTab = oldTab.cloneNode(true); oldTab.parentNode.replaceChild(newTab, oldTab); });
+            filterTabsContainer.querySelectorAll('.filter-tab').forEach(tab => tab.onclick = () => filterPrompts(tab.dataset.filter));
+            
+            filterPrompts('all');
+        }
+
+        function filterPrompts(filterType) {
+            currentFilter = filterType;
+            const promptsContainer = document.getElementById('promptsContainer');
+            const subjectPrompts = demoPrompts[selectedSubject][selectedDisposition];
+            promptsContainer.innerHTML = '';
+
+            const filterIntroTextElement = document.getElementById('filterIntroText');
+            const filterTexts = {
+                'all': 'These strategies show how to express this disposition through thinking, emotion, and action.',
+                'Head': 'This strategy focuses on deep thinking, analysis, and understanding. It helps you sharpen ideas and make connections.',
+                'Heart': 'This strategy connects to your emotions, personal relevance, and motivation. It helps you find meaning and purpose.',
+                'Hand': 'This strategy involves action, doing, and physical exploration. It engages your body in the learning process.'
+            };
+            filterIntroTextElement.textContent = filterTexts[filterType];
+            
+            document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.toggle('active', tab.dataset.filter === filterType));
+
+            subjectPrompts.forEach(prompt => {
+                if (filterType === 'all' || prompt.type === filterType) {
+                    const promptCard = document.createElement('div');
+                    promptCard.className = 'prompt-card';
+                    promptCard.innerHTML = `<div class="prompt-front"><div class="prompt-type">${prompt.type}</div><div class="prompt-text">${prompt.text}</div><div class="flip-instruction">Click for more details →</div></div><div class="prompt-back"><div class="prompt-type">How to do this</div><div class="prompt-text">${prompt.instruction}</div><div class="back-instruction">Click to go back ←</div></div>`;
+                    promptCard.onclick = () => flipCard(promptCard);
+                    promptsContainer.appendChild(promptCard);
+                }
+            });
+        }
+
+        function flipCard(card) {
+            card.classList.toggle('flipped');
+        }
+
+        function showIntroAndSubjectStep() {
+            document.getElementById('dispositionStep').style.display = 'none';
+            document.getElementById('promptsStep').style.display = 'none';
+            document.getElementById('introAndSubjectStep').style.display = 'block';
+            document.querySelectorAll('.option-card').forEach(card => card.classList.remove('selected'));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showDispositionStep() {
+            document.getElementById('promptsStep').style.display = 'none';
+            document.getElementById('dispositionStep').style.display = 'block';
+            document.querySelectorAll('#dispositionStep .option-card').forEach(card => card.classList.remove('selected'));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goToHub() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

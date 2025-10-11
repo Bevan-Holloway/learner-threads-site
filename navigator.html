@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Navigator - Learner Threads</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef); /* Standard site background */
+            min-height: 100vh;
+            padding: 2rem; /* Standard site padding */
+            color: #2c3e50;
+        }
+
+        /* --- Global Header & Footer Styles --- */
+        .global-header {
+            max-width: 1400px;
+            margin: 0 auto 2.5rem auto;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .global-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e3a5f;
+        }
+
+        .logo-link img {
+            max-height: 40px;
+            border-radius: 50%;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #475569;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #1e3a5f;
+        }
+
+        .global-footer {
+            max-width: 1400px;
+            margin: 3rem auto 0 auto;
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .global-footer p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .global-footer a {
+            color: #1e3a5f;
+            text-decoration: none;
+        }
+
+        .global-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main App Styles */
+        .main-app {
+            display: block;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .header-main-app {
+            background: #1e3a5f; /* RE-BRANDED: Main site blue */
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header-main-app h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-main-app p {
+            color: #cbd5e1; /* RE-BRANDED: Lighter, less saturated color */
+            font-size: 1.1rem;
+        }
+
+        .step-container {
+            padding: 2rem;
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #0f172a;
+        }
+
+        .step-description {
+            color: #64748b;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .option-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .option-card:hover {
+            border-color: #1e3a5f; /* RE-BRANDED */
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(30, 58, 95, 0.15); /* RE-BRANDED */
+        }
+
+        .option-card.selected {
+            border-color: #1e3a5f; /* RE-BRANDED */
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe); /* RE-BRANDED: Blue-toned gradient */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.2); /* RE-BRANDED */
+        }
+
+        .option-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+            color: #1e3a5f; /* RE-BRANDED */
+        }
+
+        .option-title {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0.25rem;
+            font-size: 1rem;
+        }
+
+        .option-description {
+            font-size: 0.85rem;
+            color: #64748b;
+            line-height: 1.4;
+        }
+
+        .prompts-container {
+            background: #f8fafc;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .prompt-card {
+            background: white;
+            border-left: 4px solid #1e3a5f; /* RE-BRANDED */
+            border-radius: 0.5rem;
+            padding: 0; 
+            cursor: pointer;
+            perspective: 1000px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            min-height: 140px;
+            width: 100%;
+        }
+        .prompt-card .prompt-front,
+        .prompt-card .prompt-back {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            padding: 1.25rem; 
+            border-radius: 0.5rem;
+            backface-visibility: hidden;
+            transition: transform 0.6s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 100%;
+        }
+        .prompt-back {
+            display: flex;
+            transform: rotateY(180deg);
+        }
+        .prompt-card.flipped .prompt-front { transform: rotateY(-180deg); }
+        .prompt-card.flipped .prompt-back { transform: rotateY(0deg); }
+        .prompt-front { transform: rotateY(0deg); background: inherit; }
+        .prompt-back {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe); /* RE-BRANDED */
+            border-left: 4px solid #475569; /* RE-BRANDED: Secondary grey-blue */
+        }
+
+        .prompt-type {
+            display: inline-block;
+            background: #1e3a5f; /* RE-BRANDED */
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            align-self: flex-start;
+            position: relative;
+            user-select: none;
+        }
+
+        .prompt-back .prompt-type {
+            background: #475569; /* RE-BRANDED */
+        }
+        
+        .prompt-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #374151;
+            flex-grow: 1;
+        }
+
+        .prompt-back .prompt-text {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: #475569;
+        }
+
+        .navigation {
+            background: #f8fafc;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            border-top: 1px solid #e2e8f0;
+            border-radius: 0 0 1rem 1rem;
+        }
+
+        .nav-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .nav-button.primary {
+            background: #1e3a5f; /* RE-BRANDED */
+            color: white;
+        }
+        .nav-button.primary:hover {
+            background: #2c4a6f; /* RE-BRANDED: Darken */
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #1e3a5f; /* RE-BRANDED */
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            transition: color 0.3s;
+            font-size: 0.9rem;
+        }
+        .back-link:hover { color: #2c4a6f; }
+
+        .teacher-reminder {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe); /* RE-BRANDED */
+            border: 2px solid #1e3a5f; /* RE-BRANDED */
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.1); /* RE-BRANDED */
+        }
+        .teacher-reminder-title {
+            font-weight: 700;
+            color: #1e3a5f; /* RE-BRANDED */
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        .teacher-reminder-text {
+            color: #334155; /* RE-BRANDED */
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .flip-instruction, .back-instruction {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 500;
+            align-self: flex-end;
+            margin-top: 0.5rem;
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            background: #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .filter-tab {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 0.5rem;
+            background-color: transparent;
+            color: #475569;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .filter-tab.active {
+            background-color: #1e3a5f; /* RE-BRANDED */
+            color: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .filter-tab:hover:not(.active) {
+            background-color: #cbd5e1;
+            color: #374151;
+        }
+
+        /* Filter Intro Text */
+        .filter-intro-text {
+            background: #f1f5f9; /* RE-BRANDED: Consistent light grey */
+            border-left: 4px solid #64748b; /* RE-BRANDED: Grey-blue accent */
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            color: #334155;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Toggle section styles */
+        .toggle-section { margin-bottom: 2rem; }
+        .toggle-button {
+            width: 100%;
+            padding: 1rem;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 1rem;
+            color: #1e3a5f;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-align: left;
+        }
+        .toggle-button:hover {
+            border-color: #1e3a5f;
+            background: #f8fafc;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(30, 58, 95, 0.15);
+        }
+        .toggle-button.expanded {
+            border-radius: 1rem 1rem 0 0;
+            background: #1e3a5f;
+            border-color: #1e3a5f;
+            color: white;
+        }
+        .toggle-content {
+            display: none;
+            background: white;
+            border: 2px solid #1e3a5f;
+            border-top: none;
+            border-radius: 0 0 1rem 1rem;
+            padding: 1.5rem;
+            animation: slideDown 0.4s;
+            box-shadow: 0 8px 25px rgba(30, 58, 95, 0.1);
+        }
+        .toggle-content.visible { display: block; }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* MOBILE SPECIFIC STYLES */
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .container { padding: 0; }
+            .step-container { padding: 1.5rem; }
+            .prompt-card { min-height: auto; }
+            .prompt-front,
+            .prompt-back {
+                position: static !important;
+                transform: none !important;
+                backface-visibility: visible;
+                min-height: auto;
+                padding: 1rem;
+            }
+            .prompt-card .prompt-front { display: flex; }
+            .prompt-card .prompt-back { display: none; }
+            .prompt-card.flipped .prompt-front { display: none; }
+            .prompt-card.flipped .prompt-back { display: flex; }
+        }
+
+    </style>
+</head>
+<body>
+    <header class="global-header">
+        <nav class="global-nav">
+            <a href="index.html" class="logo-link">
+                <img src="logo.png" alt="Learner Threads Logo">
+                <span>Learner Threads</span>
+            </a>
+            <div class="nav-links">
+                <a href="languagelens.html">Language Lens</a>
+                <a href="dispositionshub.html">For Schools</a>
+                <a href="access.html">Sign In</a>
+            </div>
+        </nav>
+    </header>
+
+    <div id="mainApp" class="main-app">
+        <div class="container">
+            <div class="card">
+                <div class="header-main-app">
+                    <h1>Your Learning Navigator</h1>
+                    <p>Find your next learning move.</p>
+                </div>
+
+                <div id="introAndSubjectStep" class="step-container">
+                    <div class="toggle-section">
+                        <button class="toggle-button" id="learningIntroToggle" onclick="toggleLearningIntro()">
+                            <span>🌟 How to Power Up Your Learning</span>
+                            <span id="learningIntroIcon">+</span>
+                        </button>
+                        <div class="toggle-content" id="learningIntroContent">
+                            <h2 style="color: #1e3a5f; font-size: 1.25rem; margin-bottom: 1rem;">Discover Who You Are as a Learner</h2>
+                            <p style="color: #475569; line-height: 1.6; margin-bottom: 1.5rem;">This tool helps you discover your identity as a thinker by helping you develop seven core learning dispositions. Whether someone becomes a brilliant scientist, creative artist, or innovative mathematician, they all draw on the same fundamental learning powers:</p>
+                            <p style="font-weight: 600; color: #1e3a5f; text-align: center; margin-bottom: 1.5rem;">Curiosity • Persistence • Imagination • Attention • Thinking • Collaboration • Craftsmanship</p>
+                            <h3 style="color: #1e3a5f; margin: 1.5rem 0 1rem 0; font-size: 1.1rem;">How Each Disposition Works Through Head, Heart & Hand</h3>
+                            <p style="color: #475569; line-height: 1.6; margin-bottom: 1.5rem;">Each learning disposition can be expressed in three different ways:</p>
+                            <ul style="list-style: none; padding-left: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+                                <li style="background-color: #f1f5f9; border-left: 3px solid #1e3a5f; padding: 0.75rem 1rem; border-radius: 0.25rem;"><strong style="color: #1e3a5f;">Hand:</strong> Action and doing – how scientists experiment or artists create.</li>
+                                <li style="background-color: #f1f5f9; border-left: 3px solid #1e3a5f; padding: 0.75rem 1rem; border-radius: 0.25rem;"><strong style="color: #1e3a5f;">Heart:</strong> Emotion and motivation – how historians connect personally with stories.</li>
+                                <li style="background-color: #f1f5f9; border-left: 3px solid #1e3a5f; padding: 0.75rem 1rem; border-radius: 0.25rem;"><strong style="color: #1e3a5f;">Head:</strong> Analysis and deep thinking – how scientists look for patterns or historians examine evidence.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h2 class="step-title">What subject are you diving into today?</h2>
+                    <p class="step-description">Choose the subject where you're looking to power up your thinking.</p>
+                    
+                    <div class="options-grid">
+                        <div class="option-card" onclick="selectSubject('english')">
+                            <span class="option-icon">📚</span>
+                            <div class="option-title">English</div>
+                            <div class="option-description">Reading, writing, communication, film, literature</div>
+                        </div>
+                        <div class="option-card" onclick="selectSubject('math')">
+                            <span class="option-icon">🔢</span> <div class="option-title">Mathematics</div>
+                            <div class="option-description">Numbers, patterns, problem-solving, logic</div>
+                        </div>
+                        <div class="option-card" onclick="selectSubject('science')">
+                            <span class="option-icon">🔬</span>
+                            <div class="option-title">Science</div>
+                            <div class="option-description">Investigation, experimentation, understanding the world</div>
+                        </div>
+                        <div class="option-card" onclick="selectSubject('history')">
+                            <span class="option-icon">📜</span>
+                            <div class="option-title">Social Studies</div>
+                            <div class="option-description">Understanding the past, cultures, and societies</div>
+                        </div>
+                         <div class="option-card" onclick="selectSubject('art')">
+                            <span class="option-icon">🎨</span>
+                            <div class="option-title">Visual Arts</div>
+                            <div class="option-description">Art, photography, multi-media, design</div>
+                        </div>
+                        <div class="option-card" onclick="selectSubject('technology')">
+                            <span class="option-icon">💻</span>
+                            <div class="option-title">Technology & Digital</div>
+                            <div class="option-description">Coding, digital literacy, problem-solving</div>
+                        </div>
+                        <div class="option-card" onclick="selectSubject('performing_arts')">
+                            <span class="option-icon">🎭</span>
+                            <div class="option-title">Performing Arts</div>
+                            <div class="option-description">Music, drama, dance</div>
+                        </div>
+                         <div class="option-card" onclick="selectSubject('physical_education')">
+                            <span class="option-icon">🏃‍♀️</span>
+                            <div class="option-title">Physical Education</div>
+                            <div class="option-description">Movement, sport, wellbeing, strategy</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="dispositionStep" class="step-container" style="display: none;">
+                    <a href="#" class="back-link" onclick="showIntroAndSubjectStep()">← Back to subjects</a>
+                    <h2 class="step-title">Which learning power do you need right now?</h2>
+                    <p class="step-description">Choose a "Magnificent Seven" disposition that feels right for powering your learning.</p>
+                    
+                    <div class="options-grid">
+                        <div class="option-card" onclick="selectDisposition('curiosity')">
+                            <span class="option-icon">🔍</span>
+                            <div class="option-title">Curiosity</div>
+                            <div class="option-description">Your engine for exploration and wonder.</div>
+                        </div>
+                        <div class="option-card" onclick="selectDisposition('persistence')">
+                            <span class="option-icon">💪</span>
+                            <div class="option-title">Persistence</div>
+                            <div class="option-description">Helps you stay engaged even when it's tough.</div>
+                        </div>
+                        <div class="option-card" onclick="selectDisposition('imagination')">
+                            <span class="option-icon">💭</span>
+                            <div class="option-title">Imagination</div>
+                            <div class="option-description">Where you play with ideas and possibilities.</div>
+                        </div>
+                        <div class="option-card" onclick="selectDisposition('attention')">
+                            <span class="option-icon">🎯</span>
+                            <div class="option-title">Attention</div>
+                            <div class="option-description">Helps you focus on what truly matters.</div>
+                        </div>
+                        <div class="option-card" onclick="selectDisposition('thinking')">
+                            <span class="option-icon">🧠</span>
+                            <div class="option-title">Thinking</div>
+                            <div class="option-description">How you sharpen ideas and make connections.</div>
+                        </div>
+                        <div class="option-card" onclick="selectDisposition('collaboration')">
+                            <span class="option-icon">🤝</span>
+                            <div class="option-title">Communication & Collaboration</div>
+                            <div class="option-description">Connects you effectively to others.</div>
+                        </div>
+                        <div class="option-card" onclick="selectDisposition('craftsmanship')">
+                            <span class="option-icon">⭐</span>
+                            <div class="option-title">Craftsmanship</div>
+                            <div class="option-description">Drives you toward mastery and quality.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="promptsStep" class="step-container" style="display: none;">
+                    <a href="#" class="back-link" onclick="showDispositionStep()">← Choose a different learning power</a>
+                    
+                    <div class="teacher-reminder">
+                        <div class="teacher-reminder-title">💡 Share Your Learning Journey!</div>
+                        <div class="teacher-reminder-text">
+                            After you try a strategy, talk to your teacher about how it helped you. You can use your <strong>Learning Reflections</strong> tool to capture these moments!
+                        </div>
+                    </div>
+                    
+                    <h2 class="step-title" id="promptsTitle">Your Learning Moves</h2>
+                    <p class="step-description" id="promptsDescription">
+                        Here are some strategies to use <span id="currentDispositionName"></span> in <span id="currentSubjectName"></span>.
+                        Click a card to see details. Try one, then reflect on how it helped!
+                    </p>
+
+                    <div class="filter-tabs" id="filterTabs">
+                        <button class="filter-tab active" data-filter="all">All</button>
+                        <button class="filter-tab" data-filter="Head">Head</button>
+                        <button class="filter-tab" data-filter="Heart">Heart</button>
+                        <button class="filter-tab" data-filter="Hand">Hand</button>
+                    </div>
+
+                    <div class="filter-intro-text" id="filterIntroText">
+                        These are a mix of strategies to help you power up your learning.
+                    </div>
+                    
+                    <div class="prompts-container" id="promptsContainer">
+                        </div>
+
+                    <div class="navigation" style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem;">
+                        <button class="nav-button primary" onclick="showIntroAndSubjectStep()">Start Over</button>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="global-footer">
+        <p>&copy; 2025 Learner Threads | <a href="mailto:bevan@learnerthreads.com">Contact Support</a></p>
+    </footer>
+
+    <script>
+        // All prompts and instructions remain the same
+        const promptsWithInstructions = {
+            english: {
+                curiosity: [
+                    { type: 'Head', text: 'Wonder about the big questions hiding behind any text you read.', instruction: 'Whether it\'s a story, a website, or a poster, ask: "What is this really trying to tell me?" "What questions does this make me think about?" Every text has deeper ideas to discover.' },
+                    { type: 'Heart', text: 'Find texts that connect to your world and make you feel something.', instruction: 'Look for characters, places, information, or ideas that feel real and important to you. Whether it\'s fiction, facts, or poetry, find what speaks to your heart.' },
+                    { type: 'Hand', text: 'Explore different ways of creating and sharing your ideas.', instruction: 'Try writing stories, making comics, creating videos, recording podcasts, or designing posters. Let your hands help you discover new ways to communicate and create.' },
+                    { type: 'Head', text: 'Ask "How did they make me think or feel that?" about any text.', instruction: 'When a book, article, or video affects you, investigate how the creator did it. What words, images, or techniques did they use to create that effect in your mind?' },
+                    { type: 'Heart', text: 'Collect words, images, and ideas that fascinate you.', instruction: 'Start collections of interesting words from poems, powerful photos from magazines, or cool facts from articles. Gather the bits of language and media that spark your curiosity.' },
+                    { type: 'Hand', text: 'Hunt for stories and information in unexpected places.', instruction: 'Look for interesting texts on signs, websites, apps, games, or conversations. Stories and information are everywhere - not just in books!' },
+                    { type: 'Head', text: 'Ask "why this, why now?" about a text\'s choices or your own topic.', instruction: 'For a studied text or film, research its historical context or the creator\'s background. For your own writing, think about why you\'re choosing this topic and what you want to achieve.' },
+                    { type: 'Heart', text: 'Find the emotional spark that makes a text, film, or idea resonate.', instruction: 'Read a passage, watch a scene, or reflect on a writing idea until something truly moves you. Explore why those specific words, visuals, or concepts triggered that feeling.' },
+                    { type: 'Hand', text: 'Step into the story: embody a character or a speaker\'s stance.', instruction: 'Physically act out a scene or deliver a line from a text, film, or speech. Notice how gestures, facial expressions, and voice unlock deeper understanding of character or intent.' }
+                ],
+                persistence: [
+                    { type: 'Head', text: 'Break challenging texts into smaller pieces you can handle.', instruction: 'If a book, article, or poem feels too hard, focus on one paragraph, one verse, or one section at a time. Build your understanding piece by piece.' },
+                    { type: 'Heart', text: 'Keep working on writing that matters to you, even when it feels hard.', instruction: 'Whether you\'re writing a story, an explanation, or a poem, stick with topics you care about, but break it into chunks. Your passion will help you push through the difficult parts.' },
+                    { type: 'Hand', text: 'Try different ways of engaging when reading or writing feels stuck.', instruction: 'If silent reading isn\'t working, try reading aloud or listening to audio. If writing isn\'t working, try drawing your ideas or handwriting instead of typing. Find the method that unlocks your thinking.' },
+                    { type: 'Head', text: 'Connect new texts to things you already know and understand.', instruction: 'When facing difficult reading, ask: "What does this remind me of?" Link new information or stories to your existing knowledge to build understanding.' },
+                    { type: 'Heart', text: 'Remember why you wanted to read or create this in the first place.', instruction: 'When reading or writing gets tough, reconnect with what drew you to it. Maybe you loved the topic, the challenge, or had an exciting idea. Hold onto that feeling.' },
+                    { type: 'Hand', text: 'Use tools and supports to help you engage with challenging texts.', instruction: 'Use dictionaries, highlighters, sticky notes, or digital tools. Ask for help reading difficult words. Let tools support your literacy learning.' },
+                    { type: 'Head', text: 'Set tiny, achievable goals and celebrate each one.', instruction: 'Choose a very small objective and write it down: "read one page," "analyse this key moment," or "write two clear sentences." When you achieve it, give yourself a quick mental high-five.' },
+                    { type: 'Heart', text: 'Take a conscious break to let ideas simmer.', instruction: 'Set a timer for 5-10 minutes. Step away from your work – walk, stretch, or simply close your eyes. Allow your mind to wander, then return refreshed.' },
+                    { type: 'Hand', text: 'Shift your environment to shift your thinking.', instruction: 'If stuck on a text or writing block, try changing your physical position – stand up, sit somewhere new. Read aloud, or draft your writing in a new spot.' }
+                ],
+                imagination: [
+                    { type: 'Head', text: 'Imagine how information could be presented in completely different ways.', instruction: 'If you\'re reading facts about animals, imagine them as a comic strip. If it\'s a news article, imagine it as a song. How could the same information tell a different story?' },
+                    { type: 'Heart', text: 'Create original stories, poems, or explanations that come from your own experiences.', instruction: 'Write about your own adventures, explain something you\'re passionate about, or create poems about your feelings. Let your authentic voice guide your creativity.' },
+                    { type: 'Hand', text: 'Play with words, sounds, and images to create something new.', instruction: 'Make up rhymes, invent new words, combine photos with text, or create ‘concrete’ poems. Let your hands and voice experiment with language in playful ways.' },
+                    { type: 'Head', text: 'Reimagine familiar stories or information with a creative twist.', instruction: 'What if Little Red Riding Hood lived in space? What if you explained fractions using pizza parties? Take something familiar and give it an imaginative makeover.' },
+                    { type: 'Heart', text: 'Express your ideas through multimedia storytelling and creation.', instruction: 'Combine writing with drawings, photos, videos, or sound. Create digital stories, illustrated poems, zines, or photo essays. There are multiple ways to share your ideas.' },
+                    { type: 'Hand', text: 'Transform texts by acting them out, illustrating them, or recreating them.', instruction: 'Turn a poem into a performance, illustrate a set of instructions, or recreate a story as a comic. Use your whole body and creativity to bring texts to life.' },
+                    { type: 'Head', text: 'Visualise the world: sketch characters, settings, or your own ideas.', instruction: 'Grab a pencil and quickly draw characters, settings, or key scenes from a text/film, or from your own story ideas. Don\'t worry about artistic skill, just capture your vision.' },
+                    { type: 'Heart', text: 'Write from an unexpected voice or perspective.', instruction: 'Choose a character from a text/film (or one you\'re creating) and write a short piece from their innermost thoughts. Or, write from the viewpoint of an inanimate object in a scene.' },
+                    { type: 'Hand', text: 'Create a soundtrack or visual storyboard for a text or your own writing.', instruction: 'Choose songs that match the mood of different scenes in a book/film, or for a story you\'re writing. Alternatively, draw a simple storyboard for a key sequence.' }
+                ],
+                attention: [
+                    { type: 'Head', text: 'Focus on the most important message in any text you encounter.', instruction: 'Whether reading a story, article, or advertisement, ask: "What\'s the main thing this wants me to understand or do?" Find the heart of the message.' },
+                    { type: 'Heart', text: 'Keep a journal, notebook, or diary.', instruction: 'Carry it with you everywhere and use it to note down ideas, thoughts and feelings, phrases that appear in your mind, or intersting things you see and hear in the world. Write, draw, scribble, map, and doodle.' },
+                    { type: 'Hand', text: 'Create a special space where you can focus on reading and writing.', instruction: 'Set up a comfortable spot for literacy work with good lighting, your favourite tools, and minimal distractions. Make it a place where your mind can concentrate.' },
+                    { type: 'Head', text: 'Slow down to really notice the craft in excellent writing.', instruction: 'When you find a sentence, verse, or passage you love, read it again slowly. What makes it special? How did the writer create that effect?' },
+                    { type: 'Heart', text: 'Listen carefully to how language sounds in poems, songs, and stories.', instruction: 'Pay attention to rhythm, rhyme, and the music in language. Notice how different texts sound when read aloud, and how sound creates meaning.' },
+                    { type: 'Hand', text: 'Use annotation and note-taking to stay engaged with texts.', instruction: 'Write questions in margins, highlight interesting parts, or jot down connections. Keep your hands active while reading to help your mind stay focused.' },
+                    { type: 'Head', text: 'Guide your eyes: use a pointer for focused reading/viewing.', instruction: 'Use your finger or a bookmark to track each line as you read. If watching film, use the pause and rewind buttons deliberately to focus on specific frames.' },
+                    { type: 'Heart', text: 'Zero in on what genuinely sparks your interest right now.', instruction: 'Scan the text, film, or your own writing prompt. Find one character, scene, or idea that immediately catches your attention. Start your deep engagement there.' },
+                    { type: 'Hand', text: 'Track your progress visually to build momentum.', instruction: 'Use sticky notes to mark each paragraph you read or each small section of writing you complete. Acknowledge each step forward to see your accomplishment.' }
+                ],
+                thinking: [
+                    { type: 'Head', text: 'Question what you read - ask if it makes sense and seems fair.', instruction: 'Don\'t believe everything just because it\'s written down. Ask: "Is this accurate?" "Whose perspective is missing?" "What might be biased here?" Be a critical reader.' },
+                    { type: 'Heart', text: 'Pay attention to how different texts make you feel and think.', instruction: 'Notice your reactions as you read stories and poems, watch videos and plays, or look at websites. Your feelings are important clues about what the text is doing to you.' },
+                    { type: 'Hand', text: 'Make connections between different texts by creating visual maps or charts.', instruction: 'Draw connections between books you\'ve read, articles on similar topics, or different versions of the same story. Show how texts talk to each other. Use lines, colours, and symbols.' },
+                    { type: 'Head', text: 'Analyse how creators use different techniques to influence their audience.', instruction: 'Notice how writers, filmmakers, or website designers try to persuade or entertain you. What techniques do they use? How do they want you to think or feel?' },
+                    { type: 'Heart', text: 'Reflect on how texts change your thinking or expand your world.', instruction: 'After reading or creating something, Look beyond the surface and ask: "How has this changed what I think?" "What new ideas do I have now?" "What is this teaching me about being human?" Notice how literacy grows your mind.' },
+                    { type: 'Hand', text: 'Compare how the same information or story is told in different formats.', instruction: 'Look at how a news story appears in newspapers vs. social media, or how a fairy tale differs in books vs. movies. What changes when the format changes?' },
+                    { type: 'Head', text: 'Find solid proof: locate evidence to back up your claims.', instruction: 'For your interpretations of a text/film, find specific quotes, examples, or details (like dialogue, shots, or sounds) that prove your point. Also, look for counter-evidence.' },
+                    { type: 'Heart', text: 'See through other eyes: how might different readers interpret this?', instruction: 'Imagine someone from a vastly different background, age, or culture engaging with this text or film, or your own work. What would they focus on? What would they find odd or tricky to understand? Where might their interpretation differ from yours?' },
+                    { type: 'Hand', text: 'Dissect the \'why\': analyse the creator\'s deliberate choices.', instruction: 'Pick a key word, phrase, or cinematic technique (like a camera angle or editing style). Ask: Why this choice? How does it shape meaning? Brainstorm or draw other options the creator had' }
+                ],
+                collaboration: [
+                    { type: 'Head', text: 'Learn from community members who have different experiences and perspectives.', instruction: 'Interview people from different backgrounds, ages, or cultures in your community. What can their experiences teach you about how society works and how it\'s changing?' },
+                    { type: 'Heart', text: 'Share your favourite texts and creative work with people you trust.', instruction: 'Tell others about books, articles, videos, or websites you love. Share your own writing and creative projects. Exchanging ideas makes literacy richer.' },
+                    { type: 'Hand', text: 'Create collaborative stories, websites, or multimedia projects together.', instruction: 'Work with others to write shared stories, make group presentations, or create collaborative blogs. Combine your different talents and perspectives.' },
+                    { type: 'Head', text: 'Help others become better readers and writers.', instruction: 'Support classmates with reading challenges, give helpful feedback on their writing, or share with them interesting texts you\'ve discovered.' },
+                    { type: 'Heart', text: 'Join reading communities and writing groups to share your literacy journey.', instruction: 'Participate in book clubs, writing circles, or online communities where people discuss texts and share creative work. Learn from other readers and writers.' },
+                    { type: 'Hand', text: 'Perform texts together through drama, readers\' theatre, or multimedia presentations.', instruction: 'Work with others to bring texts to life through performance, shared reading, or collaborative presentations that combine everyone\'s strengths.' },
+                    { type: 'Head', text: 'Share your personal take and truly listen to another\'s.', instruction: 'Tell a friend, family member, or classmate your honest thoughts and feelings about the text or film. Then, put your own thoughts aside and actively listen to their unique perspective.' },
+                    { type: 'Heart', text: 'Brainstorm a new idea for a collaborative writing project.', instruction: 'With a partner, discuss potential topics, characters, or themes for a story, poem, or report you could write together. Find common ground and build on each other\'s initial thoughts.' },
+                    { type: 'Hand', text: 'Discuss differing views to build a richer understanding together.', instruction: 'Find someone with a different interpretation of a text/film. Talk it through, asking open questions and sharing evidence, to construct a deeper, shared understanding.' }
+                ],
+                craftsmanship: [
+                    { type: 'Head', text: 'Measure your work against specific goals or criteria.', instruction: 'If you have a rubric or specific criteria, go through each point systematically. Annotate your work according to the criteria to make sure your writing addresses every requirement fully and precisely.' },
+                    { type: 'Heart', text: 'Keep writing until your words say exactly what you mean.', instruction: 'Don\'t stop at your first try. Keep working on your writing until it says what\'s in your heart and mind. Sometimes the best words come after you\'ve tried a few times.' },
+                    { type: 'Hand', text: 'Make your writing neat and easy for others to read.', instruction: 'Take care with your handwriting or typing. Add spaces, capital letters, and punctuation to help readers follow your ideas. Clear writing shows respect for your readers.' },
+                    { type: 'Head', text: 'Look for one thing you can make better in your writing.', instruction: 'Read through your writing and find one thing you could improve - maybe a word you could change, a sentence you could fix, or an idea you could explain better. Ask, "what\'s odd or missing?"' },
+                    { type: 'Heart', text: 'Choose words that show your own voice and style.', instruction: 'Write in a way that sounds like you. Choose words that feel right to you. Let your personality come through in your writing - that\'s what makes it special.' },
+                    { type: 'Hand', text: 'Keep a collection of your best writing to see how you grow.', instruction: 'Save pieces of writing that you\'re proud of in a special folder or notebook. Look back at older pieces to see how much you\'ve grown as a writer.' },
+                    { type: 'Head', text: 'Learn from the masters: dissect how great writers achieve their effects.', instruction: 'Find examples of truly effective writing or films in the same style or genre as your own work. Analyse how they achieve their impact, and experiment with those techniques in your own craft.' },
+                    { type: 'Heart', text: 'Seek honest feedback from a trusted source.', instruction: 'Choose someone whose opinion you respect. Ask them specific questions about your writing: "Does this make sense?" "Where did you get confused?" "What\'s my strongest point?"' },
+                    { type: 'Hand', text: 'Read your writing out loud to hear how it sounds.', instruction: 'After you write something, read it out loud to yourself. Listen for parts that sound bumpy or confusing. Your ears can catch things your eyes miss.' }
+                ]
+            },
+            math: {
+                curiosity: [
+                    { type: 'Head', text: 'Ask "What patterns can I find in these numbers?"', instruction: 'Look at number sequences, times tables, or shapes around you. What patterns do you notice? What comes next? Math is full of hidden patterns waiting to be discovered.' },
+                    { type: 'Heart', text: 'Find math that connects to something you love.', instruction: 'Think about your hobbies, sports, or interests. Where does math show up there? Maybe in cooking recipes, sports scores, or building things. Math is everywhere!' },
+                    { type: 'Hand', text: 'Explore math using things you can touch and move.', instruction: 'Use blocks, coins, beans, or toys to explore number problems. Move them around, group them, count them. Let your hands help your brain understand math.' },
+                    { type: 'Head', text: 'Wonder "What if I changed this number?" and try it.', instruction: 'Pick a number in your problem and change it. What happens to the answer? What if you made it bigger, smaller, or even zero? Explore how numbers affect each other.' },
+                    { type: 'Heart', text: 'Look for math in games and fun activities.', instruction: 'Notice the math in board games, video games, sports, or playground activities. How do points work? What shapes do you see? Math makes games more interesting!' },
+                    { type: 'Hand', text: 'Hunt for shapes and numbers in the world around you.', instruction: 'Go on a math treasure hunt! Look for circles, triangles, patterns, and numbers around your home, school, or neighbourhood. Math is hiding everywhere.' },
+                    { type: 'Head', text: 'Research how this mathematical concept is used in different fields.', instruction: 'Look up how artists, engineers, musicians, or scientists use this math. Find specific examples of this concept in the real world.' },
+                    { type: 'Heart', text: 'Find a real-world connection that makes this math personally meaningful.', instruction: 'Think about when you might actually use this math in your life - shopping, sports, cooking, gaming. Make up a problem using something you care about.' },
+                    { type: 'Hand', text: 'Use manipulatives, drawings, or physical objects to explore the problem.', instruction: 'Find coins, blocks, paper, or draw diagrams to represent the math problem physically. Move things around and see what patterns emerge.' }
+                ],
+                persistence: [
+                    { type: 'Head', text: 'Break tricky problems into smaller steps you can handle.', instruction: 'When maths feels too hard, find smaller parts you can solve first. What do you know? What can you figure out step by step? Even big problems are made of little ones.' },
+                    { type: 'Heart', text: 'Remember that mistakes help your mathematical brain grow stronger.', instruction: 'When you get something wrong, your brain is actually learning! Think of mistakes as your brain doing push-ups to get stronger at maths thinking.' },
+                    { type: 'Hand', text: 'Try the same problem using different materials or methods.', instruction: 'If one way isn\'t working, try drawing it, building it with blocks, or using different objects. There are often many paths to the same mathematical answer.' },
+                    { type: 'Head', text: 'Connect new problems to maths you already understand.', instruction: 'When you\'re stuck, ask yourself: "What maths do I already know that might help here?" Link new problems to patterns, shapes, or numbers you\'ve worked with before.' },
+                    { type: 'Heart', text: 'Keep going because you want to understand, not just get answers.', instruction: 'Focus on understanding how the maths works, not just getting the right answer. When you truly understand, you feel proud and remember it much better.' },
+                    { type: 'Hand', text: 'Take a movement break and return to maths with fresh energy.', instruction: 'If you\'re feeling stuck, take a short break. Jump, stretch, or move around. Sometimes your brain needs movement to see the mathematical solution clearly.' },
+                    { type: 'Head', text: 'Set a small, achievable goal and celebrate when you reach it.', instruction: 'Choose something specific like "complete 2 problems" or "understand this one concept." When you achieve it, acknowledge your success before moving on.' },
+                    { type: 'Heart', text: 'Remind yourself of a time you successfully learned something difficult.', instruction: 'Think about a challenging skill you\'ve mastered - riding a bike, learning a game, or solving a previous math concept. Remember that persistence paid off then too.' },
+                    { type: 'Hand', text: 'Imagine how this math might be useful in your future life.', instruction: 'Think about careers or activities you\'re interested in. How might you actually use this math someday? What problems could it help you solve? Visualise yourself actually using this math.' }
+                ],
+                imagination: [
+                    { type: 'Head', text: 'Imagine "What if?" with numbers, shapes, or mathematical rules.', instruction: 'What if numbers worked differently? What if triangles had four sides? What if we counted in different ways? Let your mind play with mathematical possibilities.' },
+                    { type: 'Heart', text: 'Create story problems starring your favourite characters or pets.', instruction: 'Turn your maths into adventures! Have your pet solve geometry puzzles, or your favourite character go on number quests. Make maths magical and personal.' },
+                    { type: 'Hand', text: 'Build mathematical worlds using blocks, paper, or craft materials.', instruction: 'Construct 3D shapes with marshmallows and toothpicks, design tessellation cities with paper, or build fraction pizzas with playdough. Create maths you can touch!' },
+                    { type: 'Head', text: 'Predict what will happen next in patterns or number sequences.', instruction: 'Look at a pattern and imagine what comes next. If this rule continues, what would the 10th step look like? The 100th? Let your mathematical mind predict the future.' },
+                    { type: 'Heart', text: 'Pretend you\'re a mathematical detective solving number mysteries.', instruction: 'Imagine mysteries where maths holds the clues. What secrets do these shapes hide? What message is in this number pattern? Be a maths detective!' },
+                    { type: 'Hand', text: 'Design and play your own mathematical board games.', instruction: 'Create games that use addition races, geometry challenges, or pattern puzzles. Make maths playful by turning it into games you actually want to play!' },
+                    { type: 'Head', text: 'Create mathematical models to represent real-world situations.', instruction: 'Take a real situation and create equations, graphs, or formulas to model it. How can you use math to understand or predict what happens in real life.' },
+                    { type: 'Heart', text: 'magine teaching this concept to a younger student.', instruction: 'Think about how you would explain this to a younger sibling or friend. What simple words would you use? What examples would help them understand.' },
+                    { type: 'Hand', text: 'Visualise the problem in a different way - graphs, diagrams, or models.', instruction: 'If you have numbers, try making a graph. If you have a graph, try writing an equation. Transform the problem into a different visual representation.' }
+                ],
+                attention: [
+                    { type: 'Head', text: 'Focus on the mathematical question hidden in the problem.', instruction: 'Read carefully and ask: "What is this really asking me to find?" Look past the story to find the number question, shape challenge, or pattern puzzle underneath.' },
+                    { type: 'Heart', text: 'Notice which types of maths problems spark your curiosity most.', instruction: 'Pay attention to what makes you excited about maths. Do you love number puzzles, shape challenges, or pattern games? Follow your mathematical interests.' },
+                    { type: 'Hand', text: 'Organise your workspace so you can think clearly about maths.', instruction: 'Set up your space with the tools you need - pencils, paper, blocks, or measuring tools. A tidy workspace helps your mind focus on mathematical thinking.' },
+                    { type: 'Head', text: 'Spot the important mathematical information and ignore distractions.', instruction: 'Some problems have extra information you don\'t need. Find the numbers, shapes, or patterns that matter for solving, and focus your attention on those.' },
+                    { type: 'Heart', text: 'Take time to really understand the mathematical situation.', instruction: 'Don\'t rush to start calculating. Read slowly and make sure you understand what\'s happening. What mathematical story is this problem telling?' },
+                    { type: 'Hand', text: 'Use tools like rulers, counters, or fingers to help you concentrate.', instruction: 'Point to numbers as you work, use counters to track your thinking, or draw diagrams to stay focused. Let tools help your mind pay attention to maths.' },
+                    { type: 'Hand', text: 'Set a timer and commit to focused work for that period.', instruction: 'Choose a specific amount of time (eg, 15-25 minutes) and commit to working with full focus until the timer goes off. No checking phones or getting distracted.' },
+                    { type: 'Heart', text: 'Identify the most important part of the problem to focus on first.', instruction: 'Read through the problem and ask: "What is this really asking?" Highlight or circle the key question you need to answer.' },
+                    { type: 'Head', text: 'Cover the other problems and focus on just one at a time.', instruction: 'Use a piece of paper to cover other problems on the page. Focus all your attention on solving just one problem completely before moving on.' }
+                ],
+                thinking: [
+                    { type: 'Head', text: 'Check if your answer makes sense in the real world.', instruction: 'Look at your answer and think: "Does this seem reasonable? If this was about real things, would this answer make sense?" Your mathematical intuition is important.' },
+                    { type: 'Heart', text: 'Think about why mathematical rules and patterns work the way they do.', instruction: 'Don\'t just follow steps - wonder why they work. Why do we line up place values? Why do angles in triangles add up? Understanding the "why" makes maths meaningful.' },
+                    { type: 'Hand', text: 'Show your mathematical thinking through pictures, models, and words.', instruction: 'Explain your maths in different ways. Draw geometric diagrams, build number models, write about patterns. This helps you understand your own thinking better.' },
+                    { type: 'Head', text: 'Look for connections between different areas of maths.', instruction: 'Ask yourself: "How does this number pattern relate to these shapes?" or "Does this algebra remind me of geometry?" Look for similarities to problems you\'ve solved before. Mathematics is all connected!' },
+                    { type: 'Heart', text: 'Trust your mathematical feelings and instincts about problems.', instruction: 'Sometimes you have a gut feeling about whether an answer is right or if a pattern makes sense. Listen to that feeling - your mathematical intuition is growing stronger!' },
+                    { type: 'Hand', text: 'Test your mathematical ideas by trying examples and building models.', instruction: 'If you think you\'ve found a pattern, test it with more examples. If you have a geometric idea, build it to see if it works. Mathematics loves to be tested!' },
+                    { type: 'Head', text: 'Analyse your mistakes to understand where your thinking went off track.', instruction: 'When you make an error, don\'t just erase it. Study what went wrong, understand why, and use that knowledge to avoid similar mistakes in the future.' },
+                    { type: 'Heart', text: 'Reflect on your problem-solving process - what worked, what didn\'t?', instruction: 'After solving (or attempting) a problem, think about your approach. What strategies helped? Where did you get stuck? What would you do differently next time.' },
+                    { type: 'Hand', text: 'Create multiple representations - symbolic, visual, and verbal.', instruction: 'Express the same mathematical idea in different ways: write it as an equation, draw a picture or graph, and explain it in words. See how they connect.' }
+                ],
+                collaboration: [
+                    { type: 'Head', text: 'Compare your mathematical method with a friend\'s approach.', instruction: 'Show someone else how you solved a problem, then look at how they solved it. Did you both get the same answer using different mathematical thinking? Both ways can be right!' },
+                    { type: 'Heart', text: 'Help someone understand a mathematical idea you\'ve figured out.', instruction: 'When you understand something in maths, try teaching it to a friend or family member. Explaining mathematical thinking to others helps you understand it even better.' },
+                    { type: 'Hand', text: 'Work together building, measuring, or creating mathematical models.', instruction: 'Use blocks, rulers, or art materials together to explore maths. Build geometric structures, measure playground equipment, or create fraction art as a team.' },
+                    { type: 'Head', text: 'Ask mathematical questions when someone explains their thinking.', instruction: 'When someone shows you their work, ask "How did you know to try that?" or "Why does that pattern work?" Good mathematical questions help everyone learn more.' },
+                    { type: 'Heart', text: 'Celebrate mathematical discoveries and "aha moments" together.', instruction: 'Maths is more fun when you share it! Cheer for each other when you figure things out. Everyone\'s mathematical insights make the thinking richer.' },
+                    { type: 'Hand', text: 'Take turns being the mathematical teacher and the student.', instruction: 'Sometimes you explain the maths, sometimes you listen and learn. Both roles help you understand mathematical thinking better and become a stronger problem solver.' },
+                    { type: 'Head', text: 'Practice mathematical communication using precise language and notation.', instruction: 'Work with others to use correct mathematical terms and symbols. Help each other communicate mathematical ideas clearly and precisely.' },
+                    { type: 'Heart', text: 'Ask for help when you need it and offer help when you can.', instruction: 'Be specific when asking for help: "I understand this part, but I\'m confused about..." And offer your strengths to help others where you\'re confident.' },
+                    { type: 'Hand', text: 'Create visual displays or presentations to share mathematical thinking', instruction: 'Work together to create posters, presentations, or demonstrations that show how to solve problems or understand concepts. Make math visible for others.' }
+                ],
+                craftsmanship: [
+                    { type: 'Head', text: 'Double-check your mathematical work using different approaches.', instruction: 'After you solve a problem, try a different method to check your answer. If geometry and algebra give the same result, or if estimation matches calculation, you can feel confident.' },
+                    { type: 'Heart', text: 'Take pride in mathematical work that clearly shows your thinking.', instruction: 'Make your maths work neat and easy to follow. Show your steps clearly with diagrams, calculations, and explanations so others can understand your mathematical journey.' },
+                    { type: 'Hand', text: 'Practice mathematical skills until they become smooth and natural.', instruction: 'Some maths needs practice to become automatic - like knowing number facts, recognising shapes, or spotting patterns. Practice a little bit each day until it feels natural.' },
+                    { type: 'Head', text: 'Hunt for mistakes in your work and learn from them.', instruction: 'Go through your work like a mathematical detective looking for errors. When you find a mistake, figure out what went wrong so you can avoid it next time.' },
+                    { type: 'Heart', text: 'Keep track of mathematical strategies and tools that work well for you.', instruction: 'Notice which methods, materials, and tricks help you most. Keep a collection of your favourite mathematical strategies so you can use them again and again.' },
+                    { type: 'Hand', text: 'Present your mathematical work so others can easily follow your thinking.', instruction: 'Write numbers clearly, draw neat diagrams, and label your work. Good mathematical craftsmanship means others can follow your reasoning and learn from your methods.' },
+                    { type: 'Head', text: 'Check your work carefully using different methods.', instruction: 'After solving, check your answer by working backwards, estimating, or using a different method. Ask: "Does this make sense? Did I answer what was asked."' },
+                    { type: 'Heart', text: 'Strive for elegant solutions that show mathematical beauty.', instruction: 'Look for the most efficient, clear way to solve the problem. Appreciate when a solution is simple and beautiful. Take pride in clean, logical work.' },
+                    { type: 'Hand', text: 'Seek feedback from others and use it to improve your mathematical work.', instruction: 'Ask teachers, peers, or family members to look at your work. Listen to their suggestions and use their feedback to become a better mathematical thinker.' }
+                ]
+            },
+            science: {
+                curiosity: [
+                    { type: 'Head', text: 'Ask "How does this work?" about everything around you.', instruction: 'Wonder about how plants grow, why things fall down, or what makes weather change. Scientists are professional question-askers who want to understand how everything works.' },
+                    { type: 'Heart', text: 'Find science that connects to your daily life and interests.', instruction: 'Look for science in cooking, sports, pets, games, or hobbies. How does your body work when you run? What science is in your favourite food? Science is part of everything you do.' },
+                    { type: 'Hand', text: 'Explore the natural world by touching, observing, and investigating.', instruction: 'Go outside and investigate rocks, plants, insects, or weather. Use magnifying glasses, collect samples, or just use your senses to discover what nature can teach you.' },
+                    { type: 'Head', text: 'Wonder "What would happen if...?" and make predictions.', instruction: 'Think about what might happen if you changed something. What if plants had no light? What if you mixed these materials? What if the moon was closer? Make scientific guesses.' },
+                    { type: 'Heart', text: 'Get excited about the amazing discoveries scientists are making right now.', instruction: 'Find out about cool new discoveries - maybe about space, animals, or technology. What recent scientific breakthroughs make you say "Wow!" and want to learn more?' },
+                    { type: 'Hand', text: 'Build, create, or grow things to see science in action.', instruction: 'Grow plants from seeds, build simple machines, create chemical reactions with safe materials, or construct models. Make science something you can see and touch.' },
+                    { type: 'Head', text: 'Design and conduct a simple experiment to test your questions.', instruction: 'Think of one specific question you have, then design a simple test. Change one thing and observe what happens. Keep track of your observations and results.' },
+                    { type: 'Heart', text: 'Find a personal connection to this scientific concept or phenomenon.', instruction: 'Ask yourself: "How does this affect my life?" "When have I seen this happen?" "Why should I care about this?" Make the science personally relevant.' },
+                    { type: 'Hand', text: 'Create models or demonstrations to explore your questions.', instruction: 'Build a model, create a demonstration, or simulate the scientific process using available materials. Make the invisible visible through your creation.' }
+                ],
+                persistence: [
+                    { type: 'Head', text: 'Break big scientific questions into smaller investigations you can handle.', instruction: 'If you want to understand something complex like "How do animals survive?", start with one small question like "What do birds eat in winter?" Build understanding step by step.' },
+                    { type: 'Heart', text: 'Remember that failed experiments teach you just as much as successful ones.', instruction: 'When experiments don\'t work as expected, ask "What can I learn from this?" Scientists discover amazing things by studying their mistakes and unexpected results.' },
+                    { type: 'Hand', text: 'Try different methods when your first approach doesn\'t work.', instruction: 'If one way of investigating isn\'t working, try different tools, materials, or approaches. Scientists are flexible and creative problem-solvers who try many methods.' },
+                    { type: 'Head', text: 'Use what you already know about science to tackle new problems.', instruction: 'When facing a new scientific challenge, think: "What do I already know that might help?" Connect new investigations to scientific ideas you\'ve already learned.' },
+                    { type: 'Heart', text: 'Stay curious about science even when it feels challenging or confusing.', instruction: 'Remember that all scientists feel confused and face setbacks sometimes - that\'s normal! The exciting part is gradually figuring things out through patient investigation and thinking.' },
+                    { type: 'Hand', text: 'Keep detailed records of your observations and experiments.', instruction: 'Draw pictures, write notes, or keep data tables of what you observe. Good scientific records help you notice patterns and remember what you\'ve learned.' },
+                    { type: 'Head', text: 'When an experiment "fails," treat it as data and investigate why.', instruction: 'Don\'t throw away "failed" experiments. Ask: "Why didn\'t this work as expected?" "What can I learn from this result?" Sometimes failures lead to discoveries.' },
+                    { type: 'Heart', text: 'Focus on what you\'re learning from the process, not just results.', instruction: 'TValue the skills you\'re developing: observation, hypothesis formation, experimental design. The process of doing science is just as important as the results.' },
+                    { type: 'Hand', text: 'Use different materials or tools to approach the same question.', instruction: 'If you\'re don\'t have the "right" equipment, get creative. Use household items, different measuring tools, or alternative materials to explore the same question.' }
+                ],
+                imagination: [
+                    { type: 'Head', text: 'Imagine scientific scenarios that don\'t exist yet.', instruction: 'What if gravity worked differently? What if animals could photosynthesise? What if we lived underwater? Let your mind explore impossible scientific worlds.' },
+                    { type: 'Heart', text: 'Create stories or art inspired by scientific phenomena.', instruction: 'Write stories about adventures in space, draw the life cycle of butterflies, or create poems about weather patterns. Use creativity to express your scientific understanding.' },
+                    { type: 'Hand', text: 'Build models or demonstrations that show how scientific processes work.', instruction: 'Create a model solar system, build a volcano that erupts, or demonstrate how lungs work using balloons. Make the invisible processes of science visible and touchable.' },
+                    { type: 'Head', text: 'Connect scientific concepts through analogies and metaphors.', instruction: 'Compare scientific processes to familiar things: "The cell membrane is like..." "Electric current flows like..." Use creative comparisons to understand concepts.' },
+                    { type: 'Heart', text: 'Imagine yourself as a scientist making important discoveries.', instruction: 'Picture yourself as a marine biologist discovering new sea creatures, or an astronomer finding new planets. What would it feel like to make scientific breakthroughs?' },
+                    { type: 'Hand', text: 'Design and conduct your own creative scientific investigations.', instruction: 'Invent your own experiments to test ideas about plants, forces, materials, or animals. Be creative in how you set up tests and measure results.' },
+                    { type: 'Head', text: 'Visualise scientific processes that are too small or large to see directly', instruction: 'Use your imagination to "see" atoms moving, planets forming, or cells dividing. Create mental movies of processes happening at different scales of time and space.' },
+                    { type: 'Heart', text: 'Imagine the ethical implications and future possibilities of scientific advances', instruction: 'Think about the human side of science. How might new discoveries change society? What ethical questions do they raise? What kind of future do you want science to create.' },
+                    { type: 'Hand', text: 'Invent or design something inspired by natural scientific phenomena', instruction: 'Look at how nature solves problems, then design something inspired by those solutions. How do birds fly? How do geckos stick to walls? Use biomimicry in your designs.' }
+                ],
+                attention: [
+                    { type: 'Head', text: 'Focus on one specific scientific question at a time.', instruction: 'Instead of trying to understand everything at once, pick one clear question like "Why do leaves change colour?" and give it your full scientific attention.' },
+                    { type: 'Heart', text: 'Notice which parts of science genuinely fascinate and excite you.', instruction: 'Pay attention to what makes you most curious - is it animals, space, chemistry, or something else? Follow your scientific interests and let them guide your learning.' },
+                    { type: 'Hand', text: 'Use tools and instruments to observe more carefully than your eyes alone.', instruction: 'Use magnifying glasses, microscopes, measuring tools, or timers to help you notice details you might miss. Tools help scientists see what\'s really happening.' },
+                    { type: 'Head', text: 'Look for the most important variables in your scientific investigations.', instruction: 'In any experiment, focus on what you\'re changing (like temperature) and what you\'re measuring (like how fast something grows). Keep your attention on the key factors.' },
+                    { type: 'Heart', text: 'Be patient and take time to really observe natural phenomena.', instruction: 'Good science often requires waiting and watching. Sit quietly and observe how animals behave, how plants move, or how weather changes. Nature reveals secrets to patient observers.' },
+                    { type: 'Hand', text: 'Create organised systems for recording and tracking your scientific data.', instruction: 'Set up charts, notebooks, or digital tools to keep track of your observations and measurements. Organised data helps you spot patterns and make discoveries.' },
+                    { type: 'Head', text: 'Focus on careful observation and accurate data collection.', instruction: 'Slow down and really look at what\'s happening. Use all your senses (safely). Record exactly what you see, hear, smell, or feel. Don\'t rush - good observations take time.' },
+                    { type: 'Heart', text: 'Identify the most intriguing aspect of the phenomenon and start there.', instruction: 'Look for what genuinely interests or surprises you about this scientific concept. Use that natural curiosity as your starting point for deeper investigation.' },
+                    { type: 'Hand', text: 'Create detailed, focused observations through drawing or note-taking.', instruction: 'Use detailed scientific drawings and written observations. The act of drawing or writing forces you to look more carefully and notice details you might otherwise miss.' }
+                ],
+                thinking: [
+                    { type: 'Head', text: 'Look for patterns and connections in your scientific observations.', instruction: 'Look at all your data. Ask yourself: “What patterns do I see?” ”What do I notice happening again and again?" "How are these different things connected?" Scientists find meaning by spotting patterns in nature.' },
+                    { type: 'Heart', text: 'Think about how scientific discoveries affect people and the environment.', instruction: 'Consider the impact of scientific knowledge: How do discoveries help people live better lives? How can science help protect our planet and the creatures on it?' },
+                    { type: 'Hand', text: 'Test your scientific ideas by designing fair and careful experiments.', instruction: 'When you have an idea about how something works, design a test to find out if you\'re right. Make sure your test only changes one thing at a time.' },
+                    { type: 'Head', text: 'Connect scientific concepts across different areas like life, matter, and Earth.', instruction: 'Notice how biology connects to chemistry, or how Earth science relates to physics. Science is all connected - look for links between different scientific ideas.' },
+                    { type: 'Heart', text: 'Trust your scientific instincts while remaining open to new evidence.', instruction: 'Pay attention to your scientific hunches and gut feelings, but always be ready to change your mind if evidence shows you something different.' },
+                    { type: 'Hand', text: 'Use multiple sources of evidence to support your scientific conclusions.', instruction: 'Don\'t rely on just one observation or experiment. Gather evidence from different investigations, books, or experts to build strong scientific understanding.' },
+                    { type: 'Head', text: 'Look for cause-and-effect relationships in scientific phenomena.', instruction: 'Ask: "What causes this to happen?" "If I change this, what effect will it have?" Look for clear relationships between causes and their effects in natural processes.' },
+                    { type: 'Heart', text: 'Consider multiple explanations for what you observe.', instruction: 'Don\'t settle on the first explanation that comes to mind. Brainstorm several possible reasons for what you observed. Which explanation best fits all your evidence.' },
+                    { type: 'Hand', text: 'Create graphs, charts, or visual representations of your findings.', instruction: 'Turn your data into visual representations. Make graphs, charts, or diagrams that help you see patterns and relationships in your results more clearly.' }
+                ],
+                collaboration: [
+                    { type: 'Head', text: 'Share your scientific discoveries and learn from other people\'s observations.', instruction: 'Tell others about what you\'ve discovered through experiments or observations. Listen to their scientific findings too - combining knowledge makes everyone smarter.' },
+                    { type: 'Heart', text: 'Work together to solve scientific problems and answer big questions.', instruction: 'Team up with friends or family to investigate scientific mysteries. Different people notice different things, and together you can understand more than alone.' },
+                    { type: 'Hand', text: 'Collaborate on building scientific models, conducting experiments, or collecting data.', instruction: 'Work together to build more complex models, carry out larger experiments, or gather more data than one person could collect alone. Science teamwork is powerful.' },
+                    { type: 'Head', text: 'Ask questions and discuss scientific ideas to deepen everyone\'s understanding.', instruction: 'When someone shares their scientific thinking, ask thoughtful questions like "How did you figure that out?" or "What evidence supports that idea?" Good questions help everyone learn.' },
+                    { type: 'Heart', text: 'Celebrate scientific breakthroughs and "aha moments" together.', instruction: 'Science is more exciting when shared! Cheer for each other when someone makes a discovery or understands something new. Everyone\'s scientific insights matter.' },
+                    { type: 'Hand', text: 'Teach others about scientific concepts by demonstrating or explaining.', instruction: 'Show younger students how experiments work, explain scientific concepts to family members, or create presentations about your discoveries. Teaching helps you understand better too.' },
+                    { type: 'Head', text: 'Engage in scientific discourse - explain your reasoning and evidence.', instruction: 'Practice talking like a scientist. Explain your thinking clearly, present your evidence, and listen to others\' reasoning. Ask questions and challenge ideas respectfully.' },
+                    { type: 'Heart', text: 'Learn from diverse perspectives in scientific problem-solving.', instruction: 'Recognise that different people notice and value different things and bring different ideas. Value diverse perspectives and use them to strengthen your scientific understanding.' },
+                    { type: 'Hand', text: 'Work together to solve real-world problems using scientific thinking.', instruction: 'Apply your scientific knowledge and methods to actual problems in your community or environment. Collaborate on projects that make a real difference.' }
+                ],
+                craftsmanship: [
+                    { type: 'Head', text: 'Double-check your scientific observations and measurements for accuracy.', instruction: 'Good scientists are careful and precise. Check your measurements, repeat observations, and make sure your data is accurate before drawing conclusions.' },
+                    { type: 'Heart', text: 'Take pride in conducting thorough and ethical scientific investigations.', instruction: 'Do science carefully and responsibly. Be kind to living things in your investigations, and take pride in doing high-quality scientific work that others can trust.' },
+                    { type: 'Hand', text: 'Create clear, detailed records of your scientific work with drawings and descriptions.', instruction: 'Make scientific drawings with labels, write clear descriptions of what you observe, and organise your data neatly. Good records help others understand and learn from your work.' },
+                    { type: 'Head', text: 'Check that your scientific conclusions match your evidence.', instruction: 'Before deciding what your investigation shows, look carefully at all your evidence. Do your conclusions really follow from what you observed and measured?' },
+                    { type: 'Heart', text: 'Develop the patient, curious habits that make excellent scientists.', instruction: 'Practice being observant, asking good questions, and thinking carefully about evidence. These scientific habits will serve you well in school and life.' },
+                    { type: 'Hand', text: 'Present your scientific findings clearly so others can understand and verify them.', instruction: 'Share your scientific work in ways that are easy to follow - with clear explanations, neat diagrams, and organised data. Good science communication helps knowledge spread.' },
+                    { type: 'Head', text: 'Ensure your experimental design controls for variables properly', instruction: 'Check that you\'re only changing one thing at a time and keeping everything else the same. Make sure your experiment actually tests what you think it\'s testing.' },
+                    { type: 'Heart', text: 'Take pride in careful, accurate scientific observation and recording', instruction: 'Develop the habits of a good scientist: precise measurements, detailed observations, honest recording of results. Take pride in doing high-quality scientific work.' },
+                    { type: 'Hand', text: 'Create clear, professional scientific drawings and diagrams', instruction: 'Make neat, labelled diagrams and drawings. Use rulers for straight lines, label everything clearly, and make your visuals clear enough that someone else could understand them.' }
+                ]
+            },
+            history: {
+                curiosity: [
+                    { type: 'Head', text: 'Ask "How do people live?" in different places and times.', instruction: 'Wonder about how families live in other countries, how your community has changed over time, or how geography affects daily life. Every place and time has interesting stories to discover.' },
+                    { type: 'Heart', text: 'Find connections between your life and people from different cultures or times.', instruction: 'Look for similarities between your family and families from other places or the past. What universal human experiences do we all share across cultures and time?' },
+                    { type: 'Hand', text: 'Explore maps, artefacts, and primary sources to discover hidden stories.', instruction: 'Use maps to trace journeys, examine old photos or objects, interview community elders, or explore historical sites. Let your hands help you uncover the past and understand places.' },
+                    { type: 'Head', text: 'Wonder "Why do people make the choices they do?" in different situations.', instruction: 'Think about how environment, culture, and historical context influence people\'s decisions. Why do people in deserts live differently than people near oceans? Why did past communities make certain choices?' },
+                    { type: 'Heart', text: 'Get excited about discovering the amazing diversity of human communities.', instruction: 'Find joy in learning about different cultures, traditions, and ways of organising society. What fascinating customs, innovations, or solutions have different communities created?' },
+                    { type: 'Hand', text: 'Create your own investigations into local history, geography, or community issues.', instruction: 'Design projects to map your neighbourhood, research local history, or investigate current community challenges. Be a detective studying the social world around you.' },
+                    { type: 'Head', text: 'Research multiple perspectives on the same historical event', instruction: 'Look for how different groups experienced the same event. How did men vs. women view it? Different social classes? Different countries? Compare various historians\' interpretations.' },
+                    { type: 'Heart', text: 'Interview older community members about their historical experiences', instruction: 'Talk to grandparents, elderly neighbours, or community members about their memories. How do their personal stories connect to the larger historical events you\'re studying.' },
+                    { type: 'Hand', text: 'Create a timeline or visual representation of historical events', instruction: 'Draw, build, or map out the sequence of events. Use different colours, and symbols to show connections between simultaneous events in different places.' }
+                ],
+                persistence: [
+                    { type: 'Head', text: 'Break complex social issues into smaller questions you can research.', instruction: 'If you want to understand something big like "How do governments work?", start with smaller questions like "Who makes decisions in our school?" Build understanding step by step.' },
+                    { type: 'Heart', text: 'Remember that understanding different perspectives takes time and patience.', instruction: 'Learning to see the world through other people\'s eyes is challenging but important work. Keep trying to understand viewpoints that are different from your own.' },
+                    { type: 'Hand', text: 'Use different sources and methods when researching social topics.', instruction: 'If books aren\'t giving you enough information, try interviews, documentaries, museum visits, or online resources. Social scientists use many tools to understand human communities.' },
+                    { type: 'Head', text: 'Connect new learning about societies to knowledge you already have.', instruction: 'When learning about new places or times, ask: "How is this similar to or different from what I already know?" Build bridges between familiar and unfamiliar communities.' },
+                    { type: 'Heart', text: 'Stay committed to understanding social issues that matter to you.', instruction: 'Whether you care about environmental protection, fairness, or helping others, keep working to understand these issues deeply, even when they seem complicated.' },
+                    { type: 'Hand', text: 'Keep organised records of your social studies investigations and discoveries.', instruction: 'Use timelines, maps, charts, or journals to track what you learn about different places, times, and communities. Good records help you see patterns and connections.' },
+                    { type: 'Head', text: 'Focus on understanding rather than memorising dates and names.', instruction: 'Shift your goal from remembering facts to understanding cause and effect, change over time, and human experiences. Understanding lasts longer than memorisation.' },
+                    { type: 'Heart', text: 'Connect with the emotional reality of historical struggles.', instruction: 'Remember that real people faced real challenges. Their persistence through difficulties can inspire your persistence in understanding their stories.' },
+                    { type: 'Hand', text: 'Don\'t give up when sources contradict each other, create comparison charts.', instruction: 'Make side-by-side comparisons of conflicting accounts. List what each source says, when it was created, who created it, and why they might differ. Treat contradictions as puzzles to solve.' }
+                ],
+                imagination: [
+                    { type: 'Head', text: 'Imagine how communities might solve problems in creative new ways.', instruction: 'Think about current challenges like climate change or inequality. How might future communities organise themselves differently? What creative solutions might emerge?' },
+                    { type: 'Heart', text: 'Create stories, art, or performances that bring historical periods or cultures to life.', instruction: 'Write diary entries from historical figures, create art inspired by different cultures, or role-play important community meetings. Use creativity to understand social experiences.' },
+                    { type: 'Hand', text: 'Build models or create simulations of communities, governments, or economic systems.', instruction: 'Design model cities for different environments, simulate democratic decision-making processes, or create trading games that show how economies work.' },
+                    { type: 'Head', text: 'Envision alternative ways historical events could have unfolded.', instruction: 'Think about key moments in history: What if different decisions had been made? How might communities have developed differently under different circumstances?' },
+                    { type: 'Heart', text: 'Design ideal communities that reflect your values about fairness and sustainability.', instruction: 'Imagine communities where everyone\'s needs are met fairly. How would these communities be organised? What rules and systems would make them work well?' },
+                    { type: 'Hand', text: 'Create interactive presentations or projects that help others understand social concepts.', instruction: 'Design games, create museum exhibits, or make videos that teach others about different cultures, historical periods, or how communities work.' },
+                    { type: 'Head', text: 'Connect historical patterns to modern situations and issues', instruction: 'Look for similarities between past and present. Are there recurring patterns in human behaviour? How do historical events help us understand current situations.' },
+                    { type: 'Heart', text: 'Imagine yourself living in different historical time periods', instruction: 'Spend time really visualising daily life in the past. What would you see, hear, smell? What would worry you? What would excite you? How would your values be different.' },
+                    { type: 'Hand', text: 'Consider alternative historical scenarios - what if events had been different?', instruction: 'Explore counterfactual history. What if key events had different outcomes? How might the chain of consequences have unfolded differently? What factors made actual outcomes happen.' }
+                ],
+                attention: [
+                    { type: 'Head', text: 'Focus on understanding the key factors that shape how communities develop.', instruction: 'When studying any community, pay attention to important influences like geography, resources, culture, and historical events. What are the main forces shaping this society?' },
+                    { type: 'Heart', text: 'Notice how social issues connect to your own life and community.', instruction: 'Pay attention to how broader social patterns affect your daily life. How do economic systems, political decisions, or cultural changes impact you and your family?' },
+                    { type: 'Hand', text: 'Use highlighting and annotation to focus on important evidence.', instruction: 'Mark key information in sources with different colours for different themes. Note important dates, people, causes, and effects. Create a system that helps you focus.' },
+                    { type: 'Head', text: 'Look for the most reliable and diverse sources when researching social topics.', instruction: 'Pay attention to who created your sources and why. Seek out multiple perspectives, especially from people who actually experienced the events or situations you\'re studying.' },
+                    { type: 'Heart', text: 'Take time to really listen to people\'s stories and experiences.', instruction: 'When learning about different communities or historical periods, focus carefully on individual human experiences. What were people\'s hopes, fears, and daily concerns?' },
+                    { type: 'Hand', text: 'Create detailed observations when visiting historical sites or community locations.', instruction: 'Use all your senses when exploring museums, historical sites, or different neighbourhoods. Draw, photograph, or write detailed descriptions of what you notice.' },
+                    { type: 'Head', text: 'Organise your sources and evidence systematically.', instruction: 'Create clear systems for tracking different types of sources, dates, and perspectives. Use folders, charts, or digital tools to keep your evidence organised and accessible.' },
+                    { type: 'Heart', text: 'Identify what genuinely interests you about this topic.', instruction: 'Find the human stories, mysteries, or connections that spark your curiosity. Use your genuine interest as the entry point for deeper historical investigation.' },
+                    { type: 'Hand', text: 'Focus on key historical questions rather than trying to learn everything.', instruction: 'Identify the most important questions for understanding this topic. What are the central causes, effects, or changes? Don\'t get lost in minor details. Map them out on a page.' }
+                ],
+                thinking: [
+                    { type: 'Head', text: 'Look for patterns in how societies organise themselves across time and place.', instruction: 'Ask yourself: "What do different communities have in common?" "How do similar challenges get solved differently in different places?" Look for both similarities and differences.' },
+                    { type: 'Heart', text: 'Think critically about fairness and justice in different social systems.', instruction: 'Ask tough questions: "Who benefits from this system?" "Whose voices are heard or ignored?" "How could communities be more fair for everyone?" Develop your sense of social justice.' },
+                    { type: 'Hand', text: 'Use evidence from multiple sources to support your ideas about social issues.', instruction: 'Don\'t rely on just one source. Gather and spend time looking at evidence from different perspectives, time periods, and types of sources to build strong understanding of social topics.' },
+                    { type: 'Head', text: 'Connect past and present to understand how social change happens.', instruction: 'Look for links between historical events and current situations. How do past decisions affect present communities? What can history teach us about creating positive change?' },
+                    { type: 'Heart', text: 'Reflect on how learning about other communities changes your worldview.', instruction: 'After studying different cultures or historical periods, ask: "How has this changed what I think?" "What new ideas do I have about how people can live together?" ' },
+                    { type: 'Hand', text: 'Compare how different communities approach similar challenges or opportunities.', instruction: 'Create charts or presentations showing how different societies handle issues like education, governance, trade, or environmental challenges. What can communities learn from each other?' },
+                    { type: 'Head', text: 'Analyse cause and effect relationships in historical events.', instruction: 'Look for multiple causes (not just one) and multiple effects. Ask: "What conditions made this possible?" "What were the immediate and long-term consequences?" Think in terms of historical processes.' },
+                    { type: 'Heart', text: 'Question assumptions about historical inevitability.', instruction: 'Challenge ideas that events "had to happen" this way. What alternatives existed? What choices did people make? How might different decisions have led to different outcomes.' },
+                    { type: 'Hand', text: 'Create visual models of historical change and continuity.', instruction: 'Make charts, graphs, or diagrams showing what changed and what stayed the same over time. Use timelines to show different rates of change in different areas.' }
+                ],
+                collaboration: [
+                    { type: 'Head', text: 'Learn from community members who have different experiences and perspectives.', instruction: 'Interview people from different backgrounds, ages, or cultures in your community. What can their experiences teach you about how society works and how it\'s changing?' },
+                    { type: 'Heart', text: 'Work together to understand and address real community issues.', instruction: 'Partner with classmates to research local challenges like environmental issues, community needs, or historical preservation. Combine your different insights and skills.' },
+                    { type: 'Hand', text: 'Collaborate on projects that serve your community or honour its history.', instruction: 'Work together on community service projects, oral history collections, neighbourhood mapping, or cultural celebrations that strengthen your local community.' },
+                    { type: 'Head', text: 'Engage in respectful discussions about different viewpoints on social issues.', instruction: 'Practice listening to and discussing different perspectives on community issues. Listen for insights you missed. Ask thoughtful questions and share your own views respectfully.' },
+                    { type: 'Heart', text: 'Celebrate the diverse backgrounds and experiences in your learning community.', instruction: 'Learn from classmates\' family histories, cultural traditions, and community connections. Everyone brings valuable social knowledge to share.' },
+                    { type: 'Hand', text: 'Create group presentations or exhibits that educate others about social topics.', instruction: 'Work together to create displays, performances, or presentations that help others understand different cultures, historical periods, or community issues.' },
+                    { type: 'Head', text: 'Peer-review each other\'s historical arguments and evidence.', instruction: 'Help each other strengthen historical reasoning. Check: "Is this interpretation supported by evidence?" "Are alternative explanations considered?" "Is the argument logical.' },
+                    { type: 'Heart', text: 'Engage in historical debates representing different viewpoints.', instruction: 'Take on roles of different historical figures or groups. Argue from their perspectives using historical evidence. Practice seeing events through multiple lenses.' },
+                    { type: 'Hand', text: 'Work together to analyse complex historical sources or documents.', instruction: 'Divide up sources among group members, then share findings. Collaborate on decoding difficult handwriting, translating old language, or understanding historical context.' }
+                ],
+                craftsmanship: [
+                    { type: 'Head', text: 'Check your social studies research using multiple reliable sources.', instruction: 'Verify important facts and dates by checking several trustworthy sources. Make sure your understanding of social issues is accurate and well-supported.' },
+                    { type: 'Heart', text: 'Present social information in ways that respect different communities and perspectives.', instruction: 'Be thoughtful about how you describe different cultures or historical events. Avoid stereotypes and try to represent people\'s experiences fairly and accurately.' },
+                    { type: 'Hand', text: 'Create clear, engaging presentations of your social studies learning.', instruction: 'Use maps, timelines, photos, and clear writing to help others understand what you\'ve learned about communities, places, or historical periods.' },
+                    { type: 'Head', text: 'Develop well-reasoned opinions about social issues based on evidence.', instruction: 'When you form opinions about community issues or historical events, make sure they\'re based on solid evidence and careful thinking, not just emotions or assumptions.' },
+                    { type: 'Heart', text: 'Cultivate empathy and respect for diverse communities and experiences.', instruction: 'Practice understanding and appreciating different ways of life, even when they\'re very different from your own. This empathy is essential for good citizenship.' },
+                    { type: 'Hand', text: 'Keep a portfolio of your social studies work to track your growing understanding.', instruction: 'Save examples of your best research, writing, and projects about communities and social issues. Look back to see how your understanding has deepened over time.' },
+                    { type: 'Head', text: 'Reflect on your growth as a historical thinker.', instruction: 'Notice improvements in your ability to analyze sources, understand causation, and see multiple perspectives. Celebrate your developing historical thinking skills.' },
+                    { type: 'Heart', text: 'Strive to understand historical complexity rather than seeking simple answers.', instruction: 'Embrace the messiness of history. Resist oversimplifying complex events or reducing them to simple good/bad narratives. Appreciate nuance and complexity.' },
+                    { type: 'Hand', text: 'Use proper terminology and concepts accurately.', instruction: 'Learn and use social science vocabulary correctly. Understand concepts like causation, change over time, historical significance, and perspective. Communicate like a social scientist.' }
+                ]
+            },
+            art: {
+                curiosity: [
+                    { type: 'Head', text: 'Ask "How did they create that effect?" when you see art you love.', instruction: 'When you see artwork that amazes you - in books, museums, or online - investigate how the artist made it. What materials did they use? What techniques can you spot?' },
+                    { type: 'Heart', text: 'Find art that connects to your feelings, experiences, or interests.', instruction: 'Look for artwork that speaks to you personally. Maybe it reminds you of a place you love, expresses an emotion you feel, or shows something you care about.' },
+                    { type: 'Hand', text: 'Experiment with art materials you\'ve never tried before.', instruction: 'Pick up pastels if you usually use pencils, try watercolours if you usually draw, or explore clay if you usually work on paper. Let new materials teach you new ways to create.' },
+                    { type: 'Head', text: 'Wonder "What story is this artwork telling?" and investigate deeper meanings.', instruction: 'Look beyond the surface of artworks. What ideas, stories, or messages might the artist be sharing? What symbols or hidden meanings can you discover?' },
+                    { type: 'Heart', text: 'Explore art from different cultures and time periods that spark your interest.', instruction: 'Discover Indigenous art, explore ancient Egyptian paintings, or look at contemporary digital art. What different ways of seeing and creating can you learn from other artists?' },
+                    { type: 'Hand', text: 'Hunt for artistic inspiration in unexpected places around you.', instruction: 'Look for interesting textures, patterns, colours, or shapes in nature, architecture, everyday objects, or street art. Art inspiration is everywhere!' },
+                    { type: 'Head', text: 'Deconstruct an artwork to understand its compositional elements.', instruction: 'Break down an artwork into its basic components: lines, shapes, colours, textures, space. How do these elements work together to create the overall effect? What principles of design are at play.' },
+                    { type: 'Heart', text: 'Imagine what inspired an artist to create a specific artwork.', instruction: 'Look at a piece of art and try to put yourself in the artist\'s shoes. What might they have been feeling or experiencing? What message were they hoping to send.' },
+                    { type: 'Hand', text: 'Research the meaning behind symbols or styles in a piece of art.', instruction: 'Choose an artwork and look up any symbols, colours, or recurring patterns. What did they mean to the artist or the culture? How does this deeper meaning change your understanding. Try it out in your work.' }
+                ],
+                persistence: [
+                    { type: 'Head', text: 'Break complex artistic projects into smaller, manageable steps.', instruction: 'If you want to create something ambitious, plan it in stages. Maybe start with sketches, then choose colours, then work on one section at a time. Artists build complex works step by step.' },
+                    { type: 'Heart', text: 'Keep working on art that expresses something important to you.', instruction: 'When artwork gets challenging, remember why you wanted to create it. What feeling, idea, or story are you trying to share? Let your passion keep you going.' },
+                    { type: 'Hand', text: 'Try different techniques when your first approach isn\'t working.', instruction: 'If your drawing isn\'t turning out how you imagined, try different tools, papers, or approaches. Artists are flexible problem-solvers who experiment until they find what works.' },
+                    { type: 'Head', text: 'Learn from artistic "mistakes" by seeing them as discoveries.', instruction: 'When something goes differently than planned, ask: "What interesting thing happened here?" Many great artistic techniques were discovered through happy accidents.' },
+                    { type: 'Heart', text: 'Remember that all great artists went through periods of learning and struggle.', instruction: 'Even famous artists had to practice and learn. When art feels hard, remember that struggle is part of developing your artistic voice and skills.' },
+                    { type: 'Hand', text: 'Keep an artistic journal or sketchbook to track your creative journey.', instruction: 'Draw, doodle, or paste things that inspire you in a special book. This becomes your personal record of artistic growth and a source of ideas for future projects.' },
+                    { type: 'Head', text: 'Analyse what specifically makes you feel stuck and brainstorm solutions.', instruction: 'Is it technique? Lack of ideas? Fear of making a mistake? Identify the block, then brainstorm ways to overcome it. Could you try a different tool, a simpler idea, or just start over.' },
+                    { type: 'Heart', text: 'Remember your personal stake: why does this learning matter to you?', instruction: 'Reconnect with your motivation. Think about why this artistic skill or project is important to your creative goals or interests. Keep this purpose visible.' },
+                    { type: 'Hand', text: 'Shift your environment to shift your thinking.', instruction: 'If stuck on a creative project, try changing your physical position – stand up, sit somewhere new. Work in a different space or lighting to spark new creative energy.' }
+                ],
+                imagination: [
+                    { type: 'Head', text: 'Imagine new ways to combine different artistic styles or techniques.', instruction: 'What would happen if you combined photography with painting? Or sculpture with drawing? Think creatively about mixing different artistic approaches in unexpected ways.' },
+                    { type: 'Heart', text: 'Create artwork that expresses your unique perspective on the world.', instruction: 'Make art about your dreams, your community, your worries, or your hopes. Use art to share what makes your way of seeing the world special and important.' },
+                    { type: 'Hand', text: 'Play with unconventional materials to create unexpected artworks.', instruction: 'Try making art with recycled materials, natural objects, fabric scraps, or digital tools. Experiment with creating art that moves, makes sound, or changes over time.' },
+                    { type: 'Head', text: 'Reimagine familiar objects or scenes in completely new artistic styles.', instruction: 'Draw your pet in the style of a famous artist, or create your bedroom as if it was in a fairy tale. Take something ordinary and make it extraordinary through art.' },
+                    { type: 'Heart', text: 'Connect seemingly unrelated ideas or concepts to generate new artistic directions.', instruction: 'Pick two random words (e.g., "mountain" and "joy"). What meanings and feelings do they bring up for you? How can you combine them into a single artwork or concept? Look for unexpected associations.' },
+                    { type: 'Hand', text: 'Invent new artistic tools or techniques for creating unique effects.', instruction: 'Make paintbrushes from unusual materials, try printing with found objects, or invent new ways to apply colour or create texture. Be an artistic inventor!' },
+                    { type: 'Head', text: 'Doodle or sketch freely without any specific goal in mind.', instruction: 'Let your hand move and create whatever comes to mind without judgment. This can unlock new ideas and allow your imagination to flow without pressure.' },
+                    { type: 'Heart', text: 'Listen to music and create art that expresses the feelings it evokes.', instruction: 'Put on a piece of music and let the sounds guide your hand. Don\'t think, just draw or paint the emotions, rhythms, and textures you hear and feel.' },
+                    { type: 'Hand', text: 'Brainstorm alternative uses for everyday objects in your art.', instruction: 'Look around your room. How could a paperclip, a spoon, or a piece of string be used in an unexpected artistic way? Think outside their typical function.' }
+                ],
+                attention: [
+                    { type: 'Head', text: 'Focus on one specific artistic element at a time to improve your skills.', instruction: 'Pick one thing to concentrate on - maybe colour mixing, line quality, or composition. Give your full attention to mastering that one artistic element.' },
+                    { type: 'Heart', text: 'Pay attention to how different artworks make you feel and think.', instruction: 'Notice your emotional reactions to art - what makes you feel calm, excited, sad, or energised? Your feelings are important clues about how art communicates.' },
+                    { type: 'Hand', text: 'Create a distraction-free space where you can focus on making art.', instruction: 'Set up an art area with good lighting, organised supplies, and minimal distractions. Having a dedicated creative space helps your artistic mind concentrate.' },
+                    { type: 'Head', text: 'Study the details in artworks you admire to understand artistic choices.', instruction: 'Look closely at how artists use colour, arrange compositions, or create textures. What specific choices did they make, and how do those choices affect the artwork?' },
+                    { type: 'Heart', text: 'Listen to your artistic instincts about what feels right in your work.', instruction: 'Pay attention to when something in your artwork feels "right" or "wrong" to you. Trust your artistic intuition - it\'s an important part of developing your creative voice.' },
+                    { type: 'Hand', text: 'Use viewfinders, grids, or other tools to help you observe and compose carefully.', instruction: 'Make a viewfinder from cardboard to frame interesting scenes, or use grids to help with proportions. Tools can help you see and create more accurately.' },
+                    { type: 'Head', text: 'Practice drawing or painting one specific detail very slowly and carefully.', instruction: 'Choose a tiny part of your drawing or reference image (e.g., one leaf, one eye, a small shadow). Spend 5-10 minutes focusing *only* on that detail. Notice how much detail you can capture.' },
+                    { type: 'Heart', text: 'Immerse yourself in the sensory experience of your materials.', instruction: 'Pay attention to the smell of the paint, the feel of the brush on the paper, the sound of charcoal scratching. Engage your senses fully to deepen your focus on the creative act.' },
+                    { type: 'Hand', text: 'Set a specific, small creative goal for a timed period.', instruction: 'Instead of "finish my drawing," try "draw 5 different types of lines in 5 minutes" or "mix 3 shades of blue." Small, focused goals help maintain attention.' }
+                ],
+                thinking: [
+                    { type: 'Head', text: 'Analyse how different artistic choices create different effects and meanings.', instruction: 'Think about why artists make specific choices: Why did they use these colours? Why is the composition arranged this way? How do these choices affect the artwork\'s message?' },
+                    { type: 'Heart', text: 'Reflect on what your artwork reveals about your thoughts and feelings.', instruction: 'After creating art, ask yourself: "What does this say about me?" "What was I feeling when I made this?" "How has my thinking changed through this creative process?" ' },
+                    { type: 'Hand', text: 'Compare how the same subject looks when created with different materials or styles.', instruction: 'Try drawing the same object with pencil, paint, and collage. Or study how different artists have depicted similar subjects. What changes when you change the medium or approach?' },
+                    { type: 'Head', text: 'Connect artistic techniques to the ideas or emotions they help express.', instruction: 'Think about how artistic choices support meaning: How do rough textures create different feelings than smooth ones? How do warm colours affect mood differently than cool colours?' },
+                    { type: 'Heart', text: 'Consider how art from different cultures reflects different ways of seeing the world.', instruction: 'Study art from various cultures and time periods. What do different artistic traditions reveal about how people see beauty, nature, spirituality, or community?' },
+                    { type: 'Hand', text: 'Experiment with creating the same idea using different artistic approaches.', instruction: 'Take one concept - like "movement" or "home" - and express it through drawing, sculpture, photography, and digital art. How does each medium change the expression?' },
+                    { type: 'Head', text: 'Critically analyse your own artwork: What works? What could be improved?', instruction: 'Step back from your work. Ask: "What am I trying to communicate?" "Did I succeed?" "Where is the focal point?" "Is the composition balanced?" Use a critical eye, like an art critic.' },
+                    { type: 'Heart', text: 'Reflect on the emotions or messages your art conveys to others.', instruction: 'Imagine someone else looking at your art. What feelings or ideas might they get? Does it match what you intended? How can you make your message clearer.' },
+                    { type: 'Hand', text: 'Create visual organisers to connect themes, characters, or ideas.', instruction: 'Draw a mind map, chart, or visual diagram showing how different elements of your artwork connect. Use colours, arrows, and symbols to show relationships.' }
+                ],
+                collaboration: [
+                    { type: 'Head', text: 'Learn artistic techniques and ideas by studying other artists\' work together.', instruction: 'Visit galleries, look at art books, or explore online collections with friends or family. Discuss what you notice and learn from each other\'s observations.' },
+                    { type: 'Heart', text: 'Share your artistic work with others and listen to their perspectives.', instruction: 'Show your art to people you trust and ask what they see or feel. Different people notice different things, and their insights can help you understand your own work better.' },
+                    { type: 'Hand', text: 'Create collaborative artworks that combine everyone\'s unique strengths and ideas.', instruction: 'Work with others on murals, group sculptures, or community art projects. Combine your different artistic skills and perspectives to create something none of you could make alone.' },
+                    { type: 'Head', text: 'Give and receive constructive feedback to help everyone grow as artists.', instruction: 'When someone shares their art, offer specific, helpful observations: "I love how you used colour here" or "This texture is really interesting." Ask questions that help them think about their choices.' },
+                    { type: 'Heart', text: 'Celebrate the diverse artistic voices and styles in your creative community.', instruction: 'Appreciate how different people express themselves through art. Everyone has a unique artistic voice - learn from and support each other\'s creative journeys.' },
+                    { type: 'Hand', text: 'Teach artistic techniques to others and learn new skills from fellow artists.', instruction: 'Share techniques you\'ve mastered with classmates, and ask others to teach you skills they\'ve developed. Teaching and learning from peers strengthens everyone\'s artistic abilities.' },
+                    { type: 'Head', text: 'Research and present on an art movement or artist as a group.', instruction: 'Work together to research and present about a shared artistic interest. Divide topics and combine your research to teach others about the art world.' },
+                    { type: 'Heart', text: 'Organise a "gallery walk" to share work and give affirmations.', instruction: 'Display everyone\'s artwork. Walk around and leave positive notes or specific "I notice..." comments for others. Celebrate each other\'s creative efforts.' },
+                    { type: 'Hand', text: 'Discuss different interpretations of an artwork with a group.', instruction: 'Choose a piece of art and discuss it with others. What do different people see? What are their interpretations? How do multiple viewpoints deepen your understanding.' }
+                ],
+                craftsmanship: [
+                    { type: 'Head', text: 'Step back regularly to evaluate your artistic work with a critical eye.', instruction: 'Pause during your creative process to look at your work objectively. Ask: "Is this communicating what I want?" "What\'s working well?" "What could be stronger?" ' },
+                    { type: 'Heart', text: 'Take pride in developing your personal artistic voice and style.', instruction: 'Notice what makes your artwork uniquely yours. What themes, colours, or techniques do you gravitate toward? Celebrate and develop your individual artistic identity.' },
+                    { type: 'Hand', text: 'Care for your artistic tools and materials to create your best work.', instruction: 'Keep brushes clean, organise your supplies, and use quality materials when possible. Well-maintained tools help you create artwork that truly reflects your artistic vision.' },
+                    { type: 'Head', text: 'Learn from artistic traditions while developing your own creative innovations.', instruction: 'Study how master artists solved creative problems, then experiment with your own solutions. Build on artistic knowledge while finding your own creative path.' },
+                    { type: 'Heart', text: 'Keep working on pieces until they truly express what you want to communicate.', instruction: 'Don\'t settle for "good enough" when you have something important to express. Keep refining your artwork until it captures your artistic vision.' },
+                    { type: 'Hand', text: 'Present your finished artwork in ways that enhance and protect it.', instruction: 'Mount drawings neatly, photograph your work well, or display it thoughtfully. How you present your art shows respect for your creative work and helps others appreciate it.' },
+                    { type: 'Head', text: 'Compare your current work to previous work to see growth.', instruction: 'Look back at earlier pieces. What have you improved? What techniques are you using now that you didn\'t before? Celebrate your progress.' },
+                    { type: 'Heart', text: 'Seek honest feedback from a trusted source.', instruction: 'Choose someone whose opinion you respect. Ask them specific questions about your work: "Does this communicate what I intended?" "What\'s the strongest element?" "What could be improved?"' },
+                    { type: 'Hand', text: 'Check your work against specific criteria or rubrics.', instruction: 'If you have a rubric or assignment criteria, manually go through each point systematically. Make sure you\'ve addressed every requirement fully.' }
+                ]
+            },
+            technology: {
+                curiosity: [
+                    { type: 'Head', text: 'Ask "How does this technology actually work?" about devices you use daily.', instruction: 'Wonder about the technology around you - smartphones, games, apps, or machines. What happens inside them? How do the parts work together to create the experience you see?' },
+                    { type: 'Heart', text: 'Find technology problems that you genuinely want to solve.', instruction: 'Look for frustrations in your daily life that technology might help fix. Maybe it\'s organising your room, helping your pet, or making something easier for your family.' },
+                    { type: 'Hand', text: 'Take apart old devices (safely!) to discover how they\'re built.', instruction: 'With adult help, carefully disassemble broken electronics, toys, or machines. Identify the parts and try to figure out what each component does in the whole system.' },
+                    { type: 'Head', text: 'Research how a common technology works "under the hood".', instruction: 'How does Wi-Fi work? What happens when you send a text? How does a search engine find information? Dive into the fundamental principles behind technology you use daily.' },
+                    { type: 'Heart', text: 'Imagine problems that current technology cannot solve and brainstorm solutions.', instruction: 'Think about everyday frustrations or big global challenges. How could technology be invented to address these? Let your imagination run wild with future tech ideas.' },
+                    { type: 'Hand', text: 'Experiment with a new programming language or software tool without a goal.', instruction: 'Open a new coding environment or a piece of software you\'ve never used. Just click around, try different functions, and see what you can make it do. Play to learn!' },
+                    { type: 'Head', text: 'Investigate the ethical implications of emerging technologies.', instruction: 'As technology advances, new ethical questions arise. Research a technology like AI or genetic engineering. What are the potential benefits and risks? What questions should we be asking.' },
+                    { type: 'Heart', text: 'Find a technological innovation that fascinates you and explore its origins.', instruction: 'What tech gadget or software do you love? Research its history. Who invented it? What problem were they trying to solve? How did it evolve.' },
+                    { type: 'Hand', text: 'Try the programme like it\'s "in the wild".', instruction: 'Put yourself in the shoes of a regular user. How would they use it? What might they try to do? How will it "not work" for them?.' }
+                ],
+                persistence: [
+                    { type: 'Head', text: 'Debug problems by testing one small part at a time.', instruction: 'When technology isn\'t working as expected, systematically check each element. Change one thing, test it, then move to the next. Good technologists are patient problem-solvers.' },
+                    { type: 'Heart', text: 'Remember that every expert was once a beginner who kept trying.', instruction: 'All the creators of the technology you love started by learning basics and making mistakes. When technology feels hard, remember that persistence leads to breakthrough moments.' },
+                    { type: 'Hand', text: 'Try multiple approaches when your first design doesn\'t work.', instruction: 'If your app idea, building project, or invention isn\'t working, try different materials, methods, or approaches. Technologists iterate until they find solutions that work.' },
+                    { type: 'Head', text: 'Break down complex technical problems into smaller, testable modules.', instruction: 'Don\'t try to build the whole app at once. Build one small function, test it, then build another. Modular thinking helps you tackle large problems piece by piece.' },
+                    { type: 'Heart', text: 'Focus on understanding the error message, not just fixing it.', instruction: 'Error messages are clues! Don\'t just try random fixes. Read the error carefully and try to understand *why* the computer is telling you there\'s a problem. This deepens your understanding.' },
+                    { type: 'Hand', text: 'Practice iterative design: build, test, refine, repeat.', instruction: 'Understand that technology development is a cycle. Build a basic version, get feedback, make improvements, and repeat. Each iteration gets you closer to a quality product.' }
+                ],
+                imagination: [
+                    { type: 'Head', text: 'Envision technology that doesn\'t exist yet but could solve real problems.', instruction: 'Imagine inventions that could help people, animals, or the environment. What if you could design technology to clean oceans, help people communicate, or make learning more fun?' },
+                    { type: 'Heart', text: 'Design technology solutions that reflect your values and interests.', instruction: 'Create apps, games, or inventions inspired by things you care about. How could technology support your hobbies, help your community, or express your creativity?' },
+                    { type: 'Hand', text: 'Build prototypes and models to test your technological ideas.', instruction: 'Create rough versions of your ideas using cardboard, code, craft materials, or digital tools. Build something you can actually test, even if it\'s simple or imperfect.' },
+                    { type: 'Head', text: 'Brainstorm unconventional uses for existing technologies.', instruction: 'How could a smartphone be used in a way it\'s not intended? What new function could a drone have? Challenge your assumptions about how technology "should" be used.' },
+                    { type: 'Heart', text: 'Connect technology to your personal passions and hobbies in new ways.', instruction: 'How could technology enhance your favourite sport, art form, or hobby? Could you code a game based on your favourite book? Find creative overlaps.' },
+                    { type: 'Hand', text: 'Explore emergent behaviours in complex systems (e.g., simulations).', instruction: 'If you have access to simulation software, play with variables and observe how complex patterns emerge from simple rules. This builds intuition for complex systems.' },
+                    { type: 'Head', text: 'Create a fictional story or animation featuring a new technology.', instruction: 'Write a short story, comic, or animate a scene where a completely new technology is introduced. Explore its impact on characters and their world.' },
+                    { type: 'Heart', text: 'Imagine future scenarios where technology plays a surprising role.', instruction: 'Think 20, 50, 100 years into the future. How might technology change daily life, work, or society in unexpected ways? What are the utopian and dystopian possibilities.' },
+                    { type: 'Hand', text: 'Sketch user interfaces or design concepts for imaginary apps/devices.', instruction: 'Even if you can\'t code it yet, draw what a new app or device would look like. How would people interact with it? What buttons would it have? Visualise your technological ideas.' }
+                ],
+                attention: [
+                    { type: 'Head', text: 'Focus on understanding the core problem before jumping to solutions.', instruction: 'Before designing anything, really understand what problem you\'re trying to solve. Who has this problem? When does it happen? What would success look like?' },
+                    { type: 'Heart', text: 'Pay attention to how people actually use and feel about technology.', instruction: 'Watch how family and friends interact with apps, games, or devices. What do they find confusing, delightful, or frustrating? User experience matters more than fancy features.' },
+                    { type: 'Hand', text: 'Create organised systems for tracking your design ideas and iterations.', instruction: 'Keep sketches, notes, and photos of your technological experiments. Document what works, what doesn\'t, and what you want to try next. Good records help you improve.' },
+                    { type: 'Head', text: 'Use flowcharts or diagrams to map out complex processes before coding.', instruction: 'Before you write any code or build anything, draw a diagram of how it should work. Map out the steps, decisions, and inputs/outputs. This helps you visualise and focus.' },
+                    { type: 'Heart', text: 'Minimise digital distractions during focused technical work.', instruction: 'Close unnecessary browser tabs, turn off notifications, and put your phone away. Create a digital environment that supports deep concentration on your technical task.' },
+                    { type: 'Hand', text: 'Dissect an existing piece of software or code line-by-line to understand it.', instruction: 'Find an open-source project or simple program. Read through its code line-by-line. Try to understand what each line does and how it contributes to the overall function.' },
+                    { type: 'Head', text: 'Practise active listening during technical explanations or tutorials.', instruction: 'When watching a tech tutorial or listening to an explanation, don\'t just passively absorb. Pause, summarise, ask questions in your head. Actively engage with the information.' },
+                    { type: 'Heart', text: 'Identify the most critical component of a system and dedicate your focus there.', instruction: 'In a complex system (app, robot), what\'s the absolute most important part to get right first? Direct all your attention to understanding and building that core component.' },
+                    { type: 'Hand', text: 'Focus on writing clean, well-commented code for one small function.', instruction: 'When coding, write out your logic in comments first. Then write each line of code carefully. Focus on making one small function perfect and easy to understand.' }
+                ],
+                thinking: [
+                    { type: 'Head', text: 'Break complex technological challenges into smaller, solvable parts.', instruction: 'Big tech projects feel overwhelming, but every complex system is made of simpler parts. Identify the smaller problems you can solve one by one to build toward your bigger goal.' },
+                    { type: 'Heart', text: 'Consider the ethical impact of technology on people and communities.', instruction: 'Think about how technology affects people\'s lives, privacy, environment, and relationships. How can you design technology that helps rather than harms communities?' },
+                    { type: 'Hand', text: 'Test your technological solutions with real users to improve them.', instruction: 'Have other people try your apps, games, or inventions. Watch what they do, listen to their feedback, and use their insights to make your technology work better.' },
+                    { type: 'Head', text: 'Evaluate different technical solutions for efficiency and effectiveness.', instruction: 'For a given problem, research multiple ways to solve it. Compare them: Which is faster? Uses less memory? Is easier to maintain? Choose the best solution based on criteria.' },
+                    { type: 'Heart', text: 'Reflect on how a technology shapes human behaviour and society.', instruction: 'Beyond its function, how does a technology change how people interact, communicate, or live? What are its unintended consequences? Think about the broader impact.' },
+                    { type: 'Hand', text: 'Create decision trees or logic gates to model complex system behaviours.', instruction: 'If a system has many "if-then" conditions, draw a decision tree to map out all possibilities. This helps identify logical flaws or missing conditions.' }
+                ],
+                collaboration: [
+                    { type: 'Head', text: 'Learn from other technologists and share your own discoveries.', instruction: 'Connect with others who are interested in technology - classmates, online communities, or local makers. Share what you\'ve learned and learn from their experiences.' },
+                    { type: 'Heart', text: 'Work in teams where everyone contributes their unique technological strengths.', instruction: 'Collaborate on tech projects where different people handle design, building, testing, or presenting. Everyone brings different skills to make technology projects successful.' },
+                    { type: 'Hand', text: 'Build technology together that none of you could create alone.', instruction: 'Work with others on apps, websites, inventions, or digital art that combines everyone\'s ideas and skills. Collaborative technology is often more creative and powerful.' },
+                    { type: 'Head', text: 'Break down large technical tasks into smaller, assignable components for a team.', instruction: 'For group projects, clearly define individual tasks and assign them. Ensure everyone understands their role and how their piece fits into the larger project.' },
+                    { type: 'Heart', text: 'Ask for help when you need it and offer help when you can.', instruction: 'Be specific when asking for help: "I understand this part, but I\'m confused about..." And offer your strengths to help others where you\'re confident.' },
+                    { type: 'Hand', text: 'Collaborate on real-world technological investigations or projects.', instruction: 'Work together on projects that use tech to solve real problems or answer interesting questions. Combine your different strengths and perspectives.' },
+                    { type: 'Head', text: 'Pair program with a classmate, explaining your logic as you go.', instruction: 'Work with a partner on a coding problem. One person codes, the other watches and offers suggestions. Switch roles regularly. Talking through the problem strengthens understanding.' },
+                    { type: 'Heart', text: 'Participate in online technical forums or communities to ask/answer questions.', instruction: 'Engage with online tech communities. Ask specific questions when you\'re stuck, and try to answer others\' questions when you can. Sharing knowledge helps everyone grow.' },
+                    { type: 'Hand', text: 'Use version control (e.g., Git) to collaborate on shared code projects.', instruction: 'Learn how to use collaborative coding tools. This allows multiple people to work on the same project simultaneously without overwriting each other\'s work.' }
+                ],
+                craftsmanship: [
+                    { type: 'Head', text: 'Test your technology thoroughly to make sure it works reliably.', instruction: 'Don\'t just check if your technology works once - test it multiple times, in different situations, and with different users. Reliable technology earns people\'s trust.' },
+                    { type: 'Heart', text: 'Take pride in creating technology that\'s both functional and beautiful.', instruction: 'Care about how your technology looks, feels, and works. Good technologists create solutions that are not only effective but also enjoyable to use.' },
+                    { type: 'Hand', text: 'Document your technological work so others can learn from and build on it.', instruction: 'Keep clear records of how you built things, what you learned, and how others could improve your work. Good documentation helps technology knowledge spread and grow.' },
+                    { type: 'Head', text: 'Refactor code regularly to improve its structure and readability.', instruction: 'Even working code can be improved. Regularly review and reorganise your code without changing its external behaviour. This makes it more maintainable and easier to extend.' },
+                    { type: 'Heart', text: 'Develop an eye for good design and user experience in technology.', instruction: 'Pay attention to the details of apps and websites you enjoy using. What makes them intuitive? What makes them frustrating? Cultivate a sense of quality in digital design.' },
+                    { type: 'Hand', text: 'Seek and incorporate feedback on your technical projects.', instruction: 'Show your projects to mentors or peers and ask for specific feedback on functionality, design, and code quality. Be open to criticism and use it to improve.' }
+                ]
+            },
+            performing_arts: {
+                curiosity: [
+                    { type: 'Head', text: 'Ask "How does this performance create its effect?" when you see something amazing.', instruction: 'When you watch a performance that moves you - a song, dance, or play - investigate how the performer created that impact. What specific choices did they make?' },
+                    { type: 'Heart', text: 'Find music, movement, or drama that connects to your own emotions and experiences.', instruction: 'Discover performances that make you feel something strong or remind you of important moments in your life. What kinds of artistic expression speak to your heart?' },
+                    { type: 'Hand', text: 'Experiment with new instruments, vocal styles, or movement forms.', instruction: 'Try singing if you usually play instruments, explore dance if you usually act, or pick up an instrument you\'ve never touched. Let your body discover new ways to perform.' },
+                    { type: 'Head', text: 'Investigate the science behind sound, movement, or human expression.', instruction: 'How do vocal cords work? What physics applies to dance? How does the brain process music? Explore the scientific principles underpinning your art form.' },
+                    { type: 'Heart', text: 'Imagine the stories or emotions a piece of music or dance might convey.', instruction: 'Listen to an instrumental piece or watch a dance performance. What narrative comes to mind? What feelings does it evoke? Let your imagination fill in the story.' },
+                    { type: 'Hand', text: 'Explore different interpretations of the same piece of music or script.', instruction: 'Listen to multiple recordings of the same song or watch different productions of the same play. How do different performers/directors interpret the material? What choices do they make and why.' },
+                    { type: 'Head', text: 'Deconstruct a piece of music, dance, or theatre to understand its compositional elements.', instruction: 'Break down an artwork into its basic components. How do these elements work together to create the overall effect? What principles of design are at play.' },
+                    { type: 'Heart', text: 'Research the cultural origins or historical context of a performance piece.', instruction: 'Find out where and when a song, dance, or play originated. What was happening in the world? What was its original purpose or meaning? How does this deepen your appreciation.' },
+                    { type: 'Hand', text: 'Attend a live performance (or watch online) and analyse what you notice.', instruction: 'Go to a concert, play, or dance show. Don\'t just enjoy it, actively observe: How do the performers use their bodies/voices? What emotions are conveyed? How do they connect with the audience.' }
+                ],
+                persistence: [
+                    { type: 'Head', text: 'Break challenging pieces into smaller sections you can master one at a time.', instruction: 'When learning difficult music, complex choreography, or long scripts, focus on mastering small sections before putting the whole piece together. Build skill section by section.' },
+                    { type: 'Heart', text: 'Keep practising performances that express something important to you.', instruction: 'When performance gets hard, remember why you wanted to learn this piece. What story are you telling? What feeling are you sharing? Let your artistic purpose motivate you.' },
+                    { type: 'Hand', text: 'Record yourself practising to track improvement and identify areas to work on.', instruction: 'Use your phone to record practice sessions. Listen back or watch yourself to notice what\'s improving and what still needs work. Be your own best performance coach.' },
+                    { type: 'Head', text: 'Analyse difficult sections to understand their underlying structure or theory.', instruction: 'If a musical phrase is hard, look at the notes and chords. If a monologue is tricky, break down the character\'s motivations. Understanding the "why" can help with the "how."' },
+                    { type: 'Heart', text: 'Set small, achievable practice goals and celebrate when you reach them.', instruction: 'Choose something specific like "master this one measure" or "memorise this one line." When you achieve it, acknowledge your success before moving on.' },
+                    { type: 'Hand', text: 'Research different practice techniques used by professional performers.', instruction: 'Look up how professional musicians, dancers, or actors practice. Do they use visualisation? Interval training? Memorisation tricks? Try their techniques to see what works for you.' }
+                ],
+                imagination: [
+                    { type: 'Head', text: 'Develop alternative interpretations or endings for a familiar story or song.', instruction: 'How else could this story unfold? What if the character made a different choice? What if this song was played in a completely different genre or style? Play with possibilities.' },
+                    { type: 'Heart', text: 'Connect your personal experiences and emotions to the performance material.', instruction: 'Find ways that the music, movement, or text resonates with your own life. How can your authentic feelings inform your expression and make the performance more powerful.' },
+                    { type: 'Hand', text: 'Create costumes, sets, or props that enhance your performance concept.', instruction: 'Design or create visual elements that bring your performance to life. Think about how colours, shapes, and textures can convey mood and meaning.' },
+                    { type: 'Head', text: 'Explore abstract concepts through movement or sound (e.g., peace, chaos).', instruction: 'How would "anger" sound or move? How would "hope" look in a dance? Translate abstract ideas into concrete artistic expression through your chosen medium.' },
+                    { type: 'Heart', text: 'Imagine the backstory and inner world of a character or composer.', instruction: 'If you\'re playing a piece, imagine the composer\'s life and feelings. If you\'re acting, create a rich inner life for your character – what are their secret hopes, fears, and memories.' },
+                    { type: 'Hand', text: 'Improvise freely with sound, movement, or dialogue without a script.', instruction: 'Let go of rules and just create. Play whatever sounds come to mind, move your body in new ways, or speak spontaneously. See what unexpected ideas emerge when you\'re unconstrained.' }
+                ],
+                attention: [
+                    { type: 'Head', text: 'Focus on one specific performance skill at a time to improve your craft.', instruction: 'Choose one element to concentrate on - maybe breath control for singing, precise timing for music, or clear diction for drama. Master one skill before adding others.' },
+                    { type: 'Heart', text: 'Connect deeply with the emotions and stories in your performances.', instruction: 'Before performing any piece, understand what story you\'re telling and what emotions you want to share. Let those feelings guide your focus during practice.' },
+                    { type: 'Hand', text: 'Practice in focused sessions without distractions to improve your skills.', instruction: 'Set aside specific time for performance practice where you can concentrate fully. Turn off devices and focus completely on your artistic development.' },
+                    { type: 'Head', text: 'Break down complex pieces into small, manageable sections for focused practice.', instruction: 'Don\'t try to master the whole piece at once. Focus on learning just one phrase, one section, or one challenging technical spot at a time. Master that, then move on.' },
+                    { type: 'Heart', text: 'Pay attention to unexpected results - they often lead to discoveries.', instruction: 'When something doesn\'t go as expected, don\'t ignore it. The most interesting discoveries often come from unexpected results. Focus on what surprises you.' },
+                    { type: 'Hand', text: 'Engage all your senses during practice: listen, feel, see your movements.', instruction: 'Don\'t just go through the motions. Listen acutely to the sounds you make, feel the sensations in your body, and observe your movements or expressions in a mirror. Be fully present.' }
+                ],
+                thinking: [
+                    { type: 'Head', text: 'Analyse the structure of a musical piece, script, or choreography.', instruction: 'Break down the piece: What are the different sections? How do they relate? Where are the repetitions, variations, or climaxes? Understand the underlying framework.' },
+                    { type: 'Heart', text: 'Reflect on how your performance choices impact the audience\'s experience.', instruction: 'Imagine you\'re in the audience. How do your gestures, vocal tone, or musical phrasing make them feel? Does it convey your intended message? Adjust based on desired impact.' },
+                    { type: 'Hand', text: 'Use a score, script, or choreographic notation to understand the artist\'s intentions.', instruction: 'Study the written form of your piece. What markings, directions, or symbols did the composer/writer/choreographer include? How do these guide your interpretation.' },
+                    { type: 'Head', text: 'Compare different interpretations or performances of the same piece.', instruction: 'Watch multiple versions of a play or listen to different recordings of a song. How do different performers/directors interpret the material? What choices do they make and why.' },
+                    { type: 'Heart', text: 'Explore the "why" behind the emotions or actions in a performance piece.', instruction: 'Why does a character react that way? Why did the composer choose that chord? Delve into the motivations, intentions, and meanings behind the artistic choices.' },
+                    { type: 'Hand', text: 'Create diagrams or maps of stage blocking, musical phrases, or dance sequences.', instruction: 'Visually map out the flow of a performance. Use arrows, symbols, and labels to show entrances, exits, musical dynamics, or dance patterns. This helps clarify complex sequences.' }
+                ],
+                collaboration: [
+                    { type: 'Heart', text: 'Actively listen and respond to your fellow performers on stage or in rehearsal.', instruction: 'Pay attention to cues, dynamics, and energy from your partners. Adjust your performance in real-time to create a cohesive and responsive ensemble.' },
+                    { type: 'Hand', text: 'Participate in group warm-ups or exercises to build ensemble cohesion.', instruction: 'Engage fully in activities that build connection with your group – call-and-response, mirroring movements, group improvisation. These build trust and responsiveness.' },
+                    { type: 'Head', text: 'Discuss creative choices and interpretations with your ensemble or director', instruction: 'Share your ideas about the piece openly. Listen to others\' perspectives, debate different approaches respectfully, and work together to find the best artistic solution.' },
+                    { type: 'Heart', text: 'Offer positive and constructive feedback to peers.', instruction: 'When giving feedback, start with a compliment, then offer specific suggestions for improvement. "I liked how you did X, maybe try Y for Z effect." Focus on growth.' },
+                    { type: 'Hand', text: 'Work together to solve logistical challenges of a performance (e.g., set design).', instruction: 'Collaboration extends beyond the stage. Help with lighting, sound, costumes, or prop management. Every role contributes to a successful performance.' },
+                    { type: 'Head', text: 'Learn from guest artists or master classes by engaging in dialogue.', instruction: 'When a visiting artist shares their knowledge, ask thoughtful questions and engage in conversation. Tap into their expertise to deepen your own understanding.' }
+                ],
+                craftsmanship: [
+                    { type: 'Head', text: 'Strive for technical precision in every note, step, or line.', instruction: 'Focus on hitting every note perfectly, executing every dance step with precision, and delivering every line with clear diction. Master the technical fundamentals of your art.' },
+                    { type: 'Heart', text: 'Take pride in disciplined practise and the pursuit of physical excellence.', instruction: 'Appreciate the beauty of well-executed movement and the satisfaction of mastering a physical challenge. Let the pursuit of excellence motivate your dedication to practise.' },
+                    { type: 'Hand', text: 'Regularly record and review your performances for self-assessment.', instruction: 'Use your phone to record your practise sessions. Watch back critically, but kindly. What sounds/movements were perfect? What needs more work? Identify one specific thing to improve next time.' },
+                    { type: 'Head', text: 'Analyse professional performances to learn about staging, dynamics, or expression.', instruction: 'Watch high-quality recordings of professionals. What details make their performance excellent? How do they use dynamics, timing, or staging to create impact? Apply these insights.' },
+                    { type: 'Heart', text: 'Cultivate a growth mindset: believe your skills can always be refined.', instruction: 'See every practise session as an opportunity to improve. Embrace challenges as chances to grow your talent. Know that dedication and consistent effort lead to mastery.' },
+                    { type: 'Hand', text: 'Seek out a mentor or advanced performer for personalised feedback.', instruction: 'Find someone more experienced than you. Ask them to watch or listen to your practise and give you specific advice on how to refine your technique and artistry.' }
+                ]
+            },
+            physical_education: {
+                curiosity: [
+                    { type: 'Head', text: 'Ask "How can I move my body in new ways?" and explore different movement patterns.', instruction: 'Wonder about how athletes, dancers, or martial artists move differently. What can you learn from gymnastics, swimming, or cultural dances about using your body?' },
+                    { type: 'Heart', text: 'Find physical activities that genuinely excite you and make you want to improve.', instruction: 'Discover sports, games, or movement forms that spark your interest. What kinds of physical challenges make you feel energised and motivated to keep trying?' },
+                    { type: 'Hand', text: 'Experiment with different equipment, surfaces, or environments for movement.', instruction: 'Try playing familiar games on different surfaces, using new equipment, or moving in different spaces. How does changing your environment change how you move?' },
+                    { type: 'Head', text: 'Research the science behind movement, fitness, and athletic performance.', instruction: 'Investigate how muscles work, what happens during exercise, or how elite athletes train. What does sports science reveal about optimising human performance?' },
+                    { type: 'Heart', text: 'Explore how different cultures approach physical activity and sport.', instruction: 'Research traditional games, martial arts, or sports from around the world. How do they express physical culture? What can you learn from different cultural approaches to movement and competition?' },
+                    { type: 'Hand', text: 'Investigate how biomechanics and physics apply to sports performance.', instruction: 'Study how forces, angles, and momentum affect athletic performance. How do the laws of physics help explain optimal techniques in different sports?' }
+                ],
+                persistence: [
+                    { type: 'Head', text: 'Break complex physical skills into smaller movements you can practice separately.', instruction: 'If you\'re learning a difficult skill like a tennis serve or dance sequence, identify the basic parts and practice each element before putting them all together.' },
+                    { type: 'Heart', text: 'Focus on your personal improvement rather than comparing yourself to others.', instruction: 'Celebrate your own progress - running a little further, balancing a little longer, or hitting the target more often. Your growth matters more than being the best.' },
+                    { type: 'Hand', text: 'Keep practising even when physical skills feel challenging or frustrating.', instruction: 'Remember that all physical skills take time to develop. Your muscles and brain need repetition to learn new movements. Stick with it and notice small improvements.' },
+                    { type: 'Head', text: 'Analyse your technique to identify specific areas for improvement.', instruction: 'Video yourself performing skills and analyse what you see. What specific aspects of your technique need work? Focus your practice on those precise elements.' },
+                    { type: 'Heart', text: 'Connect with your intrinsic motivation for physical activity.', instruction: 'Remember why you wanted to improve at this activity. Focus on how good it feels to move, to get stronger, or to master new skills. Let internal motivation drive persistence.' },
+                    { type: 'Hand', text: 'Use systematic training approaches to build skills progressively.', instruction: 'Follow structured training programs that gradually increase difficulty. Understand how progressive overload and systematic practice lead to improvement.' },
+                    { type: 'Head', text: 'Repeat a difficult drill or exercise until you feel a small improvement.', instruction: 'Choose one challenging part of your training (e.g., a specific shot, a complex balance). Practice it 10-20 times. Focus on consistent effort, even if it feels repetitive.' },
+                    { type: 'Heart', text: 'Remind yourself that physical mastery comes through consistent effort and overcoming plateaus.', instruction: 'Every athlete and dancer hits plateaus. Remember that consistent effort, even when progress feels slow, is how you break through and achieve higher levels of skill.' },
+                    { type: 'Hand', text: 'Break down complex physical skills into smaller, foundational movement.s', instruction: 'If a skill is hard (e.g., a perfect free throw, a complex dance sequence), break it into its component parts. Master each small movement before putting them together.' }
+                ],
+                imagination: [
+                    { type: 'Head', text: 'Visualise yourself successfully performing physical skills before attempting them.', instruction: 'Close your eyes and imagine executing a perfect shot, jump, or routine. Mental practice helps your body learn and can improve your actual physical performance.' },
+                    { type: 'Heart', text: 'Create games or movement activities that express your personality and interests.', instruction: 'Invent new games using your favourite themes, modify existing sports to make them more fun for you, or create movement routines inspired by things you love.' },
+                    { type: 'Hand', text: 'Design obstacle courses or challenges using available equipment and space.', instruction: 'Use whatever materials you have - cones, ropes, balls, or playground equipment - to create physical challenges that test different skills and are fun to attempt.' },
+                    { type: 'Head', text: 'Imagine innovative training methods or equipment that doesn\'t exist yet.', instruction: 'Design new ways to train specific skills, invent equipment that would make learning easier, or envision technologies that could enhance athletic performance.' },
+                    { type: 'Heart', text: 'Envision how you could use physical skills to help others or your community.', instruction: 'Think about how your athletic abilities could serve others: coaching younger athletes, adaptive sports programs, or using fitness to raise awareness for causes you care about.' },
+                    { type: 'Hand', text: 'Create artistic or expressive movement that tells a story.', instruction: 'Use dance, gymnastics, or martial arts to express ideas, emotions, or narratives. How can movement become a form of communication and artistic expression?' },
+                    { type: 'Head', text: 'Imagine the physical capabilities of animals or natural phenomena and apply to human movement.', instruction: 'How does a cheetah run? How does a tree stay rooted? How does water flow? Translate these observations into new ways of thinking about human movement, strength, or flexibility.' },
+                    { type: 'Heart', text: 'Create a "story" or narrative for your workout or game strategy.', instruction: 'Instead of just doing exercises, imagine them as part of an adventure or challenge. This can add motivation and engagement to your physical activity.' },
+                    { type: 'Hand', text: 'Develop alternative strategies or plays for a sport or game scenario.', instruction: 'If your team\'s strategy isn\'t working, brainstorm completely different approaches. What unexpected plays could you run? How could you surprise your opponent with creativity.' }
+                ],
+                attention: [
+                    { type: 'Head', text: 'Focus on one specific aspect of your technique at a time.', instruction: 'Instead of trying to improve everything at once, concentrate on one element - maybe your follow-through, your footwork, or your breathing. Master one aspect before adding others.' },
+                    { type: 'Heart', text: 'Pay attention to how different physical activities make your body and mind feel.', instruction: 'Notice which activities energise you, calm you, challenge you, or make you feel confident. Understanding your physical responses helps you choose activities wisely.' },
+                    { type: 'Hand', text: 'Use all your senses to improve your physical performance and awareness.', instruction: 'Pay attention to what you see, hear, and feel during physical activity. Use visual cues, listen for timing, and feel the rhythm or balance in your movements.' },
+                    { type: 'Head', text: 'Focus on understanding the tactical and strategic elements of sports.', instruction: 'Pay attention to the mental game: reading opponents, anticipating plays, making strategic decisions. Develop the cognitive aspects of athletic performance.' },
+                    { type: 'Heart', text: 'Pay attention to your emotional responses during physical challenges.', instruction: 'Notice how you feel when facing difficult physical tasks. Learn to manage anxiety, frustration, or excitement in ways that support rather than hinder performance.' },
+                    { type: 'Hand', text: 'Use mindful movement practices to enhance body awareness.', instruction: 'Practice activities like yoga, tai chi, or mindful walking that emphasise present-moment awareness of your body and movement.' },
+                    { type: 'Head', text: 'Focus on one specific body part or sensation during an exercise.', instruction: 'Instead of trying to do everything perfectly, choose one tiny detail (e.g., keeping your shoulders relaxed, breathing from your diaphragm, pointing your toes). Focus only on that for 5 minutes.' },
+                    { type: 'Heart', text: 'Tune out external distractions and focus on your internal physical experience.', instruction: 'During practise, try to ignore noise or other people. Bring your attention inwards to how your body is moving and what you\'re trying to achieve physically.' },
+                    { type: 'Hand', text: 'Concentrate on specific strategic cues during a game or activity.', instruction: 'In a game, focus on one strategic element at a time: "Today, I\'m only thinking about passing" or "I\'m going to pay attention to my positioning." Small focus points improve overall play.' }
+                ],
+                thinking: [
+                    { type: 'Head', text: 'Analyse your physical performance to identify what works and what needs adjustment.', instruction: 'After practicing or playing, think about what went well and what could be improved. What specific techniques or strategies were most effective?' },
+                    { type: 'Heart', text: 'Reflect on how different types of movement make you feel emotionally and mentally.', instruction: 'Notice how running affects your mood differently than team sports, or how yoga feels different from weightlifting. Use this self-knowledge to choose activities that support your wellbeing.' },
+                    { type: 'Hand', text: 'Use video analysis or feedback to understand your movement patterns.', instruction: 'Record yourself or ask others to observe your technique. What patterns do you notice? How can you adjust your movements to be more efficient or effective?' },
+                    { type: 'Head', text: 'Connect physical principles to optimal performance in different activities.', instruction: 'Think about how concepts like balance, leverage, timing, and energy transfer apply to your sport or activity. How can understanding these principles improve your performance?' },
+                    { type: 'Heart', text: 'Consider how physical activity contributes to your overall health and happiness.', instruction: 'Reflect on the role that movement plays in your life. How does physical activity affect your sleep, stress, confidence, and relationships with others?' },
+                    { type: 'Hand', text: 'Experiment with different training methods to see what works best for your goals.', instruction: 'Try various approaches to building strength, endurance, or skill. Track what methods give you the best results and feel most sustainable for your lifestyle.' },
+                    { type: 'Head', text: 'Analyse game film or practice footage to identify strategic strengths and weaknesses.', instruction: 'Record your own performance. Watch it back and analyse objectively: Where are the gaps in strategy? What techniques need refinement? How can you make better decisions next time.' },
+                    { type: 'Heart', text: 'Consider the ethical dimensions of sport and competition (e.g., fair play, sportsmanship).', instruction: 'Beyond winning, how does sport teach character? What does it mean to be a good competitor? How do your actions affect others on the field/court.' },
+                    { type: 'Hand', text: 'Create diagrams or playbooks for new sports strategies or movement sequences.', instruction: 'Draw out new plays for your team or choreograph a movement sequence. Use arrows, symbols, and labels to map out movements and interactions logically.' }
+                ],
+                collaboration: [
+                    { type: 'Head', text: 'Learn from teammates and coaches by asking questions and observing closely.', instruction: 'Watch how more experienced athletes approach training and competition. Ask them about their techniques, strategies, and mental approaches to physical challenges.' },
+                    { type: 'Heart', text: 'Support teammates and create positive team dynamics during physical activities.', instruction: 'Encourage others, celebrate their successes, and help create an environment where everyone feels motivated to improve and contribute to the team.' },
+                    { type: 'Hand', text: 'Practice cooperative skills and teamwork through partner exercises and group challenges.', instruction: 'Work with others on activities that require coordination, communication, and mutual support. Learn how to move and perform effectively as part of a group.' },
+                    { type: 'Head', text: 'Discuss strategy and tactics with teammates to improve collective performance.', instruction: 'Share ideas about how to approach games, competitions, or training. Listen to others\' perspectives and work together to develop effective team strategies.' },
+                    { type: 'Heart', text: 'Learn from the diverse physical strengths and approaches of different team members.', instruction: 'Notice what each person brings to the team - speed, strength, strategy, leadership, or encouragement. Appreciate and learn from everyone\'s unique contributions.' },
+                    { type: 'Hand', text: 'Work together on group fitness goals or physical challenges.', instruction: 'Set team goals for improvement, participate in group workouts, or take on physical challenges that require everyone to contribute and support each other.' },
+                    { type: 'Head', text: 'Actively communicate with teammates on the field or during drills.', instruction: 'Use clear, concise communication during games and practice. Call out positions, pass information, and give encouragement. Effective communication makes a team stronger.' },
+                    { type: 'Heart', text: 'Work in teams where everyone contributes their unique physical strengths.', instruction: 'Collaborate on physical projects where different people handle different roles - strength, speed, strategy, or coordination. Everyone brings different abilities to make the team successful.' },
+                    { type: 'Hand', text: 'Participate in group warm-ups or exercises to build team cohesion.', instruction: 'Engage fully in activities that build connection with your team – synchronised movements, partner stretches, group challenges. These build trust and teamwork.' }
+                ],
+                craftsmanship: [
+                    { type: 'Head', text: 'Focus on perfecting your technique through deliberate, mindful practice.', instruction: 'Pay attention to the details of your movement. Practice with intention, focusing on precision and efficiency rather than just going through the motions.' },
+                    { type: 'Heart', text: 'Take pride in your physical development and celebrate incremental improvements.', instruction: 'Notice and appreciate small gains in strength, skill, endurance, or technique. Take satisfaction in the process of becoming more physically capable and confident.' },
+                    { type: 'Hand', text: 'Keep detailed records of your training, performance, and physical development.', instruction: 'Track your workouts, times, distances, or skill progressions. Use this data to see patterns, celebrate progress, and plan future training.' },
+                    { type: 'Head', text: 'Study excellent performers to understand what makes their technique so effective.', instruction: 'Watch skilled athletes, dancers, or movement practitioners. Analyse what makes their performance exceptional and how you can apply those principles to your own development.' },
+                    { type: 'Heart', text: 'Develop a growth mindset about your physical capabilities and potential.', instruction: 'Believe that your physical abilities can improve with effort and smart training. Embrace challenges as opportunities to grow stronger and more skilled.' },
+                    { type: 'Hand', text: 'Seek feedback from coaches, trainers, or experienced practitioners.', instruction: 'Ask for specific guidance on how to improve your technique, training approach, or performance. Use expert feedback to refine your physical skills.' },
+                    { type: 'Head', text: 'Focus on refining one specific skill or technique for precise execution.', instruction: 'Choose one skill (e.g., a tennis serve, a dance pirouette, a basketball dribble). Break it down and practice each component until it feels smooth and precise. Aim for mastery.' },
+                    { type: 'Heart', text: 'Take pride in disciplined practice and the pursuit of physical excellence.', instruction: 'Appreciate the beauty of well-executed movement and the satisfaction of mastering a physical challenge. Let the pursuit of excellence motivate your dedication to practice.' },
+                    { type: 'Hand', text: 'Use video analysis to critically assess your form and technique.', instruction: 'Record yourself performing a skill. Watch it back in slow motion. Compare your form to expert examples. Identify precise points for adjustment and refinement.' }
+                ]
+            }
+        };
+        // Function to toggle learning introduction
+        function toggleLearningIntro() {
+            const toggle = document.getElementById('learningIntroToggle');
+            const content = document.getElementById('learningIntroContent');
+            const icon = document.getElementById('learningIntroIcon');
+            const isExpanded = content.classList.contains('visible');
+            
+            if (isExpanded) {
+                content.classList.remove('visible');
+                toggle.classList.remove('expanded');
+                icon.textContent = '+';
+            } else {
+                content.classList.add('visible');
+                toggle.classList.add('expanded');
+                icon.textContent = '−';
+            }
+        }
+
+        let selectedSubject = '';
+        let selectedDisposition = '';
+        let currentFilter = 'all';
+
+        function selectSubject(subject) {
+            selectedSubject = subject;
+            document.querySelectorAll('#introAndSubjectStep .option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.target.closest('.option-card').classList.add('selected');
+            
+            setTimeout(() => {
+                document.getElementById('introAndSubjectStep').style.display = 'none';
+                document.getElementById('dispositionStep').style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 300);
+        }
+
+        function selectDisposition(disposition) {
+            selectedDisposition = disposition;
+            document.querySelectorAll('#dispositionStep .option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.target.closest('.option-card').classList.add('selected');
+
+            setTimeout(() => {
+                showPrompts(); 
+                document.getElementById('dispositionStep').style.display = 'none';
+                document.getElementById('promptsStep').style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 300);
+        }
+
+        function showPrompts() {
+            const subjectDisplayNames = { 'english': 'English', 'math': 'Mathematics', 'science': 'Science', 'history': 'Social Studies', 'art': 'Visual Arts', 'technology': 'Technology', 'performing_arts': 'Performing Arts', 'physical_education': 'Physical Education' };
+            const dispositionDisplayNames = { 'curiosity': 'Curiosity', 'persistence': 'Persistence', 'imagination': 'Imagination', 'attention': 'Attention', 'thinking': 'Thinking', 'collaboration': 'Communication & Collaboration', 'craftsmanship': 'Craftsmanship' };
+
+            document.getElementById('currentDispositionName').textContent = dispositionDisplayNames[selectedDisposition];
+            document.getElementById('currentSubjectName').textContent = subjectDisplayNames[selectedSubject];
+            
+            const filterTabsContainer = document.getElementById('filterTabs');
+            const oldTabs = filterTabsContainer.querySelectorAll('.filter-tab');
+            oldTabs.forEach(oldTab => {
+                const newTab = oldTab.cloneNode(true);
+                oldTab.parentNode.replaceChild(newTab, oldTab);
+            });
+            filterTabsContainer.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.onclick = () => filterPrompts(tab.dataset.filter);
+            });
+            
+            filterPrompts(currentFilter);
+        }
+
+        function filterPrompts(filterType) {
+            currentFilter = filterType;
+            const promptsContainer = document.getElementById('promptsContainer');
+            const subjectPrompts = promptsWithInstructions[selectedSubject][selectedDisposition];
+            promptsContainer.innerHTML = '';
+
+            const filterIntroTextElement = document.getElementById('filterIntroText');
+            const filterTexts = {
+                'all': 'These are a mix of strategies to help you get unstuck and power up your learning.',
+                'Head': 'These strategies focus on deep thinking, analysis, and understanding. They help you sharpen ideas, make connections, and reason through problems.',
+                'Heart': 'These strategies connect to your emotions, personal relevance, and motivation. They help you find joy, meaning, and a sense of purpose in your learning.',
+                'Hand': 'These are strategies that involve action, doing, and physical exploration. Think about building, drawing, acting, or experimenting.'
+            };
+            filterIntroTextElement.textContent = filterTexts[filterType];
+            
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.filter === filterType);
+            });
+
+            subjectPrompts.forEach((prompt, index) => {
+                if (filterType === 'all' || prompt.type === filterType) {
+                    const promptCard = document.createElement('div');
+                    promptCard.className = 'prompt-card';
+                    promptCard.innerHTML = `
+                        <div class="prompt-front">
+                            <div class="prompt-type">${prompt.type}</div>
+                            <div class="prompt-text">${prompt.text}</div>
+                            <div class="flip-instruction">Click for more details →</div>
+                        </div>
+                        <div class="prompt-back">
+                            <div class="prompt-type">How to do this</div>
+                            <div class="prompt-text">${prompt.instruction}</div>
+                            <div class="back-instruction">Click to go back ←</div>
+                        </div>
+                    `;
+                    promptCard.onclick = () => flipCard(promptCard);
+                    promptsContainer.appendChild(promptCard);
+                }
+            });
+        }
+
+        function flipCard(card) {
+            card.classList.toggle('flipped');
+        }
+
+        function showIntroAndSubjectStep() {
+            document.getElementById('dispositionStep').style.display = 'none';
+            document.getElementById('promptsStep').style.display = 'none';
+            document.getElementById('introAndSubjectStep').style.display = 'block';
+            document.querySelectorAll('.option-card').forEach(card => card.classList.remove('selected'));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showDispositionStep() {
+            document.getElementById('promptsStep').style.display = 'none';
+            document.getElementById('dispositionStep').style.display = 'block';
+            document.querySelectorAll('#dispositionStep .option-card').forEach(card => card.classList.remove('selected'));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function goToHub() {
+            window.location.href = 'index.html';
+        }
+        
+    </script>
+</body>
+</html>

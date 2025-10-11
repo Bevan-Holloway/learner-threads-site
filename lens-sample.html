@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Lens (Sample)</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #2c3e50;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* --- Global Header & Footer Styles --- */
+        .global-header {
+            margin-bottom: 2.5rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .global-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e3a5f;
+        }
+
+        .logo-link img {
+            max-height: 40px;
+            border-radius: 50%;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #475569;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #1e3a5f;
+        }
+
+        .global-footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .global-footer p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .global-footer a {
+            color: #1e3a5f;
+            text-decoration: none;
+        }
+
+        .global-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- Page Header Styles --- */
+        .page-header {
+            background: white;
+            padding: 2.5rem 3rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            color: #1e3a5f;
+            font-size: 2.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 1.05rem;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .upgrade-prompt {
+            background: #fffbf5; 
+            border: 1px solid #fde8cc; 
+            padding: 1rem; 
+            border-radius: 0.5rem; 
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .upgrade-prompt p {
+            margin:0; 
+            font-size: 0.95rem;
+        }
+        .upgrade-prompt a {
+            color: #1e3a5f;
+            font-weight: 600;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.875rem 1.25rem 0.875rem 3rem;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: #f8fafc;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #1e3a5f;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .category-filter {
+            padding: 0.75rem 1.25rem;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 0.375rem;
+            background: white;
+            color: #475569;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .category-filter:hover {
+            border-color: #1e3a5f;
+            background: #f8fafc;
+        }
+
+        .category-filter.active {
+            background: #1e3a5f;
+            color: white;
+            border-color: #1e3a5f;
+        }
+
+        .mode-toggle {
+            background: #1e3a5f;
+            color: white;
+            border: none;
+            padding: 0.875rem 1.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .mode-toggle.premium-feature {
+            background: #f1f5f9;
+            color: #64748b;
+            border: 1.5px solid #e2e8f0;
+            cursor: pointer;
+        }
+        .mode-toggle.premium-feature:hover {
+            background: #e2e8f0;
+            color: #1e3a5f;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Daily Quote Section - Collapsible */
+        .daily-quote-section {
+            background: white;
+            padding: 1.5rem 3rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease-in-out;
+            margin-bottom: 2.5rem;
+        }
+
+        .collapsible-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            color: #1e3a5f;
+        }
+        .collapsible-header span:first-child {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s ease;
+            font-size: 1.2rem;
+            color: #64748b;
+        }
+
+        .daily-quote-section.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+
+        .daily-quote-section.expanded .collapsible-content {
+            max-height: 2000px;
+            transition: max-height 0.5s ease-in;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 1.5rem;
+        }
+        
+        .quote-content {
+            margin-bottom: 2rem;
+        }
+
+        .daily-quote-section blockquote {
+            font-size: 1.25rem;
+            font-style: italic;
+            color: #334155;
+            border-left: 4px solid #1e3a5f;
+            padding-left: 1.5rem;
+            margin: 0 0 1rem 0;
+            line-height: 1.6;
+        }
+
+        .daily-quote-section cite {
+            display: block;
+            text-align: right;
+            color: #64748b;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .technique-tags {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .technique-tag-link {
+            font-size: 0.75rem;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .technique-tag-link:hover {
+            background: #e2e8f0;
+            color: #1e3a5f;
+        }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-name {
+            color: #1e3a5f;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            letter-spacing: -0.01em;
+        }
+        
+        .is-sample .bookmark-btn {
+            display: none;
+        }
+
+        .bookmark-btn {
+            background: none;
+            border: none;
+            font-size: 1.35rem;
+            cursor: pointer;
+            opacity: 0.2;
+            transition: opacity 0.2s;
+            padding: 0.25rem;
+        }
+
+        .bookmark-btn:hover {
+            opacity: 0.6;
+        }
+
+        .bookmark-btn.active {
+            opacity: 1;
+            color: #1e3a5f;
+        }
+
+        .category-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .definition {
+            color: #475569;
+            margin-bottom: 1.25rem;
+            line-height: 1.7;
+            font-size: 0.975rem;
+        }
+
+        .example {
+            font-style: italic;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+            padding: 1rem 1.25rem;
+            background: #f8fafc;
+            border-radius: 0.375rem;
+            border-left: 3px solid #cbd5e1;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* --- RESTORED CSS FOR CARD FORMATTING --- */
+        .analysis-section {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0.375rem;
+            border: 1px solid #bae6fd;
+            margin-bottom: 1rem;
+        }
+
+        .purpose-section {
+            background: linear-gradient(135deg, #fffbf5, #fef5e7);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0.375rem;
+            border: 1px solid #fde8cc;
+        }
+        .pro-tip-wrapper {
+            margin-top: 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid #bae6fd; /* Subtle separator line */
+        }
+
+        .pro-tip-wrapper .section-label {
+            color: #0c4a6e; /* Match the other labels in the blue box */
+        }
+
+        .pro-tip-wrapper .effect-text {
+            font-style: normal;
+            color: #334155;
+        }
+
+        .section-label {
+            color: #0c4a6e;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .purpose-section .section-label {
+            color: #6b21a8;
+        }
+
+        .effect-text {
+            color: #334155;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+         .effect-text:last-child {
+            margin-bottom: 0;
+        }
+
+        .analysis-questions {
+            color: #0c4a6e;
+            font-weight: 600;
+            margin-bottom: 0.625rem;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .questions-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .questions-list li {
+            color: #334155;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+            padding-left: 1.25rem;
+            position: relative;
+            font-size: 0.925rem;
+        }
+
+        .questions-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #0c4a6e;
+            font-weight: bold;
+        }
+        
+        .purpose-item {
+            margin-bottom: 0.875rem;
+        }
+
+        .purpose-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .purpose-item .purpose-heading {
+            color: #7c3aed;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .purpose-item .purpose-text {
+            color: #334155;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 0.5rem;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin: auto;
+        }
+
+        .modal-inner {
+            padding: 2.5rem 3rem;
+        }
+
+        .modal-close {
+            position: sticky;
+            top: 1.5rem;
+            right: 1.5rem;
+            float: right;
+            background: #1e3a5f;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            z-index: 1;
+            margin-bottom: 1rem;
+        }
+
+        .modal-close:hover {
+            background: #2c4a6f;
+            transform: scale(1.1);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #64748b;
+            font-size: 1.1rem;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            margin-bottom: 2.5rem;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            header,
+            .daily-quote-section {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .collapsible-header span:first-child {
+                font-size: 1.25rem;
+            }
+
+            .daily-quote-section blockquote {
+                font-size: 1.1rem;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .feature-card {
+                padding: 1.5rem;
+            }
+
+            .modal-overlay {
+                padding: 1rem;
+            }
+
+            .modal-inner {
+                padding: 1.5rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                max-height: 85vh;
+            }
+        }
+
+    </style>
+</head>
+<body class="is-sample">
+    <div class="container">
+        <header class="global-header">
+            <nav class="global-nav">
+                <a href="index.html" class="logo-link">
+                    <img src="logo.png" alt="Learner Threads Logo">
+                    <span>Learner Threads</span>
+                </a>
+                <div class="nav-links">
+                    <div class="nav-links">
+                        <a href="pricing.html">Pricing</a>
+                        <a href="https://blog.learnerthreads.com">Blog</a>
+                        <a href="access.html">Sign In</a>
+                    </div>
+            </nav>
+        </header>
+    <div class="page-header">
+            <h1>Language Lens</h1>
+            <p class="subtitle">A comprehensive guide to literary devices, grammar, and sentence structure for text analysis</p>
+            
+            <div class="upgrade-prompt">
+                <p>This is a free sample with 12 features. <strong><a href="purchase.html">Purchase now</a></strong> to unlock all 50+ features, including the full flashcard deck and bookmarking.</p>
+            </div>
+
+            <div class="controls">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchInput" placeholder="Search features...">
+                </div>
+                <a href="purchase.html" class="mode-toggle premium-feature">⚡️ Flashcard Mode (Full Version)</a>
+            </div>
+
+            <div class="filter-controls" id="filterControls" style="margin-top: 1.5rem;">
+                <button class="category-filter active" data-category="all">All Features</button>
+            </div>
+        </div>
+
+        <main>
+            <section class="daily-quote-section" id="dailyQuoteSection">
+                <h2 class="collapsible-header" id="quoteHeader">
+                    <span>Daily Quote Analysis 💡</span>
+                    <span class="toggle-icon">▼</span>
+                </h2>
+                <div class="collapsible-content" id="quoteContent">
+                    <div class="quote-content">
+                        <blockquote id="dailyQuoteText"></blockquote>
+                        <cite id="dailyQuoteSource"></cite>
+                    </div>
+                    <div id="dailyQuoteAnalysis"></div>
+                </div>
+            </section>
+
+            <div class="gallery" id="gallery"></div>
+            <div class="no-results hidden" id="noResults">No features found matching your search or filter.</div>
+            
+        </main>
+        
+        <footer class="global-footer">
+            <p>&copy; 2025 Learner Threads | <a href="mailto:bevan@learnerthreads.com">Contact Support</a></p>
+        </footer>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content" id="modalContent">
+            <div class="modal-inner">
+                <button class="modal-close" id="modalClose">&times;</button>
+                <div id="modalBody"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Feature list shortened for sample version
+    const features = [
+        {
+            name: "Adjectives",
+            category: "Parts of Speech",
+            definition: "Descriptive words that modify nouns, providing specific details about their qualities, characteristics, or states.",
+            example: "The <strong>ancient</strong>, <strong>weathered</strong> manuscript revealed secrets.",
+            effect: "Add precision, create vivid imagery, and shape the reader's perception of people, places, or things.",
+            questions: [
+                "What specific qualities do the adjectives emphasise?",
+                "How do they influence your impression of the subject?",
+                "Why did the writer choose these particular descriptors?"
+            ],
+            purposes: {
+                connect: "How do descriptive words shape cultural perceptions and stereotypes?",
+                understand: "What emotions or judgments do these descriptive words trigger in you?",
+                recognise: "How does the writer use selection of adjectives to guide your feelings?",
+                question: "What biases or assumptions do these descriptive choices reveal?"
+            },
+            proTip: "Analyse how specific word choices shape perception. <strong>The adjectives 'ancient' and 'weathered' immediately frame the manuscript not just as old, but as something that has endured, giving it an aura of importance and mystery.</strong>"
+        },
+        {
+            name: "Alliteration",
+            category: "Sound Devices",
+            definition: "The repetition of the same initial consonant sound in words that are close together in a phrase or sentence.",
+            example: "Peter Piper picked a peck of pickled peppers.",
+            effect: "Creates rhythm and draws attention to specific words or ideas.",
+            questions: [
+                "What mood does the sound create - soft and soothing, or harsh and aggressive?",
+                "Which words are being emphasised through the repeated sound?",
+                "Why did the writer want to draw attention to these particular words?"
+            ],
+            purposes: {
+                connect: "How does this sound pattern draw on poetic or literary traditions you recognise?",
+                understand: "What emotion or memory does this sound evoke in you as a reader?",
+                recognise: "How does the writer use sound to make certain words stand out or stick in your mind?",
+                question: "Does the pleasant or harsh sound influence how you feel about what's being described?"
+            },
+            proTip: "Connect the repeated sound to the mood. <strong>The harsh, plosive 'p' sound in 'Peter Piper picked' mimics the aggressive, almost violent action of picking.</strong>"
+        },
+        {
+            name: "Asyndeton",
+            category: "Punctuation & Syntax",
+            definition: "The omission or absence of conjunctions (like 'and', 'or', 'but') between parts of a sentence.",
+            example: "I came, I saw, I conquered.",
+            effect: "Creates a fast-paced, breathless rhythm. It can make a list feel more immediate, spontaneous, or overwhelming.",
+            questions: [
+                "What is the effect of removing the 'and's from the list?",
+                "How does the pace of the sentence change?",
+                "Does this make the speaker sound more powerful, rushed, or passionate?"
+            ],
+            purposes: {
+                connect: "How is asyndeton used in powerful speeches or dramatic moments in film to create a sense of urgency?",
+                understand: "How does the rapid-fire list make you feel as a reader? Overwhelmed? Energised?",
+                recognise: "The writer is deliberately breaking a grammatical rule to manipulate rhythm for emotional effect.",
+                question: "Does the rapid pace prevent you from thinking too deeply about any single item in the list?"
+            },
+            proTip: "Argue that the lack of conjunctions creates a breathless, rapid-fire effect. <strong>'I came, I saw, I conquered' feels faster and more powerful without 'and,' making the sequence of events seem swift and decisive.</strong>"
+        },
+        {
+            name: "Complex Sentence",
+            category: "Sentences",
+            definition: "A sentence with one independent clause and one or more dependent clauses.",
+            example: "Although it was raining, we went for a walk.",
+            effect: "Shows relationships of cause, condition, or time between ideas, adding sophistication.",
+            questions: [
+                "What is the main idea and what is the supporting information?",
+                "How are the clauses related (because, although, when, if)?",
+                "Why did the writer make one idea dependent on another?"
+            ],
+            purposes: {
+                connect: "How do complex sentences reflect sophisticated thought in academic writing?",
+                understand: "How does the subordination help you see cause and effect?",
+                recognise: "How does the writer layer ideas to show hierarchy and relationship?",
+                question: "Which idea is privileged as main and which is treated as secondary?"
+            },
+            proTip: "Analyse which idea is subordinated. <strong>By placing 'Although it was raining' in a dependent clause, the writer emphasises the main action—going for a walk—as an act of defiance against the poor weather.</strong>"
+        },
+        {
+            name: "Em Dash",
+            category: "Punctuation & Syntax",
+            definition: "A punctuation mark (—) used to signal an interruption, an abrupt change of thought, or to add dramatic emphasis to a phrase.",
+            example: "She was a brilliant scientist—and a terrible cook.",
+            effect: "Creates a more dramatic and informal pause than a comma or colon. It can make the text feel more like natural speech, with interruptions and parenthetical thoughts.",
+            questions: [
+                "What is the purpose of the interruption here?",
+                "How does the dash change the tone compared to using a different punctuation mark?",
+                "Does the phrase after the dash add emphasis, an explanation, or a surprising twist?"
+            ],
+            purposes: {
+                connect: "How do em dashes mimic the way we interrupt ourselves in natural conversation to add extra information or change direction?",
+                understand: "Does the abrupt pause create a sense of drama, comedy, or intimacy for you as a reader?",
+                recognise: "The writer is choosing a specific punctuation mark to create a distinct voice and rhythm that feels less formal and more dynamic.",
+                question: "Is the information set off by dashes a crucial detail or a casual aside? How does that choice affect its importance?"
+            },
+            proTip: "Analyse the em dash as a deliberate interruption. <strong>The dash before '—and a terrible cook' creates a dramatic, comedic pause, making the contradictory statement more impactful and surprising.</strong>"
+        },
+        {
+            name: "Metaphor",
+            category: "Figurative Language",
+            definition: "A direct comparison between two unlike things without using 'like' or 'as.' It states that one thing is another.",
+            example: "The world is a stage.",
+            effect: "Creates powerful connections and helps readers see things in new ways.",
+            questions: [
+                "What two things are being compared?",
+                "What qualities are transferred from one to the other?",
+                "Why did the writer choose this particular comparison?"
+            ],
+            purposes: {
+                connect: "How does this metaphor draw on familiar cultural or literary references?",
+                understand: "What new way of seeing yourself or the world does this comparison offer?",
+                recognise: "How does this metaphor shape your emotional or intellectual response?",
+                question: "Whose worldview or values does this comparison reinforce or challenge?"
+            },
+            proTip: "Instead of saying 'the author uses a metaphor,' analyse its implications directly. <strong>By describing the world as 'a stage,' Shakespeare implies our actions are performative and our fates predetermined by a script.</strong>"
+        },
+        {
+            name: "Onomatopoeia",
+            category: "Sound Devices",
+            definition: "The use of words that imitate the sounds they describe.",
+            example: "Buzz, hiss, or pop.",
+            effect: "Brings sounds to life, making the writing more dynamic and sensory.",
+            questions: [
+                "What sound is being imitated?",
+                "How does hearing this sound affect the mood or atmosphere?",
+                "Why does the writer want us to 'hear' this moment?"
+            ],
+            purposes: {
+                connect: "How do sound words connect to the way we naturally describe our world?",
+                understand: "How does hearing this sound immerse you more deeply in the experience?",
+                recognise: "How does the writer use sound imitation to make the scene more vivid and immediate?",
+                question: "Whose experience of sound is being prioritised - could others hear it differently?"
+            },
+            proTip: "Analyse how the sound makes the event more visceral. <strong>The word 'hiss' doesn't just describe a sound; it makes the reader almost feel the sibilant, menacing presence of the creature.</strong>"
+        },
+        {
+            name: "Personification",
+            category: "Figurative Language",
+            definition: "Giving human qualities or actions to inanimate objects or abstract ideas.",
+            example: "The wind whispered through the trees.",
+            effect: "Makes non-human things relatable and vivid by bringing them to life.",
+            questions: [
+                "What non-human thing is being given human qualities?",
+                "What human characteristics are assigned to it?",
+                "Why did the writer want us to see this thing as human-like?"
+            ],
+            purposes: {
+                connect: "How does this connect to myths, fables, or cultural stories about nature?",
+                understand: "How does seeing nature as alive change your relationship with it?",
+                recognise: "How does the writer make abstract or distant things feel closer and more relatable?",
+                question: "Does treating nature as human help us care for it, or does it centre human experience?"
+            },
+            proTip: "Explain how giving an object human qualities changes our relationship with it. <strong>By having 'the wind whisper,' nature is transformed from an inanimate force into a gentle, sentient companion.</strong>"
+        },
+        {
+            name: "Repetition",
+            category: "Structural Devices",
+            definition: "The simple act of repeating a word, phrase, or sentence.",
+            example: "The politician promised change, change, and more change.",
+            effect: "Emphasises key ideas and creates rhythm, building intensity or urgency.",
+            questions: [
+                "What specific words or phrases are being repeated?",
+                "How does the repetition affect the tone or emotional intensity?",
+                "Why does the writer want to hammer this point home?"
+            ],
+            purposes: {
+                connect: "How does repetition connect to advertising, political slogans, or cultural mantras?",
+                understand: "Does the repetition convince you or make you suspicious?",
+                recognise: "How does the writer use repetition to persuade or manipulate?",
+                question: "Is the repetition used to inspire or to overwhelm critical thinking?"
+            },
+            proTip: "Go beyond 'it emphasises.' <strong>The repetition of 'change, change, and more change' is not just for emphasis; it's a persuasive tool that aims to make the promise of change feel overwhelming and inevitable.</strong>"
+        },
+        {
+            name: "Foreshadowing",
+            category: "Structural Devices",
+            definition: "Hints or clues about events that will occur later in the narrative.",
+            example: "There are dark clouds gathering on the horizon.",
+            effect: "Builds anticipation, creates tension, and prepares readers for future events.",
+            questions: [
+                "What is being hinted at or suggested?",
+                "How does this create expectations about what might happen?",
+                "Why did the writer want to prepare us for what's coming?"
+            ],
+            purposes: {
+                connect: "How does foreshadowing connect to storytelling traditions and prophecy?",
+                understand: "How does anticipating future events change your experience of the present?",
+                recognise: "How does the writer plant clues to create suspense and structure?",
+                question: "Does foreshadowing suggest fate and inevitability, or just careful planning?"
+            },
+            proTip: "Explain how the hint creates suspense. <strong>The mention of 'dark clouds gathering' infuses an ordinary weather observation with a sense of impending doom, creating tension for the reader.</strong>"
+        },
+        {
+            name: "Simple Sentence",
+            category: "Sentences",
+            definition: "A sentence with one independent clause containing a subject and verb, expressing a complete thought.",
+            example: "The cat slept.",
+            effect: "Creates clarity, emphasis, and directness through brevity.",
+            questions: [
+                "What single idea is being expressed?",
+                "How does the simplicity affect the pace and clarity?",
+                "Why did the writer use a simple structure here?"
+            ],
+            purposes: {
+                connect: "How do simple sentences mirror children's language and learning?",
+                understand: "How does simplicity make you feel - clarity or oversimplification?",
+                recognise: "How does the writer use simple sentences for emphasis or pacing?",
+                question: "Does simplicity clarify or does it hide complexity?"
+            },
+            proTip: "When a simple sentence appears after long ones, analyse its dramatic impact. <strong>'The cat slept.' is a moment of absolute calm and simplicity, offering a quiet, definitive statement with no extra complexity.</strong>"
+        },
+        {
+            name: "Verbs",
+            category: "Parts of Speech",
+            definition: "Words that express actions, occurrences, or states of being. They drive the movement and energy of sentences.",
+            example: "The wind <strong>howled</strong> through the empty streets.",
+            effect: "Create action, convey intensity, and establish the energy and tone of a sentence.",
+            questions: [
+                "What action or state is being described?",
+                "Is the verb active (she runs) or passive (she is running)?",
+                "Why did the writer choose this particular verb?"
+            ],
+            purposes: {
+                connect: "How do strong verbs connect to dynamic storytelling traditions?",
+                understand: "What energy or emotion does the verb create in you?",
+                recognise: "How does the writer use verb choice to control pace and intensity?",
+                question: "Does the verb suggest agency or passivity - who has the power to act?"
+            },
+            proTip: "Analyse the verb's specific connotations. <strong>The verb 'howled' does more than say the wind blew; it personifies the wind as a wild, mournful creature, creating a desolate and lonely atmosphere.</strong>"
+        }
+    ];
+
+    const dailyQuotes = [
+        {
+            text: "The mass of men lead lives of quiet desperation.",
+            author: "Henry David Thoreau",
+            source: "Walden (1854)",
+            techniques: ["Hyperbole", "Alliteration"],
+            analysis: "Thoreau uses <strong>hyperbole</strong> to make the provocative claim that most people live in 'quiet desperation'. This exaggeration is amplified by the soft <strong>alliteration</strong> in 'lead lives', which adds to the sense of hushed, unspoken suffering. Together, these techniques create a powerful and memorable critique of conformity.",
+            matters: "By moving beyond a simple observation to a grand, dramatic statement, Thoreau forces the reader to confront their own life. The analysis isn't just about societal critique; it's a personal challenge. It prompts us to question whether our own pursuit of stability and social acceptance has come at the cost of genuine fulfillment, turning a sociological observation into a timeless philosophical question about what it means to live an authentic life."
+        },
+        {
+            text: "It was the best of times, it was the worst of times...",
+            author: "Charles Dickens",
+            source: "A Tale of Two Cities (1859)",
+            techniques: ["Anaphora", "Antithesis", "Parallel Structure"],
+            analysis: "Dickens employs <strong>anaphora</strong> by repeating the phrase 'it was the' to build a powerful, rhythmic cadence. This repetition structures a series of direct contrasts, or <strong>antithesis</strong> ('best'/'worst', 'wisdom'/'foolishness'). The use of <strong>parallel structure</strong> across these clauses gives the contradictions a sense of epic scale and balance.",
+            matters: "This opening immediately establishes the novel's central theme of duality. Rather than presenting a simple view of the past, the language forces the reader to hold opposing ideas in their mind simultaneously. This complexity suggests that truth is not simple and that every era is defined by its contradictions, setting the stage for a story where personal and political loyalties are constantly in conflict."
+        },
+        {
+            text: "Because I could not stop for Death – He kindly stopped for me –",
+            author: "Emily Dickinson",
+            source: "Poem 712 (c. 1863)",
+            techniques: ["Personification", "Irony", "Caesura"],
+            analysis: "Dickinson uses <strong>personification</strong> to portray Death as a polite gentleman in a carriage. This gentle image is contrasted with the reality of death, creating a profound <strong>irony</strong>. The <strong>caesura</strong> (the dash) creates a pause, forcing the reader to contemplate this strange, courteous image of mortality before the line concludes.",
+            matters: "By transforming death from a terrifying force into a gentle suitor, the poem challenges our fundamental fears. The analysis shows how this gentle tone creates a contemplative mood, allowing the speaker to explore the journey towards the afterlife without fear. It reframes mortality not as an end, but as a transition, prompting a deeper reflection on the nature of eternity and our place within it."
+        },
+        {
+            text: "All the world's a stage, And all the men and women merely players;",
+            author: "William Shakespeare",
+            source: "As You Like It (c. 1599)",
+            techniques: ["Metaphor", "Parallel Structure"],
+            analysis: "Shakespeare uses a direct <strong>metaphor</strong> to frame life as a theatrical performance, stating the world <strong>is</strong> a stage. This comparison is extended through <strong>parallel structure</strong> in the two lines ('All the...'), creating a balanced, memorable rhythm that gives the idea a sense of universal truth.",
+            matters: "This metaphor provides a powerful framework for understanding human existence. It suggests our lives follow a pre-written script with set roles, entrances, and exits. This perspective can feel fatalistic, but it also connects every individual's personal story to a larger, shared human drama, highlighting the common experiences that unite us across time."
+        }
+    ];
+
+    const categories = ['all', ...new Set(features.map(f => f.category))];
+    let currentCategory = 'all';
+    let filteredFeatures = [...features];
+
+    const gallery = document.getElementById('gallery');
+    const searchInput = document.getElementById('searchInput');
+    const noResults = document.getElementById('noResults');
+    const filterControls = document.getElementById('filterControls');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalClose = document.getElementById('modalClose');
+    const modalBody = document.getElementById('modalBody');
+    
+    const quoteSection = document.getElementById('dailyQuoteSection');
+    const quoteHeader = document.getElementById('quoteHeader');
+    const dailyQuoteText = document.getElementById('dailyQuoteText');
+    const dailyQuoteSource = document.getElementById('dailyQuoteSource');
+    const dailyQuoteAnalysis = document.getElementById('dailyQuoteAnalysis');
+
+    function displayDailyQuote() {
+        function getDayOfYear() {
+            const now = new Date();
+            const start = new Date(now.getFullYear(), 0, 0);
+            const diff = now - start;
+            const oneDay = 1000 * 60 * 60 * 24;
+            return Math.floor(diff / oneDay);
+        }
+
+        const dayIndex = getDayOfYear() % dailyQuotes.length;
+        const quote = dailyQuotes[dayIndex];
+
+        dailyQuoteText.innerHTML = `“${quote.text}”`;
+        dailyQuoteSource.textContent = `— ${quote.author}, ${quote.source}`;
+        
+        const techniqueTagsHtml = quote.techniques.map(tech => 
+            `<span class="technique-tag-link" data-feature="${tech}">${tech}</span>`
+        ).join('');
+
+        dailyQuoteAnalysis.innerHTML = `
+            <div class="technique-tags">${techniqueTagsHtml}</div>
+            <div class="analysis-section">
+                <div class="section-label">Analysis</div>
+                <div class="effect-text">${quote.analysis}</div>
+            </div>
+            <div class="purpose-section">
+                <div class="section-label">Why it Matters</div>
+                <div class="effect-text">${quote.matters}</div>
+            </div>
+        `;
+    }
+
+    quoteHeader.addEventListener('click', () => {
+        quoteSection.classList.toggle('expanded');
+    });
+
+    dailyQuoteAnalysis.addEventListener('click', (e) => {
+        const tag = e.target.closest('.technique-tag-link');
+        if (tag) {
+            const featureName = tag.dataset.feature;
+            searchInput.value = featureName;
+            filterByCategory('all');
+            applyFilters();
+            searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            searchInput.focus();
+        }
+    });
+
+    categories.forEach(cat => {
+        if (cat === 'all') return;
+        const btn = document.createElement('button');
+        btn.className = 'category-filter';
+        btn.dataset.category = cat;
+        btn.textContent = cat;
+        btn.addEventListener('click', (e) => filterByCategory(e.target.dataset.category));
+        filterControls.appendChild(btn);
+    });
+    
+    displayDailyQuote();
+    renderGallery();
+
+    function filterByCategory(category) {
+        currentCategory = category;
+        document.querySelectorAll('.category-filter').forEach(btn => {
+            btn.classList.remove('active');
+            if(btn.dataset.category === category) {
+                btn.classList.add('active');
+            }
+        });
+        document.querySelector('[data-category="all"]').classList.remove('active');
+         if(category === 'all') {
+            document.querySelector('[data-category="all"]').classList.add('active');
+        }
+        applyFilters();
+    }
+
+    function applyFilters() {
+        const searchTerm = searchInput.value.toLowerCase();
+        filteredFeatures = features.filter(f => {
+            const matchesCategory = currentCategory === 'all' || f.category === currentCategory;
+            const matchesSearch = !searchTerm || 
+                f.name.toLowerCase().includes(searchTerm) ||
+                f.definition.toLowerCase().includes(searchTerm) ||
+                f.effect.toLowerCase().includes(searchTerm) ||
+                f.category.toLowerCase().includes(searchTerm);
+            return matchesCategory && matchesSearch;
+        });
+        renderGallery();
+    }
+    
+    searchInput.addEventListener('input', applyFilters);
+
+    function renderGallery() {
+        gallery.innerHTML = '';
+        if (filteredFeatures.length === 0) {
+            noResults.classList.remove('hidden');
+            gallery.classList.add('hidden');
+            return;
+        }
+        noResults.classList.add('hidden');
+        gallery.classList.remove('hidden');
+        
+        filteredFeatures.forEach((feature) => {
+            const card = document.createElement('div');
+            card.className = 'feature-card';
+            const questionsList = feature.questions.map(q => `<li>${q}</li>`).join('');
+            
+            card.innerHTML = `
+                <div class="category-tag">${feature.category}</div>
+                <div class="feature-name">
+                    <span>${feature.name}</span>
+                </div>
+                <div class="definition">${feature.definition}</div>
+                <div class="example">${feature.example}</div>
+                <div class="analysis-section">
+                    <div class="section-label">Effect</div>
+                    <div class="effect-text">${feature.effect}</div>
+                    <div class="analysis-questions">When Analysing Language, Ask</div>
+                    <ul class="questions-list">${questionsList}</ul>
+                    <div class="pro-tip-wrapper">
+                        <div class="section-label">💡 Pro Tip</div>
+                        <div class="effect-text">${feature.proTip}</div>
+                    </div>
+                </div>
+                <div class="purpose-section">
+                    <div class="section-label">When Analysing Why This Matters, You Can</div>
+                    <div class="purpose-item">
+                        <div class="purpose-heading">Connect to the Wider World:</div>
+                        <div class="purpose-text">${feature.purposes.connect}</div>
+                    </div>
+                    <div class="purpose-item">
+                        <div class="purpose-heading">Understand Ourselves:</div>
+                        <div class="purpose-text">${feature.purposes.understand}</div>
+                    </div>
+                    <div class="purpose-item">
+                        <div class="purpose-heading">Recognise the Craft:</div>
+                        <div class="purpose-text">${feature.purposes.recognise}</div>
+                    </div>
+                    <div class="purpose-item">
+                        <div class="purpose-heading">Question the Text:</div>
+                        <div class="purpose-text">${feature.purposes.question}</div>
+                    </div>
+                </div>
+            `;
+            
+            card.addEventListener('click', (e) => {
+                openModal(feature);
+            });
+            
+            gallery.appendChild(card);
+        });
+    }
+
+    function openModal(feature) {
+        const questionsList = feature.questions.map(q => `<li>${q}</li>`).join('');
+        modalBody.innerHTML = `
+            <div class="category-tag">${feature.category}</div>
+            <div class="feature-name"><span>${feature.name}</span></div>
+            <div class="definition">${feature.definition}</div>
+            <div class="example">${feature.example}</div>
+            <div class="analysis-section">
+                <div class="section-label">Effect</div>
+                <div class="effect-text">${feature.effect}</div>
+                <div class="analysis-questions">When Analysing Language, Ask</div>
+                <ul class="questions-list">${questionsList}</ul>
+                <div class="pro-tip-wrapper">
+                    <div class="section-label">💡 Pro Tip</div>
+                    <div class="effect-text">${feature.proTip}</div>
+                </div>
+            </div>
+            <div class="purpose-section">
+                <div class="section-label">When Exploring Why This Matters, You Can</div>
+                <div class="purpose-item">
+                    <div class="purpose-heading">Connect to the Wider World:</div>
+                    <div class="purpose-text">${feature.purposes.connect}</div>
+                </div>
+                <div class="purpose-item">
+                    <div class="purpose-heading">Understand Ourselves:</div>
+                    <div class="purpose-text">${feature.purposes.understand}</div>
+                </div>
+                <div class="purpose-item">
+                    <div class="purpose-heading">Recognise the Craft:</div>
+                    <div class="purpose-text">${feature.purposes.recognise}</div>
+                </div>
+                <div class="purpose-item">
+                    <div class="purpose-heading">Question the Text:</div>
+                    <div class="purpose-text">${feature.purposes.question}</div>
+                </div>
+            </div>
+        `;
+        modalOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        modalOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelector('[data-category="all"]').addEventListener('click', (e) => filterByCategory(e.target.dataset.category));
+</script>
+</body>
+</html>

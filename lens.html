@@ -1,0 +1,2210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Lens</title>
+
+    <script>
+        const validCodes = new Set([
+            'PC2025',
+            'O$2TE@7B'
+        ]);
+
+        const storedCode = localStorage.getItem('languageFeaturesAccess');
+
+        if (!validCodes.has(storedCode)) {
+            window.location.href = 'access.html';
+        }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #2c3e50;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* --- Global Header & Footer Styles --- */
+        .global-header {
+            margin-bottom: 2.5rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .global-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e3a5f;
+        }
+
+        .logo-link img {
+            max-height: 40px;
+            border-radius: 50%;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #475569;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #1e3a5f;
+        }
+
+        .global-footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .global-footer p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .global-footer a {
+            color: #1e3a5f;
+            text-decoration: none;
+        }
+
+        .global-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- Page Header Styles --- */
+        .page-header {
+            background: white;
+            padding: 2.5rem 3rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            color: #1e3a5f;
+            font-size: 2.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 1.05rem;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.875rem 1.25rem 0.875rem 3rem;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: #f8fafc;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #1e3a5f;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .category-filter {
+            padding: 0.75rem 1.25rem;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 0.375rem;
+            background: white;
+            color: #475569;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .category-filter:hover {
+            border-color: #1e3a5f;
+            background: #f8fafc;
+        }
+
+        .category-filter.active {
+            background: #1e3a5f;
+            color: white;
+            border-color: #1e3a5f;
+        }
+
+        .mode-toggle {
+            background: #1e3a5f;
+            color: white;
+            border: none;
+            padding: 0.875rem 1.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .mode-toggle:hover {
+            background: #2c4a6f;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.2);
+        }
+
+        /* Daily Quote Section - Collapsible */
+        .daily-quote-section {
+            background: white;
+            padding: 1.5rem 3rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease-in-out;
+            margin-bottom: 2.5rem;
+        }
+
+        .collapsible-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            color: #1e3a5f;
+        }
+        .collapsible-header span:first-child {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s ease;
+            font-size: 1.2rem;
+            color: #64748b;
+        }
+
+        .daily-quote-section.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+
+        .daily-quote-section.expanded .collapsible-content {
+            max-height: 2000px; /* Adjust if content is taller */
+            transition: max-height 0.5s ease-in;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 1.5rem;
+        }
+        
+        .quote-content {
+            margin-bottom: 2rem;
+        }
+
+        .daily-quote-section blockquote {
+            font-size: 1.25rem;
+            font-style: italic;
+            color: #334155;
+            border-left: 4px solid #1e3a5f;
+            padding-left: 1.5rem;
+            margin: 0 0 1rem 0;
+            line-height: 1.6;
+        }
+
+        .daily-quote-section cite {
+            display: block;
+            text-align: right;
+            color: #64748b;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .technique-tags {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .technique-tag-link {
+            font-size: 0.75rem;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .technique-tag-link:hover {
+            background: #e2e8f0;
+            color: #1e3a5f;
+        }
+
+        /* Analysis Section (for explanation) - Match card's effect section */
+        .analysis-section {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0.375rem;
+            border: 1px solid #bae6fd;
+            margin-bottom: 1rem;
+        }
+
+        .section-label {
+            color: #0c4a6e;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .effect-text {
+            color: #334155;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        .effect-text:last-child {
+            margin-bottom: 0;
+        }
+        .pro-tip-wrapper {
+            margin-top: 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid #bae6fd; /* Subtle separator line */
+        }
+
+        .pro-tip-wrapper .section-label {
+            color: #0c4a6e; /* Match the other labels in the blue box */
+        }
+
+        .pro-tip-wrapper .effect-text {
+            font-style: normal;
+            color: #334155;
+        }
+
+        /* Purpose Section (for why it matters) - Match card's purpose section */
+        .purpose-section {
+            background: linear-gradient(135deg, #fffbf5, #fef5e7);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0.375rem;
+            border: 1px solid #fde8cc;
+        }
+
+        .purpose-section .section-label {
+            color: #6b21a8;
+        }
+        .purpose-section .effect-text {
+            font-style: italic;
+        }
+
+        .purpose-item {
+            margin-bottom: 0.875rem;
+        }
+        .purpose-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Reference Gallery Mode */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-name {
+            color: #1e3a5f;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            letter-spacing: -0.01em;
+        }
+
+        .bookmark-btn {
+            background: none;
+            border: none;
+            font-size: 1.35rem;
+            cursor: pointer;
+            opacity: 0.2;
+            transition: opacity 0.2s;
+            padding: 0.25rem;
+        }
+
+        .bookmark-btn:hover {
+            opacity: 0.6;
+        }
+
+        .bookmark-btn.active {
+            opacity: 1;
+            color: #1e3a5f;
+        }
+
+        .category-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .definition {
+            color: #475569;
+            margin-bottom: 1.25rem;
+            line-height: 1.7;
+            font-size: 0.975rem;
+        }
+
+        .example {
+            font-style: italic;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+            padding: 1rem 1.25rem;
+            background: #f8fafc;
+            border-radius: 0.375rem;
+            border-left: 3px solid #cbd5e1;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .analysis-questions {
+            color: #0c4a6e;
+            font-weight: 600;
+            margin-bottom: 0.625rem;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .questions-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .questions-list li {
+            color: #334155;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+            padding-left: 1.25rem;
+            position: relative;
+            font-size: 0.925rem;
+        }
+
+        .questions-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #0c4a6e;
+            font-weight: bold;
+        }
+
+        .purpose-section .questions-list li::before {
+            color: #6b21a8;
+        }
+
+        .questions-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .purpose-item .purpose-heading {
+            color: #7c3aed;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .purpose-item .purpose-text {
+            color: #334155;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 0.5rem;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin: auto;
+        }
+
+        .modal-inner {
+            padding: 2.5rem 3rem;
+        }
+
+        .modal-close {
+            position: sticky;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: #1e3a5f;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            z-index: 1;
+            margin-bottom: 1rem;
+        }
+
+        .modal-close:hover {
+            background: #2c4a6f;
+            transform: scale(1.1);
+        }
+
+        /* Flashcard Mode */
+        .flashcard-container {
+            display: none;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .flashcard-container.active {
+            display: block;
+        }
+
+        .flashcard {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 3.5rem 3rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            min-height: 500px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .flashcard:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .flashcard-front {
+            text-align: center;
+        }
+
+        .flashcard-front .feature-name {
+            font-size: 2.75rem;
+            color: #1e3a5f;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .flashcard-front .tap-hint {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-top: 2.5rem;
+        }
+
+        .flashcard-back {
+            display: none;
+        }
+
+        .flashcard.flipped .flashcard-front {
+            display: none;
+        }
+
+        .flashcard.flipped .flashcard-back {
+            display: block;
+        }
+
+        .flashcard-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+        }
+        
+        .flashcard-nav-center {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-btn {
+            background: #1e3a5f;
+            color: white;
+            border: none;
+            padding: 0.875rem 1.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        #randomiseBtn {
+            background-color: #f1f5f9;
+            color: #475569;
+            padding: 0.75rem 1.25rem;
+            font-size: 0.9rem;
+        }
+        
+        #randomiseBtn:hover {
+             background-color: #e2e8f0;
+             transform: translateY(-1px);
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #2c4a6f;
+            transform: translateY(-1px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .card-counter {
+            color: #475569;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #64748b;
+            font-size: 1.1rem;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            margin-bottom: 2.5rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .page-header {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .daily-quote-section {
+                padding: 1rem 1.5rem;
+            }
+             .collapsible-header span:first-child {
+                font-size: 1.25rem;
+            }
+            .daily-quote-section blockquote {
+                font-size: 1.1rem;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .feature-card {
+                padding: 1.5rem;
+            }
+
+            .flashcard {
+                padding: 2rem 1.5rem;
+            }
+            .flashcard-navigation {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+            .flashcard-nav-center {
+                order: -1;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .flashcard-front .feature-name {
+                font-size: 2rem;
+            }
+
+            .modal-overlay {
+                padding: 1rem;
+            }
+
+            .modal-inner {
+                padding: 1.5rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                max-height: 85vh;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .controls, .mode-toggle, .bookmark-btn, .filter-controls, .daily-quote-section, .global-header, .global-footer {
+                display: none !important;
+            }
+
+            .feature-card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #e2e8f0;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="global-header">
+            <nav class="global-nav">
+                <a href="index.html" class="logo-link">
+                    <img src="logo.png" alt="Learner Threads Logo">
+                    <span>Learner Threads</span>
+                </a>
+                <div class="nav-links">
+                    <a href="pricing.html">Pricing</a>
+                    <a href="https://blog.learnerthreads.com">Blog</a>
+                    <a href="access.html">Sign In</a>
+                </div>
+            </nav>
+        </header>
+
+        <div class="page-header">
+            <h1>Language Lens</h1>
+            <p class="subtitle">A comprehensive guide to literary devices, grammar, and sentence structure for text analysis</p>
+            
+            <div class="controls">
+                <div class="search-box" id="searchBox">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchInput" placeholder="Search features...">
+                </div>
+                <button class="mode-toggle" id="modeToggle">Switch to Flashcard Mode</button>
+            </div>
+            
+            <div class="filter-controls" id="filterControls" style="margin-top: 1.5rem;">
+                <button class="category-filter active" data-category="all">All Features</button>
+                <button class="category-filter" id="bookmarkFilterBtn">🔖 Show Bookmarked</button>
+            </div>
+        </div>
+
+        <main>
+            <section class="daily-quote-section" id="dailyQuoteSection">
+                <h2 class="collapsible-header" id="quoteHeader">
+                    <span>Daily Quote Analysis 💡</span>
+                    <span class="toggle-icon">▼</span>
+                </h2>
+                <div class="collapsible-content" id="quoteContent">
+                    <div class="quote-content">
+                        <blockquote id="dailyQuoteText"></blockquote>
+                        <cite id="dailyQuoteSource"></cite>
+                    </div>
+                    <div id="dailyQuoteAnalysis"></div>
+                </div>
+            </section>
+
+            <div class="gallery" id="gallery"></div>
+            <div class="no-results hidden" id="noResults">No features found matching your search or filter.</div>
+
+            <div class="flashcard-container" id="flashcardContainer">
+                <div class="flashcard" id="flashcard">
+                    <div class="flashcard-front">
+                        <div class="category-tag" id="flashcardCategoryFront"></div>
+                        <div class="feature-name" id="flashcardName"></div>
+                        <p class="tap-hint">Click to reveal details ▼</p>
+                    </div>
+                    <div class="flashcard-back">
+                        <div class="category-tag" id="flashcardCategory"></div>
+                        <div class="feature-name" id="flashcardNameBack"></div>
+                        <div class="definition" id="flashcardDefinition"></div>
+                        <div class="example" id="flashcardExample"></div>
+                        <div class="analysis-section" id="flashcardAnalysis"></div>
+                    </div>
+                </div>
+                
+                <div class="flashcard-navigation">
+                    <button class="nav-btn" id="prevBtn">← Previous</button>
+                    <div class="flashcard-nav-center">
+                        <div class="card-counter" id="counter"></div>
+                        <button class="nav-btn" id="randomiseBtn">🔀 Randomise</button>
+                    </div>
+                    <button class="nav-btn" id="nextBtn">Next →</button>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="global-footer">
+            <p>&copy; 2025 Learner Threads | <a href="mailto:bevan@learnerthreads.com">Contact Support</a></p>
+        </footer>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content" id="modalContent">
+            <div class="modal-inner">
+                <button class="modal-close" id="modalClose">&times;</button>
+                <div id="modalBody"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const features = [
+            // SOUND DEVICES
+            {
+                name: "Alliteration",
+                category: "Sound Devices",
+                definition: "The repetition of the same initial consonant sound in words that are close together in a phrase or sentence.",
+                example: "Peter Piper picked a peck of pickled peppers.",
+                effect: "Creates rhythm and draws attention to specific words or ideas.",
+                questions: [
+                    "What mood does the sound create - soft and soothing, or harsh and aggressive?",
+                    "Which words are being emphasised through the repeated sound?",
+                    "Why did the writer want to draw attention to these particular words?"
+                ],
+                purposes: {
+                    connect: "How does this sound pattern draw on poetic or literary traditions you recognise?",
+                    understand: "What emotion or memory does this sound evoke in you as a reader?",
+                    recognise: "How does the writer use sound to make certain words stand out or stick in your mind?",
+                    question: "Does the pleasant or harsh sound influence how you feel about what's being described?"
+                },
+                proTip: "Connect the repeated sound to the mood. 'The harsh, plosive 'p' sound in 'Peter Piper picked' mimics the aggressive, almost violent action of picking.'"
+            },
+            {
+                name: "Assonance",
+                category: "Sound Devices",
+                definition: "The repetition of the same vowel sounds within words that are close to each other.",
+                example: "The fleet-feet sweep by sleeping geese.",
+                effect: "Adds musicality and flow to the text, creating a particular mood or tone.",
+                questions: [
+                    "What vowel sounds are being repeated?",
+                    "How does this affect the pace and rhythm of the line?",
+                    "Why did the writer want to create this particular sound quality?"
+                ],
+                purposes: {
+                    connect: "How does this musical quality connect to oral storytelling or poetic traditions?",
+                    understand: "What feeling or atmosphere does the repeated vowel sound create for you?",
+                    recognise: "How does the writer use vowel sounds to control the pace and flow of reading?",
+                    question: "Does the smooth or jarring sound affect how you interpret the meaning?"
+                },
+                proTip: "Analyse how the vowel sounds affect the pace and internal mood of a line. 'The long, drawn-out 'o' sounds in 'on a low, slow boat' create a mournful, weary tone.'"
+            },
+            {
+                name: "Consonance",
+                category: "Sound Devices",
+                definition: "The repetition of consonant sounds within or at the end of words in close proximity, particularly in the middle or end of words.",
+                example: "The lumpy, bumpy road led to the dump.",
+                effect: "Creates a subtle sound pattern that can unify lines and add to the overall musicality.",
+                questions: [
+                    "Which consonant sounds are being repeated?",
+                    "How does this differ from alliteration in its effect?",
+                    "Why did the writer choose to repeat these particular sounds?"
+                ],
+                purposes: {
+                    connect: "How does this technique link to traditional poetry or songwriting?",
+                    understand: "What texture or feeling do these repeated sounds create in your mind?",
+                    recognise: "How does the writer create cohesion and unity through sound?",
+                    question: "Does the subtle sound pattern influence your emotional response to the text?"
+                }
+            },
+            {
+                name: "Onomatopoeia",
+                category: "Sound Devices",
+                definition: "The use of words that imitate the sounds they describe.",
+                example: "Buzz, hiss, or pop.",
+                effect: "Brings sounds to life, making the writing more dynamic and sensory.",
+                questions: [
+                    "What sound is being imitated?",
+                    "How does hearing this sound affect the mood or atmosphere?",
+                    "Why does the writer want us to 'hear' this moment?"
+                ],
+                purposes: {
+                    connect: "How do sound words connect to the way we naturally describe our world?",
+                    understand: "How does hearing this sound immerse you more deeply in the experience?",
+                    recognise: "How does the writer use sound imitation to make the scene more vivid and immediate?",
+                    question: "Whose experience of sound is being prioritised - could others hear it differently?"
+                }
+            },
+            {
+                name: "Rhyme",
+                category: "Sound Devices",
+                definition: "The repetition of similar sounds in the final stressed syllables of two or more words, most often at the ends of lines in poems and songs.",
+                example: "The cat sat on the mat / with a funny little hat.",
+                effect: "Creates musical quality, structure, and makes ideas more memorable.",
+                questions: [
+                    "What is the rhyme scheme or pattern?",
+                    "How does the rhyme affect the rhythm and flow?",
+                    "Why did the writer choose to use rhyme here?"
+                ],
+                purposes: {
+                    connect: "How does rhyme connect this text to traditional forms of poetry or song?",
+                    understand: "What childhood memories or emotions does the rhyme evoke?",
+                    recognise: "How does the writer use rhyme to create structure and aid memory?",
+                    question: "Does the playful or serious tone of the rhyme affect how you take the message?"
+                }
+            },
+            {
+                name: "Sibilance",
+                category: "Sound Devices",
+                definition: "The repetition of hissing sounds, typically 's,' 'sh,' 'z,' or 'ch,' in close succession within a phrase or sentence.",
+                example: "The snake hissed silently in the grass.",
+                effect: "Creates a specific sound quality that can feel smooth and flowing or ominous and sinister.",
+                questions: [
+                    "What mood does the hissing sound create?",
+                    "Is it soothing, sinister, or something else?",
+                    "Why did the writer want this particular sound quality?"
+                ],
+                purposes: {
+                    connect: "How does this hissing sound connect to cultural associations (snakes, secrets, whispers)?",
+                    understand: "What feeling does the 's' sound trigger in you - comfort or unease?",
+                    recognise: "How does the writer manipulate sound to create atmosphere?",
+                    question: "Does the sound reinforce stereotypes (evil snakes) or challenge them?"
+                }
+            },
+            // FIGURATIVE LANGUAGE            
+            {
+                name: "Allusion",
+                category: "Figurative Language",
+                definition: "A brief and indirect reference to a person, place, thing, or idea of historical, cultural, literary, or political significance.",
+                example: "He was a real Romeo with the ladies.",
+                effect: "Adds depth by connecting to shared cultural knowledge and evoking associations.",
+                questions: [
+                    "What does the reader need to know to understand this reference?",
+                    "What qualities or ideas does it bring to mind?",
+                    "Why did the writer choose this particular reference?"
+                ],
+                purposes: {
+                    connect: "How does this reference rely on shared cultural or literary knowledge?",
+                    understand: "What does recognising (or not recognising) this reference tell you about yourself?",
+                    recognise: "How does the writer use cultural shorthand to add layers of meaning?",
+                    question: "Who is included and who is excluded by assuming this knowledge?"
+                }
+            },
+            {
+                name: "Analogy",
+                category: "Figurative Language",
+                definition: "A comparison between two different things to explain or clarify a complex idea.",
+                example: "A doctor is to a hospital as a mechanic is to a garage.",
+                effect: "Makes complex or abstract ideas easier to understand by relating them to familiar concepts.",
+                questions: [
+                    "What is being compared to what?",
+                    "How does the familiar thing help explain the unfamiliar?",
+                    "Why was this particular comparison chosen?"
+                ],
+                purposes: {
+                    connect: "How does this analogy build on shared everyday experiences?",
+                    understand: "What new understanding does this comparison give you?",
+                    recognise: "How does the writer make difficult ideas accessible through comparison?",
+                    question: "Does the analogy oversimplify or does it genuinely illuminate the concept?"
+                }
+            },
+            {
+                name: "Antithesis",
+                category: "Figurative Language",
+                definition: "Placing two contrasting ideas or words together in a balanced structure to highlight their differences.",
+                example: "It was the best of times, it was the worst of times.",
+                effect: "Creates drama and highlights contrasts, making differences more striking.",
+                questions: [
+                    "What two opposing ideas are being contrasted?",
+                    "How does the balanced structure emphasise the opposition?",
+                    "Why does the writer want to show this contrast?"
+                ],
+                purposes: {
+                    connect: "How does this technique connect to philosophical or political debates?",
+                    understand: "How does the contrast reflect contradictions in your own experience?",
+                    recognise: "How does the writer use balanced opposites to create tension?",
+                    question: "Does presenting two extremes erase the middle ground or nuance?"
+                }
+            },
+            {
+                name: "Euphemism",
+                category: "Figurative Language",
+                definition: "A mild or indirect word or expression used in place of one considered too harsh, blunt, or embarrassing.",
+                example: "He passed away last spring.",
+                effect: "Softens the impact of difficult topics, making them more palatable. Can also be used deceptively to downplay the severity of a situation.",
+                questions: [
+                    "What harsh reality is being softened or concealed?",
+                    "Who benefits from this softening of language?",
+                    "Is the euphemism being used for politeness or deception?"
+                ],
+                purposes: {
+                    connect: "How do euphemisms reflect societal taboos around topics like death, conflict, or bodily functions?",
+                    understand: "How does this indirect language make you feel compared to the direct term? More comfortable? Suspicious?",
+                    recognise: "How does the writer use euphemisms to manage the audience's emotional response or to manipulate their perception?",
+                    question: "Does the euphemism obscure an important truth or show respectful sensitivity?"
+                }
+            },
+            {
+                name: "Hyperbole",
+                category: "Figurative Language",
+                definition: "The deliberate exaggeration of a statement for emphasis or effect.",
+                example: "I've told you a million times.",
+                effect: "Emphasises a point dramatically, often adding humour or intensity.",
+                questions: [
+                    "What is being exaggerated and by how much?",
+                    "Does the exaggeration create humour, frustration, or another emotion?",
+                    "Why did the writer choose to overstate rather than state plainly?"
+                ],
+                purposes: {
+                    connect: "How does exaggeration appear in tall tales, comedy, and everyday speech?",
+                    understand: "What emotion drives you to exaggerate in your own life?",
+                    recognise: "How does the writer use exaggeration to emphasise or entertain?",
+                    question: "Does the exaggeration hide or reveal the truth?"
+                }
+            },                       
+            {
+                name: "Imagery",
+                category: "Figurative Language",
+                definition: "The use of vivid and descriptive language to create a mental picture for the reader, appealing to the five senses.",
+                example: "The acidic scent of pine needles filled the crisp, morning air.",
+                effect: "Makes writing immersive by helping readers experience what is being described.",
+                questions: [
+                    "Which senses does this appeal to (sight, sound, smell, taste, touch)?",
+                    "What atmosphere or mood does the imagery create?",
+                    "Why does the writer want us to experience this particular sensation?"
+                ],
+                purposes: {
+                    connect: "How does this sensory description connect to universal human experiences?",
+                    understand: "What memories or emotions does this sensory detail trigger for you personally?",
+                    recognise: "How does the writer use specific sensory details to create atmosphere and mood?",
+                    question: "Whose sensory experience is centred - might others experience this place differently?"
+                }
+            },
+            {
+                name: "Irony",
+                category: "Figurative Language",
+                definition: "A contrast between what is said and what is actually meant, or between what happens and what is expected to happen.",
+                example: "Water, water, everywhere, nor any drop to drink.",
+                effect: "Creates surprise, humour, or reveals deeper meaning by highlighting contradictions.",
+                questions: [
+                    "What is the gap between expectation and reality?",
+                    "What tone does this create - humorous, tragic, or critical?",
+                    "Why does the writer want to highlight this contradiction?"
+                ],
+                purposes: {
+                    connect: "How does irony connect to satire, comedy, or social critique in literature?",
+                    understand: "What does the unexpected twist make you reconsider?",
+                    recognise: "How does the writer use contradiction to create humour or criticism?",
+                    question: "Who benefits and who suffers from the ironic situation?"
+                }
+            },
+            {
+                name: "Juxtaposition",
+                category: "Figurative Language",
+                definition: "Placing two contrasting elements side by side to highlight their differences.",
+                example: "The limousine drove past the beggar.",
+                effect: "Emphasises contrasts by forcing readers to compare and notice differences.",
+                questions: [
+                    "What two things are placed side by side?",
+                    "What does their contrast reveal or emphasise?",
+                    "Why does the writer want us to see these things together?"
+                ],
+                purposes: {
+                    connect: "How does this technique appear in visual art, film, or social commentary?",
+                    understand: "What emotions does the stark contrast create in you?",
+                    recognise: "How does the writer use placement to create meaning and critique?",
+                    question: "What power structures or inequalities does this contrast expose?"
+                }
+            },
+            {
+                name: "Litotes",
+                category: "Figurative Language",
+                definition: "An ironic understatement in which an affirmative is expressed by the negative of its contrary.",
+                example: "After completing the marathon, she said, 'I'm not unhappy with my time.'",
+                effect: "Creates emphasis through understatement, often with a touch of irony or modesty. It can make a statement more subtle and persuasive.",
+                questions: [
+                        "What positive statement is being expressed through a double negative?",
+                        "What is the tone – ironic, modest, or critical?",
+                        "Why did the writer choose to understate the point rather than state it directly?"
+                ],
+                purposes: {
+                    connect: "How is this form of understatement used in different cultures, such as in formal British English, to convey meaning indirectly?",
+                    understand: "How does the understatement make you feel about the speaker? Does it make them sound more confident or less certain?",
+                    recognise: "How does the writer create emphasis not by exaggerating, but by deliberately downplaying the subject?",
+                    question: "Could the understatement be misinterpreted by a reader unfamiliar with its cultural context?"
+                }
+            },
+            {
+                name: "Metaphor",
+                category: "Figurative Language",
+                definition: "A direct comparison between two unlike things without using 'like' or 'as.' It states that one thing is another.",
+                example: "The world is a stage.",
+                effect: "Creates powerful connections and helps readers see things in new ways.",
+                questions: [
+                    "What two things are being compared?",
+                    "What qualities are transferred from one to the other?",
+                    "Why did the writer choose this particular comparison?"
+                ],
+                purposes: {
+                    connect: "How does this metaphor draw on familiar cultural or literary references?",
+                    understand: "What new way of seeing yourself or the world does this comparison offer?",
+                    recognise: "How does this metaphor shape your emotional or intellectual response?",
+                    question: "Whose worldview or values does this comparison reinforce or challenge?"
+                }
+            },
+            {
+                name: "Oxymoron",
+                category: "Figurative Language",
+                definition: "A figure of speech that combines two contradictory terms.",
+                example: "Jumbo shrimp. Deafening silence.",
+                effect: "Creates surprise and highlights complexity or contradiction.",
+                questions: [
+                    "What contradiction exists in these paired words?",
+                    "What complex truth or irony is being revealed?",
+                    "Why did the writer combine these opposing ideas?"
+                ],
+                purposes: {
+                    connect: "How do oxymorons appear in everyday language and cultural expressions?",
+                    understand: "What complex feelings or experiences does the contradiction capture?",
+                    recognise: "How does the writer use contradiction to express complexity?",
+                    question: "Does the contradiction reveal truth or confusion in our language?"
+                }
+            },
+            {
+                name: "Personification",
+                category: "Figurative Language",
+                definition: "Giving human qualities or actions to inanimate objects or abstract ideas.",
+                example: "The wind whispered through the trees.",
+                effect: "Makes non-human things relatable and vivid by bringing them to life.",
+                questions: [
+                    "What non-human thing is being given human qualities?",
+                    "What human characteristics are assigned to it?",
+                    "Why did the writer want us to see this thing as human-like?"
+                ],
+                purposes: {
+                    connect: "How does this connect to myths, fables, or cultural stories about nature?",
+                    understand: "How does seeing nature as alive change your relationship with it?",
+                    recognise: "How does the writer make abstract or distant things feel closer and more relatable?",
+                    question: "Does treating nature as human help us care for it, or does it centre human experience?"
+                }
+            },
+            {
+                name: "Pun",
+                category: "Figurative Language",
+                definition: "A joke that exploits the different possible meanings of a word or the fact that there are words that sound alike but have different meanings; a play on words.",
+                example: "A bicycle can't stand on its own because it is two-tired.",
+                effect: "Adds humour and wit to writing. Can make text more memorable and engaging by revealing clever connections between words.",
+                questions: [
+                    "What two meanings is the author playing on?",
+                    "What is the intended effect – humour, cleverness, or something else?",
+                    "Does the pun add to or distract from the main message?"
+                ],
+                purposes: {
+                    connect: "How are puns used in advertising slogans, headlines, and comedy to grab attention?",
+                    understand: "What makes a pun feel clever or cringey to you? What does this reveal about your relationship with language?",
+                    recognise: "How does the writer use wordplay to create memorable phrases or to add a layer of humour?",
+                    question: "In a serious context, could a pun be used to trivialize an important subject?"
+                }
+            },            
+            {            
+                name: "Rhetorical Question",
+                category: "Figurative Language",
+                definition: "A question asked for effect rather than to elicit an answer.",
+                example: "Are we going to sit here and do nothing?",
+                effect: "Provokes thought and engages the reader, often implying an obvious answer.",
+                questions: [
+                    "What is the implied or obvious answer to this question?",
+                    "How does this engage or challenge the reader?",
+                    "Why did the writer choose to question rather than state directly?"
+                ],
+                purposes: {
+                    connect: "How do rhetorical questions appear in speeches, debates, and persuasive texts?",
+                    understand: "How does being questioned make you feel - challenged, engaged, or manipulated?",
+                    recognise: "How does the writer use questions to guide you toward a particular answer?",
+                    question: "Does the 'obvious' answer really allow for other perspectives?"
+                }
+            },
+            {
+                name: "Simile",
+                category: "Figurative Language",
+                definition: "A direct comparison between two different things using the words 'like' or 'as.'",
+                example: "She is as brave as a lion.",
+                effect: "Makes descriptions vivid by comparing to something familiar.",
+                questions: [
+                    "What two things are being compared?",
+                    "What quality is being highlighted through the comparison?",
+                    "Why did the writer choose this particular comparison?"
+                ],
+                purposes: {
+                    connect: "How does this comparison rely on shared cultural knowledge or stereotypes?",
+                    understand: "How does the comparison help you visualise or understand the subject?",
+                    recognise: "How does the writer use familiar things to explain unfamiliar concepts?",
+                    question: "Does the comparison rely on cultural assumptions that might not be universal?"
+                }
+            },
+            {
+                name: "Symbolism",
+                category: "Figurative Language",
+                definition: "The use of an object, person, or idea to represent a deeper, more abstract concept.",
+                example: "As the guns went quiet, I looked to the sky and saw a dove.",
+                effect: "Adds layers of meaning, allowing complex ideas to be communicated indirectly.",
+                questions: [
+                    "What is the symbol and what does it represent?",
+                    "How do you know what it symbolises - is it cultural, contextual, or stated?",
+                    "Why did the writer choose to communicate this idea symbolically?"
+                ],
+                purposes: {
+                    connect: "How does this symbol draw on religious, cultural, or literary traditions?",
+                    understand: "What personal meaning or memory does this symbol hold for you?",
+                    recognise: "How does the writer layer meaning through symbols rather than direct statement?",
+                    question: "Whose culture or belief system does this symbol come from?"
+                }
+            },
+            // STRUCTURAL DEVICES                                    
+            {
+                name: "Anaphora",
+                category: "Structural Devices",
+                definition: "The repetition of a word or phrase at the beginning of successive clauses or sentences.",
+                example: "I have a dream... I have a dream...",
+                effect: "Builds rhythm and emphasis, making ideas powerful and memorable.",
+                questions: [
+                    "What words or phrases are repeated at the start of each line?",
+                    "How does the repetition build emotional intensity?",
+                    "Why does the writer want to emphasise this particular idea?"
+                ],
+                purposes: {
+                    connect: "How does this technique connect to speeches, sermons, or protest chants?",
+                    understand: "What emotion does the building repetition create in you?",
+                    recognise: "How does the writer use repetition to hammer home a message?",
+                    question: "Whose voice and whose dream is being centred through this repetition?"
+                }
+            },
+            {
+                name: "Caesura",
+                category: "Structural Devices",
+                definition: "A distinct pause or break in the middle of a line of poetry, often marked by punctuation.",
+                example: "To be, or not to be — that is the question.",
+                effect: "Creates dramatic emphasis, controls pacing, and can reflect hesitation or contemplation.",
+                questions: [
+                    "Where does the pause occur and what causes it?",
+                    "How does the pause affect the rhythm and meaning?",
+                    "Why did the writer want to interrupt the flow here?"
+                ],
+                purposes: {
+                    connect: "How does this pause mirror natural speech patterns or dramatic performance?",
+                    understand: "What does the pause make you feel - suspense, doubt, reflection?",
+                    recognise: "How does the writer use pauses to create emphasis and control how you read?",
+                    question: "Does the pause force you to reconsider what came before it?"
+                }
+            },                        
+            {
+                name: "Enjambment",
+                category: "Structural Devices",
+                definition: "When a line of poetry continues without pause or punctuation into the next line, carrying the thought forward.",
+                example: "I wandered lonely as a cloud / That floats on high o'er vales and hills.",
+                effect: "Creates flow, builds momentum, and can reflect ongoing thought or action.",
+                questions: [
+                    "Where does the sentence or thought run over the line break?",
+                    "How does this affect the rhythm and pace of reading?",
+                    "Why did the writer want the thought to continue without pausing?"
+                ],
+                purposes: {
+                    connect: "How does this break from traditional poetry's line-by-line structure?",
+                    understand: "How does the flowing thought mirror the way your mind works?",
+                    recognise: "How does the writer control pacing and create suspense through line breaks?",
+                    question: "What expectations about poetry does this technique challenge or fulfill?"
+                }
+            },
+            {
+                name: "Foreshadowing",
+                category: "Structural Devices",
+                definition: "Hints or clues about events that will occur later in the narrative.",
+                example: "There are dark clouds gathering on the horizon.",
+                effect: "Builds anticipation, creates tension, and prepares readers for future events.",
+                questions: [
+                    "What is being hinted at or suggested?",
+                    "How does this create expectations about what might happen?",
+                    "Why did the writer want to prepare us for what's coming?"
+                ],
+                purposes: {
+                    connect: "How does foreshadowing connect to storytelling traditions and prophecy?",
+                    understand: "How does anticipating future events change your experience of the present?",
+                    recognise: "How does the writer plant clues to create suspense and structure?",
+                    question: "Does foreshadowing suggest fate and inevitability, or just careful planning?"
+                }
+            },
+            {
+                name: "Listing",
+                category: "Structural Devices",
+                definition: "The inclusion of several items, ideas, or actions in a series.",
+                example: "The market sold fresh fruits, crisp vegetables, artisanal cheeses, and baked breads.",
+                effect: "Builds momentum, creates a sense of abundance or overwhelm, and provides detailed description.",
+                questions: [
+                    "Why list these specific items in this particular order?",
+                    "Does the list create a sense of plenty, chaos, or something else?",
+                    "Why did the writer choose to accumulate details this way?"
+                ],
+                purposes: {
+                    connect: "How do lists appear in sacred texts, inventories, or cultural catalogues?",
+                    understand: "Does the abundance or overwhelm of the list reflect your own experiences?",
+                    recognise: "How does the writer use accumulation to create effect - richness or excess?",
+                    question: "What is included in this list and what is left out - whose world is being represented?"
+                }
+            },                        
+            {
+                name: "Parallel Structure",
+                category: "Structural Devices",
+                definition: "The repetition of a chosen grammatical form within a sentence or a series of sentences.",
+                example: "She likes reading, writing, and singing.",
+                effect: "Creates balance, rhythm, and clarity, making ideas memorable and persuasive.",
+                questions: [
+                    "What grammatical pattern is being repeated?",
+                    "How does the balance affect the rhythm of the sentence?",
+                    "Why does the writer want these ideas to feel equally weighted?"
+                ],
+                purposes: {
+                    connect: "How does this structure connect to speeches, religious texts, or formal writing?",
+                    understand: "How does the balanced structure make the ideas feel fair or complete?",
+                    recognise: "How does the writer use grammatical patterns to persuade or emphasise?",
+                    question: "Does the balanced structure hide any inequality in the ideas presented?"
+                }
+            },
+            {
+                name: "Repetition",
+                category: "Structural Devices",
+                definition: "The simple act of repeating a word, phrase, or sentence.",
+                example: "The politician promised change, change, and more change.",
+                effect: "Emphasises key ideas and creates rhythm, building intensity or urgency.",
+                questions: [
+                    "What specific words or phrases are being repeated?",
+                    "How does the repetition affect the tone or emotional intensity?",
+                    "Why does the writer want to hammer this point home?"
+                ],
+                purposes: {
+                    connect: "How does repetition connect to advertising, political slogans, or cultural mantras?",
+                    understand: "Does the repetition convince you or make you suspicious?",
+                    recognise: "How does the writer use repetition to persuade or manipulate?",
+                    question: "Is the repetition used to inspire or to overwhelm critical thinking?"
+                }
+            },            
+            {
+                name: "Triad",
+                category: "Structural Devices",
+                definition: "A specific type of parallelism where three items are listed in a series. This is often called 'the rule of three.'",
+                example: "Veni, vidi, vici (I came, I saw, I conquered).",
+                effect: "Creates a sense of completeness and rhythm, making ideas memorable and impactful.",
+                questions: [
+                    "Why these three items specifically?",
+                    "How does the order contribute to the effect?",
+                    "Why did the writer stop at three rather than two or four?"
+                ],
+                purposes: {
+                    connect: "How does the 'rule of three' appear in fairy tales, speeches, and cultural sayings?",
+                    understand: "Why does three feel complete or satisfying to you?",
+                    recognise: "How does the writer use the power of three to make ideas stick?",
+                    question: "What is excluded by limiting the list to three things?"
+                }
+            },
+            // PARTS OF SPEECH
+            {
+                name: "Adjectives",
+                category: "Parts of Speech",
+                definition: "Descriptive words that modify nouns, providing specific details about their qualities, characteristics, or states.",
+                example: "The <strong>ancient</strong>, <strong>weathered</strong> manuscript revealed secrets.",
+                effect: "Add precision, create vivid imagery, and shape the reader's perception of people, places, or things.",
+                questions: [
+                    "What specific qualities do the adjectives emphasise?",
+                    "How do they influence your impression of the subject?",
+                    "Why did the writer choose these particular descriptors?"
+                ],
+                purposes: {
+                    connect: "How do descriptive words shape cultural perceptions and stereotypes?",
+                    understand: "What emotions or judgments do these descriptive words trigger in you?",
+                    recognise: "How does the writer use selection of adjectives to guide your feelings?",
+                    question: "What biases or assumptions do these descriptive choices reveal?"
+                }
+            },
+            {
+                name: "Adverbs",
+                category: "Parts of Speech",
+                definition: "Words that modify verbs, adjectives, or other adverbs, often indicating how, when, where, or to what extent something occurs.",
+                example: "She spoke <strong>quietly</strong> but <strong>firmly</strong> to the crowd.",
+                effect: "Refine meaning by adding nuance to actions, descriptions, or other modifiers.",
+                questions: [
+                    "What additional meaning does the adverb provide?",
+                    "How does it change your understanding of the action?",
+                    "Why did the writer need this extra detail?"
+                ],
+                purposes: {
+                    connect: "How do adverbs add subtlety to the way we describe actions across cultures?",
+                    understand: "How does the manner of the action affect how you judge the person doing it?",
+                    recognise: "How does the writer control tone and judgment through these modifiers?",
+                    question: "Do the adverbs reveal the writer's attitude or bias toward the action?"
+                }
+            },
+            {
+                name: "Conjunctions",
+                category: "Parts of Speech",
+                definition: "Words that connect clauses, sentences, or words (and, but, or, because, although).",
+                example: "She was tired, <strong>but</strong> she kept working.",
+                effect: "Show relationships between ideas, create flow, and establish logical connections.",
+                questions: [
+                    "What ideas or clauses are being connected?",
+                    "Does the conjunction show addition (and), contrast (but), or cause (because)?",
+                    "Why did the writer choose this particular connection?"
+                ],
+                purposes: {
+                    connect: "How do conjunctions reflect the way we naturally structure thought and argument?",
+                    understand: "How does the connection between ideas shape your understanding?",
+                    recognise: "How does the writer guide your thinking through these logical links?",
+                    question: "Does the logical connection presented hide other possible relationships?"
+                }
+            },
+            {
+                name: "Imperative",
+                category: "Parts of Speech",
+                definition: "A verb form used to give commands, instructions, or make requests. The subject 'you' is usually implied.",
+                example: "Close the door. Be quiet. Pass the salt.",
+                effect: "Creates directness, urgency, or authority by addressing the reader or listener directly.",
+                questions: [
+                    "What is being commanded or requested?",
+                    "Is the tone authoritative, friendly, or pleading?",
+                    "Why did the writer choose to command rather than suggest?"
+                ],
+                purposes: {
+                    connect: "How do imperatives appear in instructions, commandments, and advertising?",
+                    understand: "How does being directly commanded make you feel?",
+                    recognise: "How does the writer use commands to assert authority or create urgency?",
+                    question: "Who has the power to give commands and who must obey?"
+                }
+            },
+            {
+                name: "Interjections",
+                category: "Parts of Speech",
+                definition: "Exclamatory words or phrases that express sudden emotion or reaction (Oh! Wow! Alas! Hey!).",
+                example: "<strong>Wow</strong>! That was incredible!",
+                effect: "Convey immediate emotional response and add authenticity to dialogue or narration.",
+                questions: [
+                    "What emotion is being expressed?",
+                    "How does the interjection affect the tone?",
+                    "Why did the writer include this emotional outburst?"
+                ],
+                purposes: {
+                    connect: "How do interjections vary across languages and cultures?",
+                    understand: "What genuine emotion or reaction does this capture?",
+                    recognise: "How does the writer use spontaneous emotion to create authenticity?",
+                    question: "Whose emotional expressions are considered acceptable or excessive?"
+                }
+            },                                    
+            {
+                name: "Nouns",
+                category: "Parts of Speech",
+                definition: "Words that name people, places, things, or ideas. They form the core subjects and objects in sentences.",
+                example: "The <strong>teacher</strong> gave the <strong>students</strong> their <strong>homework</strong>.",
+                effect: "Provide the concrete or abstract elements that form the foundation of meaning.",
+                questions: [
+                    "What specific people, places, or things are being named?",
+                    "Are they concrete (book) or abstract (freedom)?",
+                    "Why did the writer choose these specific nouns?"
+                ],
+                purposes: {
+                    connect: "How do the nouns chosen reflect cultural values and priorities?",
+                    understand: "What world is being constructed through the things named?",
+                    recognise: "How does the writer select nouns to create their reality?",
+                    question: "What people, places, or concepts are absent from the text?"
+                }
+            },
+            {
+                name: "Prepositions",
+                category: "Parts of Speech",
+                definition: "Words that show relationships of position, direction, time, or manner (in, on, at, by, with, from).",
+                example: "The book <strong>on</strong> the table belongs <strong>to</strong> my sister.",
+                effect: "Establish spatial, temporal, and relational contexts for actions and objects.",
+                questions: [
+                    "What relationship is being established (location, time, possession)?",
+                    "How does the preposition affect the meaning?",
+                    "Why did the writer specify this particular relationship?"
+                ],
+                purposes: {
+                    connect: "How do spatial and temporal relationships vary across cultures?",
+                    understand: "How does the positioning of things in space or time affect your mental picture?",
+                    recognise: "How does the writer use position and relationship to create meaning?",
+                    question: "What power dynamics are revealed through who is 'above,' 'below,' 'with,' or 'against'?"
+                }
+            },            
+            {
+                name: "Pronouns",
+                category: "Parts of Speech",
+                definition: "Words that replace nouns to avoid repetition, including personal (I, you, they), possessive (my, your), and relative pronouns (who, which).",
+                example: "<strong>She</strong> gave <strong>him</strong> <strong>her</strong> book because <strong>he</strong> needed it.",
+                effect: "Create flow, establish relationships, and position readers in relation to the text.",
+                questions: [
+                    "Who or what do the pronouns refer to?",
+                    "Does the writer use 'I,' 'you,' 'we,' or 'they' - and why?",
+                    "Why did the writer choose pronouns instead of names?"
+                ],
+                purposes: {
+                    connect: "How do pronouns reflect evolving understandings of gender and identity?",
+                    understand: "How does 'we' versus 'they' make you feel included or excluded?",
+                    recognise: "How does the writer use pronouns to create intimacy or distance?",
+                    question: "Who is the 'we' and who is the 'they' - what divisions does this create?"
+                }
+            },
+            {
+                name: "Verbs",
+                category: "Parts of Speech",
+                definition: "Words that express actions, occurrences, or states of being. They drive the movement and energy of sentences.",
+                example: "The wind <strong>howled</strong> through the empty streets.",
+                effect: "Create action, convey intensity, and establish the energy and tone of a sentence.",
+                questions: [
+                    "What action or state is being described?",
+                    "Is the verb active (she runs) or passive (she is running)?",
+                    "Why did the writer choose this particular verb?"
+                ],
+                purposes: {
+                    connect: "How do strong verbs connect to dynamic storytelling traditions?",
+                    understand: "What energy or emotion does the verb create in you?",
+                    recognise: "How does the writer use verb choice to control pace and intensity?",
+                    question: "Does the verb suggest agency or passivity - who has the power to act?"
+                }
+            },            
+            // SENTENCES
+            {
+                name: "Simple Sentence",
+                category: "Sentences",
+                definition: "A sentence with one independent clause containing a subject and verb, expressing a complete thought.",
+                example: "The cat slept.",
+                effect: "Creates clarity, emphasis, and directness through brevity.",
+                questions: [
+                    "What single idea is being expressed?",
+                    "How does the simplicity affect the pace and clarity?",
+                    "Why did the writer use a simple structure here?"
+                ],
+                purposes: {
+                    connect: "How do simple sentences mirror children's language and learning?",
+                    understand: "How does simplicity make you feel - clarity or oversimplification?",
+                    recognise: "How does the writer use simple sentences for emphasis or pacing?",
+                    question: "Does simplicity clarify or does it hide complexity?"
+                }
+            },
+            {
+                name: "Compound Sentence",
+                category: "Sentences",
+                definition: "A sentence with two or more independent clauses joined by a conjunction or semicolon.",
+                example: "The cat slept, and the dog barked.",
+                effect: "Shows equal relationships between ideas and creates balanced rhythm.",
+                questions: [
+                    "What two or more ideas are being joined?",
+                    "How are they connected (and, but, or, so)?",
+                    "Why did the writer treat these ideas as equal?"
+                ],
+                purposes: {
+                    connect: "How do compound structures reflect balanced arguments and fairness?",
+                    understand: "How does seeing two ideas together change your understanding?",
+                    recognise: "How does the writer create balance and connection between ideas?",
+                    question: "Are the ideas truly equal or does one dominate?"
+                }
+            },
+            {
+                name: "Complex Sentence",
+                category: "Sentences",
+                definition: "A sentence with one independent clause and one or more dependent clauses.",
+                example: "Although it was raining, we went for a walk.",
+                effect: "Shows relationships of cause, condition, or time between ideas, adding sophistication.",
+                questions: [
+                    "What is the main idea and what is the supporting information?",
+                    "How are the clauses related (because, although, when, if)?",
+                    "Why did the writer make one idea dependent on another?"
+                ],
+                purposes: {
+                    connect: "How do complex sentences reflect sophisticated thought in academic writing?",
+                    understand: "How does the subordination help you see cause and effect?",
+                    recognise: "How does the writer layer ideas to show hierarchy and relationship?",
+                    question: "Which idea is privileged as main and which is treated as secondary?"
+                }
+            },
+            {
+                name: "Compound-Complex Sentence",
+                category: "Sentences",
+                definition: "A sentence with two or more independent clauses and at least one dependent clause.",
+                example: "Although it was raining, we went for a walk, and we enjoyed ourselves.",
+                effect: "Conveys multiple related ideas with sophistication and nuance.",
+                questions: [
+                    "What multiple ideas are being expressed?",
+                    "How do the ideas relate to each other?",
+                    "Why did the writer need this level of complexity?"
+                ],
+                purposes: {
+                    connect: "How do compound-complex sentences appear in formal or academic discourse?",
+                    understand: "How does the layered complexity mirror real-life situations?",
+                    recognise: "How does the writer handle multiple ideas and relationships simultaneously?",
+                    question: "Does the complexity add necessary nuance or create confusion?"
+                }
+            },
+            {
+                name: "Declarative Sentence",
+                category: "Sentences",
+                definition: "A sentence that makes a statement or provides information, ending with a full stop.",
+                example: "The sky is blue.",
+                effect: "Presents information as fact, establishing authority and clarity.",
+                questions: [
+                    "What information or claim is being stated?",
+                    "Is it presented as fact or opinion?",
+                    "Why did the writer choose to declare rather than question or command?"
+                ],
+                purposes: {
+                    connect: "How do declarative statements establish authority in textbooks and news?",
+                    understand: "How does stating something as fact affect your acceptance of it?",
+                    recognise: "How does the writer use statements to establish credibility?",
+                    question: "Who gets to declare what is true - what authority backs this claim?"
+                }
+            },
+            {
+                name: "Interrogative Sentence",
+                category: "Sentences",
+                definition: "A sentence that asks a question, ending with a question mark.",
+                example: "What time is it?",
+                effect: "Engages readers, creates curiosity, or seeks information.",
+                questions: [
+                    "What is being asked?",
+                    "Is it a genuine question or rhetorical?",
+                    "Why did the writer choose to ask rather than tell?"
+                ],
+                purposes: {
+                    connect: "How do questions drive inquiry across cultures and disciplines?",
+                    understand: "How does being asked a question engage your thinking?",
+                    recognise: "How does the writer use questions to engage, provoke, or guide?",
+                    question: "Who is allowed to ask questions and who must answer?"
+                }
+            },
+            {
+                name: "Imperative Sentence",
+                category: "Sentences",
+                definition: "A sentence that gives a command or makes a request, with the subject 'you' implied.",
+                example: "Close the door.",
+                effect: "Creates directness and authority by telling the reader what to do.",
+                questions: [
+                    "What action is being commanded?",
+                    "Is the tone polite or authoritative?",
+                    "Why did the writer choose to command rather than suggest?"
+                ],
+                purposes: {
+                    connect: "How do imperatives appear in laws, recipes, and moral teachings?",
+                    understand: "How does being told what to do affect your response?",
+                    recognise: "How does the writer use commands to assert authority?",
+                    question: "Who has the authority to give orders in this context?"
+                }
+            },
+            {
+                name: "Exclamatory Sentence",
+                category: "Sentences",
+                definition: "A sentence that expresses strong emotion or excitement, ending with an exclamation mark.",
+                example: "What a beautiful day!",
+                effect: "Conveys intense feeling and adds emotional energy to the text.",
+                questions: [
+                    "What emotion is being expressed?",
+                    "How does the exclamation affect the tone?",
+                    "Why did the writer choose to exclaim rather than state calmly?"
+                ],
+                purposes: {
+                    connect: "How do exclamations appear in emotional expression across cultures?",
+                    understand: "What genuine feeling does this outburst capture for you?",
+                    recognise: "How does the writer use emotional intensity to engage or persuade?",
+                    question: "Whose emotional expressions are considered appropriate or excessive?"
+                }
+            },
+            // PUNCTUATION & SYNTAX
+            {
+                name: "Asyndeton",
+                category: "Punctuation & Syntax",
+                definition: "The omission or absence of conjunctions (like 'and', 'or', 'but') between parts of a sentence.",
+                example: "I came, I saw, I conquered.",
+                effect: "Creates a fast-paced, breathless rhythm. It can make a list feel more immediate, spontaneous, or overwhelming.",
+                questions: [
+                    "What is the effect of removing the 'and's from the list?",
+                    "How does the pace of the sentence change?",
+                    "Does this make the speaker sound more powerful, rushed, or passionate?"
+                ],
+                purposes: {
+                    connect: "How is asyndeton used in powerful speeches or dramatic moments in film to create a sense of urgency?",
+                    understand: "How does the rapid-fire list make you feel as a reader? Overwhelmed? Energised?",
+                    recognise: "The writer is deliberately breaking a grammatical rule to manipulate rhythm for emotional effect.",
+                    question: "Does the rapid pace prevent you from thinking too deeply about any single item in the list?"
+                }
+            },
+            {
+                name: "Polysyndeton",
+                category: "Punctuation & Syntax",
+                definition: "The deliberate use of multiple conjunctions in close succession, especially where they are not strictly necessary.",
+                example: "We have ships and men and money and stores.",
+                effect: "Slows down the rhythm of a sentence, creating a sense of deliberate emphasis, abundance, or even childlike excitement.",
+                questions: [
+                    "What is the effect of adding extra 'and's to the list?",
+                    "How does this change the feeling compared to a standard list?",
+                    "Does it make the list feel larger, more significant, or more exhausting?"
+                ],
+                purposes: {
+                    connect: "How is this technique used in religious texts (like the Bible) or children's stories to create a sense of scale and wonder?",
+                    understand: "Does the repetitive nature of the list feel comforting and rhythmic, or tedious and overwhelming?",
+                    recognise: "The writer is using grammar to control the pace of reading, forcing you to consider each item in the list individually.",
+                    question: "Does the deliberate slowing of the pace suggest the speaker is trying to be persuasive or simply being dramatic?"
+                }
+            },
+            {
+                name: "Ellipsis",
+                category: "Punctuation & Syntax",
+                definition: "The use of three dots (...) to indicate an omission of words, a pause, or an unfinished thought.",
+                example: "She looked out at the rain and whispered, 'If only...'",
+                effect: "Creates suspense, indicates hesitation, or allows the reader to fill in the blank with their own imagination. It suggests something left unsaid.",
+                questions: [
+                    "What is being left unsaid or trailed off?",
+                    "What emotion does this pause or omission create (suspense, sadness, uncertainty)?",
+                    "Why did the writer choose not to complete the thought?"
+                ],
+                purposes: {
+                    connect: "How do we use pauses and unfinished sentences in our own speech to convey emotion or uncertainty?",
+                    understand: "How does the ellipsis make you, the reader, an active participant by forcing you to imagine what's missing?",
+                    recognise: "The writer is using punctuation to create atmosphere and engage the reader's imagination beyond the words on the page.",
+                    question: "Is the missing information a deliberate mystery, or does it signal a character's inability to express themselves?"
+                }
+            },
+            {
+                name: "Em Dash",
+                category: "Punctuation & Syntax",
+                definition: "A punctuation mark (—) used to signal an interruption, an abrupt change of thought, or to add dramatic emphasis to a phrase.",
+                example: "She was a brilliant scientist—and a terrible cook.",
+                effect: "Creates a more dramatic and informal pause than a comma or colon. It can make the text feel more like natural speech, with interruptions and parenthetical thoughts.",
+                questions: [
+                    "What is the purpose of the interruption here?",
+                    "How does the dash change the tone compared to using a different punctuation mark?",
+                    "Does the phrase after the dash add emphasis, an explanation, or a surprising twist?"
+                ],
+                purposes: {
+                    connect: "How do em dashes mimic the way we interrupt ourselves in natural conversation to add extra information or change direction?",
+                    understand: "Does the abrupt pause create a sense of drama, comedy, or intimacy for you as a reader?",
+                    recognise: "The writer is choosing a specific punctuation mark to create a distinct voice and rhythm that feels less formal and more dynamic.",
+                    question: "Is the information set off by dashes a crucial detail or a casual aside? How does that choice affect its importance?"
+                }
+            }
+        ];
+
+        const dailyQuotes = [
+            {
+                text: "The mass of men lead lives of quiet desperation.",
+                author: "Henry David Thoreau",
+                source: "Walden (1854)",
+                techniques: ["Hyperbole", "Alliteration"],
+                analysis: "Thoreau uses <strong>hyperbole</strong> to make the provocative claim that most people live in 'quiet desperation'. This exaggeration is amplified by the soft <strong>alliteration</strong> in 'lead lives', which adds to the sense of hushed, unspoken suffering. Together, these techniques create a powerful and memorable critique of conformity.",
+                matters: "By moving beyond a simple observation to a grand, dramatic statement, Thoreau forces the reader to confront their own life. The analysis isn't just about societal critique; it's a personal challenge. It prompts us to question whether our own pursuit of stability and social acceptance has come at the cost of genuine fulfillment, turning a sociological observation into a timeless philosophical question about what it means to live an authentic life."
+            },
+            {
+                text: "It was the best of times, it was the worst of times...",
+                author: "Charles Dickens",
+                source: "A Tale of Two Cities (1859)",
+                techniques: ["Anaphora", "Antithesis", "Parallel Structure"],
+                analysis: "Dickens employs <strong>anaphora</strong> by repeating the phrase 'it was the' to build a powerful, rhythmic cadence. This repetition structures a series of direct contrasts, or <strong>antithesis</strong> ('best'/'worst', 'wisdom'/'foolishness'). The use of <strong>parallel structure</strong> across these clauses gives the contradictions a sense of epic scale and balance.",
+                matters: "This opening immediately establishes the novel's central theme of duality. Rather than presenting a simple view of the past, the language forces the reader to hold opposing ideas in their mind simultaneously. This complexity suggests that truth is not simple and that every era is defined by its contradictions, setting the stage for a story where personal and political loyalties are constantly in conflict."
+            },
+            {
+                text: "Because I could not stop for Death – He kindly stopped for me –",
+                author: "Emily Dickinson",
+                source: "Poem 712 (c. 1863)",
+                techniques: ["Personification", "Irony", "Caesura"],
+                analysis: "Dickinson uses <strong>personification</strong> to portray Death as a polite gentleman in a carriage. This gentle image is contrasted with the reality of death, creating a profound <strong>irony</strong>. The <strong>caesura</strong> (the dash) creates a pause, forcing the reader to contemplate this strange, courteous image of mortality before the line concludes.",
+                matters: "By transforming death from a terrifying force into a gentle suitor, the poem challenges our fundamental fears. The analysis shows how this gentle tone creates a contemplative mood, allowing the speaker to explore the journey towards the afterlife without fear. It reframes mortality not as an end, but as a transition, prompting a deeper reflection on the nature of eternity and our place within it."
+            },
+            {
+                text: "All the world's a stage, And all the men and women merely players;",
+                author: "William Shakespeare",
+                source: "As You Like It (c. 1599)",
+                techniques: ["Metaphor", "Parallel Structure"],
+                analysis: "Shakespeare uses a direct <strong>metaphor</strong> to frame life as a theatrical performance, stating the world <strong>is</strong> a stage. This comparison is extended through <strong>parallel structure</strong> in the two lines ('All the...'), creating a balanced, memorable rhythm that gives the idea a sense of universal truth.",
+                matters: "This metaphor provides a powerful framework for understanding human existence. It suggests our lives follow a pre-written script with set roles, entrances, and exits. This perspective can feel fatalistic, but it also connects every individual's personal story to a larger, shared human drama, highlighting the common experiences that unite us across time."
+            },
+        ];
+
+        const categories = ['all', ...new Set(features.map(f => f.category))];
+        let currentMode = 'gallery';
+        let currentCardIndex = 0;
+        let currentCategory = 'all';
+        let showingBookmarksOnly = false;
+        let filteredFeatures = [...features];
+        let bookmarks = JSON.parse(localStorage.getItem('languageFeatureBookmarks') || '[]');
+        let flashcardOrder = [];
+
+        const gallery = document.getElementById('gallery');
+        const flashcardContainer = document.getElementById('flashcardContainer');
+        const modeToggle = document.getElementById('modeToggle');
+        const searchInput = document.getElementById('searchInput');
+        const searchBox = document.getElementById('searchBox');
+        const noResults = document.getElementById('noResults');
+        const flashcard = document.getElementById('flashcard');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const counter = document.getElementById('counter');
+        const randomiseBtn = document.getElementById('randomiseBtn');
+        const filterControls = document.getElementById('filterControls');
+        const bookmarkFilterBtn = document.getElementById('bookmarkFilterBtn');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalClose = document.getElementById('modalClose');
+        const modalBody = document.getElementById('modalBody');
+        
+        // Quote Section Elements
+        const quoteSection = document.getElementById('dailyQuoteSection');
+        const quoteHeader = document.getElementById('quoteHeader');
+        const dailyQuoteText = document.getElementById('dailyQuoteText');
+        const dailyQuoteSource = document.getElementById('dailyQuoteSource');
+        const dailyQuoteAnalysis = document.getElementById('dailyQuoteAnalysis');
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initializeFlashcards() {
+            flashcardOrder = Array.from(features.keys());
+            currentCardIndex = 0;
+        }
+
+        function displayDailyQuote() {
+            function getDayOfYear() {
+                const now = new Date();
+                const start = new Date(now.getFullYear(), 0, 0);
+                const diff = now - start;
+                const oneDay = 1000 * 60 * 60 * 24;
+                return Math.floor(diff / oneDay);
+            }
+
+            const dayIndex = getDayOfYear() % dailyQuotes.length;
+            const quote = dailyQuotes[dayIndex];
+
+            dailyQuoteText.innerHTML = `“${quote.text}”`;
+            dailyQuoteSource.textContent = `— ${quote.author}, ${quote.source}`;
+            
+            const techniqueTagsHtml = quote.techniques.map(tech => 
+                `<span class="technique-tag-link" data-feature="${tech}">${tech}</span>`
+            ).join('');
+
+            dailyQuoteAnalysis.innerHTML = `
+                <div class="technique-tags">${techniqueTagsHtml}</div>
+                <div class="analysis-section">
+                    <div class="section-label">Analysis</div>
+                    <div class="effect-text">${quote.analysis}</div>
+                </div>
+                <div class="purpose-section">
+                    <div class="section-label">Why it Matters</div>
+                    <div class="effect-text">${quote.matters}</div>
+                </div>
+            `;
+        }
+
+        quoteHeader.addEventListener('click', () => {
+            quoteSection.classList.toggle('expanded');
+        });
+
+        dailyQuoteAnalysis.addEventListener('click', (e) => {
+            const tag = e.target.closest('.technique-tag-link');
+            if (tag) {
+                const featureName = tag.dataset.feature;
+                if (currentMode === 'flashcard') {
+                    modeToggle.click();
+                }
+                searchInput.value = featureName;
+                filterByCategory('all');
+                applyFilters();
+                searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                searchInput.focus();
+            }
+        });
+
+        categories.forEach(cat => {
+            if (cat === 'all') return;
+            const btn = document.createElement('button');
+            btn.className = 'category-filter';
+            btn.dataset.category = cat;
+            btn.textContent = cat;
+            btn.addEventListener('click', () => filterByCategory(cat));
+            filterControls.appendChild(btn);
+        });
+        
+        displayDailyQuote();
+        renderGallery();
+
+        bookmarkFilterBtn.addEventListener('click', () => {
+            showingBookmarksOnly = !showingBookmarksOnly;
+            
+            bookmarkFilterBtn.classList.toggle('active', showingBookmarksOnly);
+            if (showingBookmarksOnly) {
+                document.querySelectorAll('.category-filter[data-category]').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+            } else {
+                document.querySelector('[data-category="all"]').classList.add('active');
+                currentCategory = 'all';
+            }
+            
+            applyFilters();
+        });
+
+        function filterByCategory(category) {
+            showingBookmarksOnly = false;
+            bookmarkFilterBtn.classList.remove('active');
+            
+            currentCategory = category;
+            document.querySelectorAll('.category-filter').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase();
+            filteredFeatures = features.filter(f => {
+                const isBookmarked = bookmarks.includes(f.name);
+                const matchesSearch = !searchTerm || 
+                    f.name.toLowerCase().includes(searchTerm) ||
+                    f.definition.toLowerCase().includes(searchTerm) ||
+                    f.effect.toLowerCase().includes(searchTerm) ||
+                    f.category.toLowerCase().includes(searchTerm);
+
+                if (showingBookmarksOnly) {
+                    return isBookmarked && matchesSearch;
+                } else {
+                    const matchesCategory = currentCategory === 'all' || f.category === currentCategory;
+                    return matchesCategory && matchesSearch;
+                }
+            });
+            renderGallery();
+        }
+
+        modeToggle.addEventListener('click', () => {
+            if (currentMode === 'gallery') {
+                currentMode = 'flashcard';
+                gallery.classList.add('hidden');
+                noResults.classList.add('hidden');
+                flashcardContainer.classList.add('active');
+                searchBox.style.display = 'none';
+                filterControls.style.display = 'none';
+                modeToggle.textContent = 'Switch to Reference Mode';
+                initializeFlashcards();
+                renderFlashcard();
+            } else {
+                currentMode = 'gallery';
+                flashcardContainer.classList.remove('active');
+                searchBox.style.display = '';
+                filterControls.style.display = 'flex';
+                modeToggle.textContent = 'Switch to Flashcard Mode';
+                flashcard.classList.remove('flipped');
+                searchInput.value = '';
+                applyFilters();
+            }
+        });
+
+        searchInput.addEventListener('input', applyFilters);
+
+        function renderGallery() {
+            gallery.innerHTML = '';
+            if (filteredFeatures.length === 0) {
+                noResults.classList.remove('hidden');
+                gallery.classList.add('hidden');
+                return;
+            }
+            noResults.classList.add('hidden');
+            gallery.classList.remove('hidden');
+            
+            filteredFeatures.forEach((feature) => {
+                const card = document.createElement('div');
+                card.className = 'feature-card';
+                const isBookmarked = bookmarks.includes(feature.name);
+                const questionsList = feature.questions.map(q => `<li>${q}</li>`).join('');
+                
+                card.innerHTML = `
+                    <div class="category-tag">${feature.category}</div>
+                    <div class="feature-name">
+                        <span>${feature.name}</span>
+                        <button class="bookmark-btn ${isBookmarked ? 'active' : ''}" data-name="${feature.name}">
+                            ${isBookmarked ? '★' : '☆'}
+                        </button>
+                    </div>
+                    <div class="definition">${feature.definition}</div>
+                    <div class="example">${feature.example}</div>
+                    <div class="analysis-section">
+                        <div class="section-label">Effect</div>
+                        <div class="effect-text">${feature.effect}</div>
+                        <div class="analysis-questions">When Analysing Language, Ask</div>
+                        <ul class="questions-list">${questionsList}</ul>
+                        <div class="pro-tip-wrapper">
+                            <div class="section-label">💡 Pro Tip</div>
+                            <div class="effect-text">${feature.proTip}</div>
+                        </div>
+                    </div>
+                    <div class="purpose-section">
+                        <div class="section-label">When Analysing Why This Matters, You Can</div>
+                        <div class="purpose-item">
+                            <div class="purpose-heading">Connect to the Wider World:</div>
+                            <div class="purpose-text">${feature.purposes.connect}</div>
+                        </div>
+                        <div class="purpose-item">
+                            <div class="purpose-heading">Understand Ourselves:</div>
+                            <div class="purpose-text">${feature.purposes.understand}</div>
+                        </div>
+                        <div class="purpose-item">
+                            <div class="purpose-heading">Recognise the Craft:</div>
+                            <div class="purpose-text">${feature.purposes.recognise}</div>
+                        </div>
+                        <div class="purpose-item">
+                            <div class="purpose-heading">Question the Text:</div>
+                            <div class="purpose-text">${feature.purposes.question}</div>
+                        </div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', (e) => {
+                    if (!e.target.closest('.bookmark-btn')) {
+                        openModal(feature);
+                    }
+                });
+                
+                gallery.appendChild(card);
+            });
+
+            document.querySelectorAll('.bookmark-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleBookmark(btn.dataset.name);
+                });
+            });
+        }
+
+        function toggleBookmark(name) {
+            const index = bookmarks.indexOf(name);
+            if (index > -1) {
+                bookmarks.splice(index, 1);
+            } else {
+                bookmarks.push(name);
+            }
+            localStorage.setItem('languageFeatureBookmarks', JSON.stringify(bookmarks));
+            renderGallery();
+        }
+
+        function openModal(feature) {
+            const questionsList = feature.questions.map(q => `<li>${q}</li>`).join('');
+            modalBody.innerHTML = `
+                <div class="category-tag">${feature.category}</div>
+                <div class="feature-name"><span>${feature.name}</span></div>
+                <div class="definition">${feature.definition}</div>
+                <div class="example">${feature.example}</div>
+                <div class="analysis-section">
+                    <div class="section-label">Effect</div>
+                    <div class="effect-text">${feature.effect}</div>
+                    <div class="analysis-questions">When Analysing Language, Ask</div>
+                    <ul class="questions-list">${questionsList}</ul>
+                    <div class="pro-tip-wrapper">
+                        <div class="section-label">💡 Pro Tip</div>
+                        <div class="effect-text">${feature.proTip}</div>
+                    </div>
+                </div>
+                <div class="purpose-section">
+                    <div class="section-label">When Exploring Why This Matters, You Can</div>
+                    <div class="purpose-item">
+                        <div class="purpose-heading">Connect to the Wider World:</div>
+                        <div class="purpose-text">${feature.purposes.connect}</div>
+                    </div>
+                    <div class="purpose-item">
+                        <div class="purpose-heading">Understand Ourselves:</div>
+                        <div class="purpose-text">${feature.purposes.understand}</div>
+                    </div>
+                    <div class="purpose-item">
+                        <div class="purpose-heading">Recognise the Craft:</div>
+                        <div class="purpose-text">${feature.purposes.recognise}</div>
+                    </div>
+                    <div class="purpose-item">
+                        <div class="purpose-heading">Question the Text:</div>
+                        <div class="purpose-text">${feature.purposes.question}</div>
+                    </div>
+                </div>
+            `;
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        modalClose.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
+
+        function renderFlashcard() {
+            const featureIndex = flashcardOrder[currentCardIndex];
+            const feature = features[featureIndex];
+
+            document.getElementById('flashcardCategoryFront').textContent = feature.category;
+            document.getElementById('flashcardCategory').textContent = feature.category;
+            document.getElementById('flashcardName').textContent = feature.name;
+            document.getElementById('flashcardNameBack').textContent = feature.name;
+            document.getElementById('flashcardDefinition').textContent = feature.definition;
+            document.getElementById('flashcardExample').innerHTML = `${feature.example}`;
+            document.getElementById('flashcardAnalysis').innerHTML = `
+                <div class="section-label">Effect</div>
+                <div class="effect-text">${feature.effect}</div>
+            `;
+            counter.textContent = `${currentCardIndex + 1} of ${flashcardOrder.length}`;
+            prevBtn.disabled = currentCardIndex === 0;
+            nextBtn.disabled = currentCardIndex === flashcardOrder.length - 1;
+        }
+
+        flashcard.addEventListener('click', () => flashcard.classList.toggle('flipped'));
+        
+        prevBtn.addEventListener('click', () => {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                flashcard.classList.remove('flipped');
+                renderFlashcard();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentCardIndex < flashcardOrder.length - 1) {
+                currentCardIndex++;
+                flashcard.classList.remove('flipped');
+                renderFlashcard();
+            }
+        });
+
+        randomiseBtn.addEventListener('click', () => {
+            shuffleArray(flashcardOrder);
+            currentCardIndex = 0;
+            flashcard.classList.remove('flipped');
+            renderFlashcard();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+                closeModal();
+            }
+            if (currentMode === 'flashcard') {
+                if (e.key === 'ArrowLeft') prevBtn.click();
+                if (e.key === 'ArrowRight') nextBtn.click();
+                if (e.key === ' ' || e.key === 'Enter') {
+                    e.preventDefault();
+                    flashcard.classList.toggle('flipped');
+                }
+            }
+        });
+
+        document.querySelector('[data-category="all"]').addEventListener('click', (e) => filterByCategory(e.target.dataset.category));
+    </script>
+</body>
+</html>

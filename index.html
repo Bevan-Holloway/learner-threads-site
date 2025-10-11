@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learner Threads | Tools for Deeper Learning</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            color: #2c3e50;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        main {
+            flex-grow: 1;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        a { color: #1e3a5f; text-decoration: none; }
+
+        .global-header { padding: 1rem 2rem; border-bottom: 1px solid #e2e8f0; }
+        .global-nav { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo-link { display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 600; }
+        .logo-link img { height: 40px; width: 40px; border-radius: 50%; }
+        .nav-links a { color: #475569; font-weight: 500; margin-left: 2rem; font-size: 0.95rem; }
+        .nav-links a:hover { color: #1e3a5f; }
+
+        .hero { text-align: center; padding: 6rem 1rem; }
+        .hero h1 { font-size: 3.5rem; color: #1e3a5f; margin-bottom: 1rem; font-weight: 700; letter-spacing: -0.02em; }
+        .hero p { font-size: 1.25rem; color: #64748b; max-width: 650px; margin: 0 auto 2.5rem auto; }
+        .hero-buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+        .btn { display: inline-block; padding: 1rem 2.5rem; border-radius: 0.5rem; font-weight: 600; transition: all 0.2s; text-decoration: none; }
+        .btn-primary { background: #1e3a5f; color: white; }
+        .btn-primary:hover { background: #2c4a6f; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(30,58,95,0.2); }
+        .btn-secondary { background: white; color: #1e3a5f; border: 1px solid #e2e8f0; }
+        .btn-secondary:hover { background: #f8fafc; border-color: #cbd5e1; transform: translateY(-2px); }
+
+        .tools-section { padding: 4rem 0; }
+        .section-title { text-align: center; font-size: 2.5rem; color: #1e3a5f; margin-bottom: 3rem; font-weight: 700; }
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
+        .tool-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s;
+        }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.1); }
+        .card-icon {
+            font-size: 3rem; /* Larger icon size */
+            margin-bottom: 1rem; /* Space between icon and title */
+            line-height: 1; /* Ensures icon sits well */
+        }
+        .tool-card h3 { font-size: 1.75rem; color: #1e3a5f; margin-bottom: 0.75rem; }
+        .tool-card p { color: #475569; margin-bottom: 2rem; flex-grow: 1; /* Makes sure paragraph takes up available space */ }
+        .tool-card .btn { margin-top: auto; /* Pushes the button to the bottom */ }
+
+        .global-footer { text-align: center; padding: 3rem 1rem; margin-top: 3rem; border-top: 1px solid #e2e8f0; font-size: 0.9rem; color: #64748b; }
+        .global-footer a { color: #475569; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header class="global-header">
+        <nav class="global-nav">
+            <a href="index.html" class="logo-link">
+                <img src="logo.png" alt="Learner Threads Logo">
+                <span>Learner Threads</span>
+            </a>
+            <div class="nav-links">
+                <a href="pricing.html">Pricing</a>
+                <a href="https://blog.learnerthreads.com">Blog</a>
+                <a href="access.html">Sign In</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="hero">
+                <h1>Tools for Deeper Learning</h1>
+                <p>A suite of powerful, interactive apps designed to deepen understanding and empower learners.</p>
+                <div class="hero-buttons">
+                    <a href="#tools" class="btn btn-secondary">Explore Our Tools</a>
+                    <a href="pricing.html" class="btn btn-primary">View All Pricing</a>
+                </div>
+            </section>
+
+            <section class="tools-section" id="tools">
+                <h2 class="section-title">Explore The Tools</h2>
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <h3>Language Lens</h3>
+                        <p>An interactive guide to 50+ literary devices, grammatical features, and sentence structures. Perfect for students looking to unlock their analytical writing.</p>
+                        <a href="lens-sample.html" class="btn btn-secondary">Use the Free Version</a>
+                    </div>
+                    <div class="tool-card">
+                        <h3>Learning Navigator</h3>
+                        <p>Find your next learning move. This tool helps students select a learning disposition and a subject to get targeted, practical strategies for powering up their thinking.</p>
+                        <a href="navigator-demo.html" class="btn btn-secondary">Use the Free Version</a>
+                    </div>
+                    <div class="tool-card">
+                        <h3>Learning Reflections</h3>
+                        <p>Transform simple activities into powerful learning stories. A guided tool for students to document their work, reflect on their growth, and build metacognition.</p>
+                        <a href="reflections-tour.html" class="btn btn-secondary">Take the Guided Tour</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <footer class="global-footer">
+        <p>&copy; 2025 Learner Threads | <a href="mailto:bevan@learnerthreads.com">Contact Support</a></p>
+    </footer>
+</body>
+</html>

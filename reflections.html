@@ -1,0 +1,2288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Reflections - Learner Threads</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+        }
+
+        .main-app {
+            display: block;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1.25rem;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #14b8a6 0%, #0891b2 50%, #0284c7 100%);
+            color: white;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="30" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        }
+
+        .header h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            position: relative;
+            letter-spacing: -0.025em;
+        }
+
+        .header p {
+            color: #bae6fd;
+            font-size: 1.1rem;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .progress-container {
+            background: linear-gradient(to right, #fafafa, #ffffff);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #14b8a6, #0891b2, #0284c7);
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            font-size: 0.875rem;
+            color: #64748b;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .content {
+            padding: 2.5rem;
+            min-height: 60vh;
+        }
+
+        .section-intro {
+            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+            border-left: 5px solid #14b8a6;
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-intro::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.1) 0%, transparent 70%);
+        }
+
+        .section-intro h2 {
+            color: #0f766e;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            position: relative;
+        }
+
+        .section-intro p {
+            color: #0f766e;
+            line-height: 1.7;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .dispositions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .disposition-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .disposition-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.02), rgba(8, 145, 178, 0.02));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .disposition-card:hover {
+            border-color: #14b8a6;
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(20, 184, 166, 0.15);
+        }
+
+        .disposition-card:hover::before {
+            opacity: 1;
+        }
+
+        .disposition-card.selected {
+            border-color: #14b8a6;
+            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(20, 184, 166, 0.25);
+        }
+
+        .disposition-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            transition: transform 0.3s ease;
+        }
+
+        .disposition-card:hover .disposition-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .disposition-name {
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .disposition-desc {
+            font-size: 0.875rem;
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+        }
+
+        .disposition-prompts {
+            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #99f6e4;
+            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.1);
+        }
+
+        .disposition-prompts h4 {
+            color: #0f766e;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Enhanced Examples Section Styles */
+        .examples-section {
+            margin: 2rem 0;
+        }
+
+        .examples-toggle {
+            width: 100%;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+            border: 2px solid #14b8a6;
+            border-radius: 1rem;
+            color: #0f766e;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .examples-toggle::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .examples-toggle:hover::before {
+            left: 100%;
+        }
+
+        .examples-toggle:hover {
+            background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(20, 184, 166, 0.25);
+            border-color: #0891b2;
+        }
+
+        .examples-toggle.expanded {
+            border-radius: 1rem 1rem 0 0;
+            background: linear-gradient(135deg, #14b8a6 0%, #0891b2 100%);
+            color: white;
+        }
+
+        .examples-content {
+            display: none;
+            background: white;
+            border: 2px solid #14b8a6;
+            border-top: none;
+            border-radius: 0 0 1rem 1rem;
+            padding: 2rem;
+            animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(20, 184, 166, 0.15);
+        }
+
+        .examples-content.visible {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                max-height: 1000px;
+            }
+        }
+
+        .examples-intro {
+            color: #0f766e;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .example-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            border-left: 4px solid #14b8a6;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .example-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.1);
+        }
+
+        .example-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .example-header {
+            font-weight: 700;
+            color: #0891b2;
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .example-text {
+            color: #374151;
+            font-style: italic;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+        }
+
+        .file-upload-area:hover {
+            border-color: #14b8a6;
+            background-color: #f0fdfa;
+        }
+
+        .file-uploaded {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .file-name {
+            color: #059669;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .file-remove {
+            color: #dc2626;
+            font-size: 0.75rem;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .file-remove:hover {
+            color: #b91c1c;
+        }
+
+        .file-preview {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 0.5rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .upload-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            color: white;
+            background: linear-gradient(135deg, #14b8a6, #0891b2);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .upload-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+        }
+
+        .text-fields-container {
+            background: #f8fafc;
+            border-top: 2px solid #e2e8f0;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 1rem;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+            font-family: inherit;
+            background: white;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #14b8a6;
+            box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+        }
+
+        .input-guidance {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 150px;
+            line-height: 1.6;
+        }
+
+        .reflection-preview {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .reflection-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .reflection-subtitle {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #0f766e;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .reflection-meta {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f0fdfa;
+            border-radius: 0.5rem;
+            border: 1px solid #14b8a6;
+        }
+
+        .reflection-meta-item {
+            margin-bottom: 0.25rem;
+        }
+
+        .reflection-meta-label {
+            font-weight: 600;
+            color: #0f766e;
+            display: inline-block;
+            width: 60px;
+        }
+
+        .reflection-section {
+            margin-bottom: 2rem;
+            page-break-inside: avoid;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 0.5rem;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #14b8a6;
+        }
+
+        .reflection-section h3 {
+            color: #0f766e;
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            margin-left: -1.5rem;
+            margin-right: -1.5rem;
+            margin-top: -1.5rem;
+            padding: 1rem 1.5rem;
+            background: #14b8a6;
+            color: white;
+            border-radius: 0.5rem 0.5rem 0 0;
+        }
+
+        .opt-in-form-group {
+            background-color: #f0fdfa;
+            border: 1px solid #99f6e4;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 3rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .opt-in-form-group .form-label {
+            margin-bottom: 0.5rem;
+            color: #0f766e;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .opt-in-form-group .form-label input[type="checkbox"] {
+            flex-shrink: 0;
+        }
+
+        .reflection-content {
+            color: #374151;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            font-size: 1rem;
+            text-align: left; 
+        }
+
+        .reflection-dispositions {
+            background: #f0fdfa;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            border: 1px solid #14b8a6;
+        }
+
+        .reflection-dispositions strong {
+            color: #0f766e;
+            font-size: 1rem;
+        }
+
+        .navigation {
+            background: #f8fafc;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            border-top: 1px solid #e2e8f0;
+            border-radius: 0 0 0.75rem 0.75rem;
+        }
+
+        .nav-left, .nav-right {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #14b8a6 0%, #0891b2 50%, #0284c7 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(20, 184, 166, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #475569 0%, #334155 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(100, 116, 139, 0.4);
+        }
+
+        footer {
+            margin-top: 2rem;
+            padding: 1rem;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        
+        footer .copyright {
+            font-size: 0.75rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .help-section {
+            margin: 1rem 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background: #f8fafc;
+        }
+
+        .help-toggle {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.875rem;
+            color: #0891b2;
+            font-weight: 500;
+        }
+
+        .help-toggle:hover {
+            background: #f0fdfa;
+        }
+
+        .help-content {
+            padding: 1rem;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        .help-content h4 {
+            color: #0f766e;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .help-content p {
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+                                @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .content {
+                padding: 1.5rem;
+            }
+
+            .text-fields-container {
+                padding: 1.5rem;
+            }
+
+            .dispositions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .navigation {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                gap: 1rem;
+                padding: 1.5rem;
+            }
+
+            .nav-left, .nav-right {
+                justify-content: center;
+                gap: 0.75rem;
+            }
+
+            .nav-right {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+
+            .examples-toggle {
+                font-size: 0.875rem;
+                padding: 1rem;
+            }
+
+            .example-card {
+                padding: 1rem;
+            }
+
+            .example-text {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media print {
+            #mainApp {
+                display: none;
+            }
+            
+            #print-content, #print-content * {
+                visibility: visible !important;
+            }
+            
+            #print-content {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 1rem;
+                background: white;
+                border: none;
+                box-shadow: none;
+                display: block !important;
+            }
+            
+            #print-content * {
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            @page {
+                margin: 1in;
+                size: letter;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="mainApp" class="main-app">
+        <div class="container">
+            <div class="card">
+                <div class="header">
+                    <h1>My Learning Reflection</h1>
+                    <p>Tell the story of your growing learning power</p>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 20%"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">Step 1 of 5</div>
+                </div>
+
+                <div class="content" id="content">
+                    </div>
+
+                <div class="navigation" id="navigation">
+                    <button class="btn btn-secondary" id="prevBtn" onclick="previousStep()">
+                        ← Previous
+                    </button>
+                    <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">
+                        Next →
+                    </button>
+                </div>
+            </div>
+
+            <footer>
+                <p class="copyright">© 2025 Learner Threads, powered by Smata</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Application State
+        let currentStep = 0;
+        let reflection = {
+            studentName: '',
+            yearLevel: '',
+            date: '',
+            subject: '',
+            whatIDid: '',
+            evidenceFile: null,
+            evidenceFileName: '',
+            evidenceDescription: '',
+            learningStrengths: [],
+            learningStrengthsReflection: '',
+            selectedFuturePrompts: [],
+            whereThisTakesMe: '',
+            includeTeacherParentComment: false,
+            teacherParentComment: ''
+        };
+
+        const totalSteps = 5;
+
+        const subjects = [
+            'Maths',
+            'English',
+            'Science',
+            'Biology',
+            'Chemistry',
+            'Physics',
+            'Social Studies',
+            'History',
+            'Geography',
+            'Economics',
+            'Visual Arts',
+            'Performing Arts',
+            'Languages',
+            'Physical Education',
+            'Technology',
+            'Inquiry Learning',
+            'Other'
+        ];
+
+        const yearLevels = [
+            'Year 5', 'Year 6', 'Year 7', 'Year 8', 'Year 9', 'Year 10',
+            'Year 11', 'Year 12', 'Year 13'
+        ];
+
+        // What I Did examples data structure - REVISED for Years 5+
+        const whatIDidExamples = {
+            'Years 5-8': [
+                { year: 'Year 5', subject: 'Maths', text: 'We learned about fractions by cutting up pizza models. I had to work out what 1/4 of 12 pieces would be and then check my answer by actually counting the pieces.' },
+                { year: 'Year 6', subject: 'Science', text: 'We did an experiment about plant growth using different types of soil. I had to measure my bean plants every day for two weeks and record the data in a chart.' },
+                { year: 'Year 7', subject: 'English', text: 'I wrote a persuasive letter to the principal about getting more sports equipment. I had to research what equipment costs and think of good reasons why we need it.' },
+                { year: 'Year 8', subject: 'Art', text: 'We studied dot painting and I created my own artwork about my family\'s story. I researched the meaning of different symbols before planning my design.' },
+                { year: 'Year 5', subject: 'Music', text: 'We composed a simple melody using GarageBand. I experimented with different instrument sounds and learned how to make my melody sound happy or sad.' },
+                { year: 'Year 6', subject: 'Drama', text: 'We performed scenes from a play about friendship. I had to understand my character\'s feelings and practice showing emotions through my voice and movements.' },
+                { year: 'Year 7', subject: 'Physical Education', text: 'We analysed our basketball shooting technique using video recordings. I had to identify what I was doing wrong and practice the correct form.' },
+                { year: 'Year 8', subject: 'Technology', text: 'I designed a simple robot using Lego Mindstorms that could follow a line. When it didn\'t work at first, I had to debug the programming and test different solutions.' },
+                { year: 'Year 6', subject: 'Languages', text: 'We learned to describe our daily routine in French. I practiced by recording myself speaking and playing it back to check my pronunciation.' },
+                { year: 'Year 7', subject: 'Dance', text: 'We learned our school haka. I had to coordinate the movements with the words and understand the meaning behind each gesture.' },
+                { year: 'Year 8', subject: 'Social Studies', text: 'I researched how children lived 100 years ago compared to today. I found old photographs and interviewed my grandfather about his childhood.' }
+            ],
+            'Years 9-13': [
+                { year: 'Year 9', subject: 'History', text: 'I\'m researching the causes of World War I for our assessment. I\'ve been looking closely at primary sources like letters and newspaper articles to understand different perspectives on why the war started.' },
+                { year: 'Year 10', subject: 'Chemistry', text: 'We completed a titration experiment to determine the concentration of an unknown acid solution. I had to be very precise with measurements and repeat the experiment three times to get reliable results.' },
+                { year: 'Year 11', subject: 'English', text: 'I\'m writing a creative response to "Bulibasha" from the perspective of a minor character. This is challenging because I need to maintain the author\'s style while showing events from a completely different viewpoint.' },
+                { year: 'Year 12', subject: 'Physics', text: 'I\'m investigating how the angle of a ramp affects the acceleration of a ball rolling down it. This involves collecting data, creating graphs, and using calculus to analyse the motion patterns.' },
+                { year: 'Year 9', subject: 'Technology', text: 'I\'m developing a mobile app prototype that helps students organize their homework. I\'m learning to code in Python and designing user interfaces that are simple and effective.' },
+                { year: 'Year 10', subject: 'Music', text: 'I\'m composing an original piece for piano that tells the story of a thunderstorm. I\'m studying how composers like Beethoven use dynamics and tempo changes to create dramatic effects.' },
+                { year: 'Year 11', subject: 'Drama', text: 'I\'m performing Lady Macbeth in our school production. I\'m analysing her psychological journey through the play and developing physical gestures that show her mental state.' },
+                { year: 'Year 12', subject: 'Physical Education', text: 'I\'m conducting a biomechanical analysis of sprint technique, using video analysis software to break down the phases of movement and identify areas for performance improvement.' },
+                { year: 'Year 9', subject: 'Languages', text: 'I\'m working on a research project about climate change, presenting my findings entirely in Spanish. This involves learning specialised vocabulary and complex grammatical structures.' },
+                { year: 'Year 10', subject: 'Dance', text: 'I\'m choreographing a contemporary piece that explores themes of identity and belonging. I\'m experimenting with how different movement qualities can represent internal emotions.' },
+                { year: 'Year 11', subject: 'Art', text: 'I\'m developing a photography series documenting social issues in our community. I\'m learning advanced editing techniques and exploring how visual narratives can raise awareness.' }
+            ]
+        };
+
+        const dispositions = [
+            { 
+                name: 'Curiosity', 
+                icon: '🔍', 
+                description: 'Asking questions, exploring ideas, wondering about things',
+                prompts: [
+                    'Having a mind full of questions',
+                    'Enjoying researching',
+                    'Being amazed by what you \'find\'',
+                    'Exploring: things that seem odd, missing, \'how it works\', or other possibilities',
+                    'Feeling positive about your learning'
+                ]
+            },
+            { 
+                name: 'Persistence', 
+                icon: '💪', 
+                description: 'Sticking with challenges, not giving up when things get tough',
+                prompts: [
+                    'Putting in the time to practise',
+                    'Having a go, even when it\'s hard or difficult',
+                    'Reminding yourself of what you are trying to achieve',
+                    'Taking a break when you need one, and returning refreshed and with new ideas',
+                    'Thinking about the resources that can help you'
+                ]
+            },
+            { 
+                name: 'Imagination', 
+                icon: '💭', 
+                description: 'Trying creative approaches, thinking outside the box',
+                prompts: [
+                    'Being inventive and experimental',
+                    'Wondering and daydreaming',
+                    'Using metaphor, humour, and analogies',
+                    'Empathising with different perspectives',
+                    'Looking for other ways to make use of what you have done or learned'
+                ]
+            },
+            { 
+                name: 'Attention', 
+                icon: '🎯', 
+                description: 'Focusing deeply, concentrating on what matters',
+                prompts: [
+                    'Prioritising',
+                    'Using, and developing, strategies that help you focus',
+                    'Being observant',
+                    'Following what you find interesting in the task',
+                    'Tuning out distractions, \'locking in\''
+                ]
+            },
+            { 
+                name: 'Thinking', 
+                icon: '🧠', 
+                description: 'Making connections, analysing, reasoning through problems',
+                prompts: [
+                    'Enjoying \'hooking things up\' by looking for connections and associations',
+                    'Analysing, reasoning, evaluating, critiquing',
+                    'Examining the basis of a conclusion, understanding, or belief',
+                    'Testing and sharpening ideas',
+                    'Wondering if there might be more to it'
+                ]
+            },
+            { 
+                name: 'Collaboration', 
+                icon: '🤝', 
+                description: 'Working well with others, sharing ideas, helping teammates',
+                prompts: [
+                    'Taking on varying roles',
+                    'Knowing when to listen',
+                    'Expressing and defending your own thoughts calmly and clearly',
+                    'Being receptive and imitative',
+                    'Helping others by building on their contributions'
+                ]
+            },
+            { 
+                name: 'Craftsmanship', 
+                icon: '⭐', 
+                description: 'Caring about quality, wanting to do your best work',
+                prompts: [
+                    'Developing a \'nose\' for quality and what \'even better\' might look like',
+                    'Making honest judgements about how it\'s going',
+                    'Making good use of resources (including time and people)',
+                    'Being keen to improve by seeking and using feedback',
+                    'Tinkering, reviewing and revising, and developing your own style as a result'
+                ]
+            }
+        ];
+
+        // Disposition examples data structure - EXPANDED and REVISED for Years 5+
+        const dispositionExamples = {
+            'Curiosity': {
+                'Years 5-8': [
+                    { year: 'Year 5', subject: 'Science', text: 'I kept asking questions about why leaves change colour and discovered there are chemicals inside them that we can\'t usually see' },
+                    { year: 'Year 6', subject: 'Maths', text: 'I didn\'t understand fractions at first, but I kept wondering \'what if I try this way?\' and slowly it started making sense' },
+                    { year: 'Year 7', subject: 'History', text: 'I started researching what life was really like for ordinary people in medieval times and discovered stories that weren\'t in our textbook' },
+                    { year: 'Year 8', subject: 'English', text: 'I was confused by this character\'s choice in the novel, but asking \'why would they do that?\' and also acting out a scene helped me understand something I\'d missed' },
+                    { year: 'Year 6', subject: 'Art', text: 'I wondered how artists chose their symbols, so I researched the meanings and found stories behind each one' },
+                    { year: 'Year 7', subject: 'Technology', text: 'When my robot didn\'t work, I got curious about why and discovered I had the wrong type of sensor for what I was trying to do' },
+                    { year: 'Year 8', subject: 'Music', text: 'I wondered how film composers make music sound scary, so I experimented with different chords and discovered minor keys create tension' }
+                ],
+                'Years 9-13': [
+                    { year: 'Year 12', subject: 'Economics', text: 'I investigated the underlying assumptions in this economic theory and found contradictory evidence that challenged my initial understanding' },
+                    { year: 'Year 11', subject: 'Chemistry', text: 'I wasn\'t getting the results I expected in chemistry, so I wondered what variables I might have missed and learnt heaps from investigating' },
+                    { year: 'Year 13', subject: 'Biology', text: 'I became fascinated by how certain plants survive in extreme conditions and ended up researching adaptation mechanisms beyond what was in our course' },
+                    { year: 'Year 9', subject: 'Social Studies', text: 'I started questioning why our city developed where it did and discovered fascinating connections between geography, trade routes, and history' }
+                ]
+            },
+            'Persistence': {
+                'Years 5-8': [
+                    { year: 'Year 5', subject: 'Maths', text: 'I tried five different ways to solve the word problem and finally found one that made sense to me' },
+                    { year: 'Year 6', subject: 'Technology', text: 'My tower kept falling down and I felt frustrated, but I kept trying different shapes until I built one that stayed up' },
+                    { year: 'Year 7', subject: 'English', text: 'Writing is really hard for me, so I tried to remember stories I liked and do writing like those ones.' },
+                    { year: 'Year 8', subject: 'Maths', text: 'I kept working on this algebra problem using different methods until I finally understood how the formula actually works' },
+                    { year: 'Year 6', subject: 'Music', text: 'Learning to play this piece was really hard, but I practiced the hard parts slowly, over and over, until my fingers remembered what to do' },
+                    { year: 'Year 7', subject: 'Science', text: 'Our experiment failed three times, but each time we learned something new and eventually got results we could trust' }
+                ],
+                'Years 9-13': [
+                    { year: 'Year 10', subject: 'Technology', text: 'I spent hours debugging my code, testing different solutions until I identified the logic error and learnt valuable troubleshooting skills' },
+                    { year: 'Year 12', subject: 'Biology', text: 'This topic was really challenging for me, but I worked through multiple drafts until I could explain my thinking clearly' },
+                    { year: 'Year 11', subject: 'Physics', text: 'I struggled with this concept for weeks, but I kept approaching it from different angles until it finally clicked during a practical experiment' },
+                    { year: 'Year 9', subject: 'Drama', text: 'Learning my lines was really hard, but I broke the script into small sections and practiced one bit each day until I knew the whole thing' }
+                ]
+            },
+            'Imagination': {
+                'Years 5-8': [
+                    { year: 'Year 5', subject: 'Science', text: 'I pretended I was a raindrop travelling through the water cycle and it helped me remember all the steps' },
+                    { year: 'Year 6', subject: 'English', text: 'I\'m not good at writing stories, but imagining I was actually in the scene helped me think of what to write next' },
+                    { year: 'Year 7', subject: 'Maths', text: 'I visualised myself as a detective solving the math problem step by step, which helped me see the pattern' },
+                    { year: 'Year 8', subject: 'History', text: 'I imagined what this event would look like through different people\'s eyes and suddenly the history made more sense' },
+                    { year: 'Year 6', subject: 'Art', text: 'I imagined my painting coming to life and thought about what story it would tell, which helped me choose the right colors' },
+                    { year: 'Year 7', subject: 'Dance', text: 'I imagined I was a tree growing from a seed to full size, and this helped me create movements that showed the whole life cycle' }
+                ],
+                'Years 9-13': [
+                    { year: 'Year 12', subject: 'Physics', text: 'I used metaphors to explain complex scientific concepts in my presentation, and that made them easier for my audience to understand' },
+                    { year: 'Year 10', subject: 'Technology', text: 'I struggle with abstract concepts, but visualising different scenarios for this problem helped me find a solution that worked' },
+                    { year: 'Year 13', subject: 'English', text: 'I imagined the story from the villain\'s perspective and suddenly understood why the author made certain choices about character development' },
+                    { year: 'Year 9', subject: 'Geography', text: 'I visualised what our town would look like in 50 years with climate change, which helped me understand the importance of sustainable planning' }
+                ]
+            },
+            'Attention': {
+                'Years 5-8': [
+                    { year: 'Year 5', subject: 'English', text: 'I focused really carefully on the details in the picture and noticed things that helped me understand the story better' },
+                    { year: 'Year 6', subject: 'Music', text: 'It\'s hard for me to concentrate sometimes, but when I listened closely to each instrument, I could hear how they worked together' },
+                    { year: 'Year 7', subject: 'Science', text: 'I focused on the important details in the experiment and noticed a pattern that led to an important discovery' },
+                    { year: 'Year 8', subject: 'English', text: 'I usually rush through reading, but when I slowed down I started to see how the author\'s word choices created the mood' },
+                    { year: 'Year 6', subject: 'Maths', text: 'I used to make careless errors, but when I slowed down and focused on each step, my accuracy improved dramatically' },
+                    { year: 'Year 7', subject: 'Art', text: 'I concentrated on the way light fell across my subject and noticed subtle shadows I\'d never seen before' }
+                ],
+                'Years 9-13': [
+                    { year: 'Year 11', subject: 'Statistics', text: 'I concentrated on the subtle changes in the data trends and identified a significant correlation others had missed' },
+                    { year: 'Year 12', subject: 'History', text: 'Reading primary sources is challenging for me, but using a highlighter helped me find evidence that deepened my understanding' },
+                    { year: 'Year 10', subject: 'Chemistry', text: 'I focused intently on the colour changes during the reaction and caught the exact moment when the endpoint occurred' },
+                    { year: 'Year 9', subject: 'Technology', text: 'By paying careful attention to each line of code, I found the small error that was causing my entire program to fail' }
+                ]
+            },
+            'Thinking': {
+                'Years 5-8': [
+                    { year: 'Year 5', subject: 'Maths', text: 'I thought about how this math problem was like building with blocks and that helped me figure out the answer' },
+                    { year: 'Year 6', subject: 'Science', text: 'I was confused at first, but when I compared our science experiment to things I see in my garden, it clicked' },
+                    { year: 'Year 7', subject: 'History', text: 'I looked at the different sides\' values in this historical conflict and it helped me understand more about why each side made their decisions' },
+                    { year: 'Year 8', subject: 'English', text: 'I didn\'t get why the character acted that way, but thinking about their motivations helped me understand' },
+                    { year: 'Year 6', subject: 'Technology', text: 'I connected what I learned about simple machines to how my bike works, and suddenly engineering made sense' },
+                    { year: 'Year 7', subject: 'Art', text: 'I analysed how different artists use color to create mood and use those techniques in my own painting' }
+                ],
+                'Years 9-13': [
+                    { year: 'Year 11', subject: 'Social Studies', text: 'I critically examined the methodology of this research study and identified potential biases that affected the conclusions' },
+                    { year: 'Year 9', subject: 'English', text: 'Connecting ideas is hard for me, but I kept looking for links between different topics until I found patterns that explained things' },
+                    { year: 'Year 13', subject: 'Economics', text: 'I questioned the assumptions behind this economic model and discovered how cultural factors influence its applicability' },
+                    { year: 'Year 10', subject: 'Science', text: 'I looked closely the relationship between variables in our experiment and realised we needed to control for factors we hadn\'t considered' }
+                ]
+            },
+            'Collaboration': {
+                'Years 5-8': [
+                    { year: 'Year 5', subject: 'Maths', text: 'I listened to my partner\'s idea about sorting the objects and we found a way that worked even better' },
+                    { year: 'Year 6', subject: 'Art', text: 'I\'m quite shy, but when I shared my drawing with my group I learnt a new way to shade from them' },
+                    { year: 'Year 7', subject: 'Social Studies', text: 'I added to my teammate\'s research and together we created a presentation that was stronger than we could have made alone' },
+                    { year: 'Year 8', subject: 'English', text: 'I find it hard to speak up sometimes, but listening to different viewpoints in our debate helped me feel more confident in my ideas' },
+                    { year: 'Year 6', subject: 'Science', text: 'Working with my lab partner taught me that two people observing the same experiment can notice different important details' },
+                    { year: 'Year 7', subject: 'Drama', text: 'I learned to really listen to my scene partner and respond to them, which made our performance feel real' }
+                ],
+                'Years 9-13': [
+                    { year: 'Year 11', subject: 'Business Studies', text: 'I led our group discussion and made sure everyone\'s ideas contributed to our solution, resulting in a more comprehensive analysis' },
+                    { year: 'Year 10', subject: 'Visual Arts', text: 'Working with others doesn\'t come naturally to me, but giving and receiving feedback improved both our projects a lot' },
+                    { year: 'Year 13', subject: 'Chemistry', text: 'Our lab group divided responsibilities based on each person\'s strengths, and we cross-checked each other\'s calculations for accuracy' },
+                    { year: 'Year 9', subject: 'Technology', text: 'I presented my points for features I believed were important, but learned to compromise on design decisions' }
+                ]
+            },
+            'Craftsmanship': {
+                'Years 5-8': [
+                    { year: 'Year 5', subject: 'Art', text: 'I looked at my picture and asked \'how could this be even better?\' then added more details to make it clearer' },
+                    { year: 'Year 6', subject: 'English', text: 'My handwriting is messy, but I kept practising until others could read my story easily' },
+                    { year: 'Year 7', subject: 'English', text: 'I read my story out loud to check if it flowed well and rewrote the parts that sounded funny. Now it sounds smooth' },
+                    { year: 'Year 8', subject: 'Maths', text: 'Math isn\'t my strongest subject, but I double-checked my work and caught a mistake that would have made everything wrong' },
+                    { year: 'Year 6', subject: 'Technology', text: 'I tested my bridge design lots of times and kept making small improvements until it could hold the weight' },
+                    { year: 'Year 7', subject: 'Music', text: 'I practiced this piece until I could play it smoothly, then focused on adding feeling to make it really musical' }
+                ],
+                'Years 9-13': [
+                    { year: 'Year 11', subject: 'English', text: 'I revised my essay multiple times, seeking feedback and improving my arguments until I produced work I was genuinely proud of' },
+                    { year: 'Year 9', subject: 'Science', text: 'Science is really challenging for me, but questioning my method and being careful with details led to results I could trust' },
+                    { year: 'Year 12', subject: 'Art', text: 'I spent weeks perfecting the technique for this piece, studying master artists and practicing until I achieved the effect I wanted' },
+                    { year: 'Year 10', subject: 'Technology', text: 'I refined my app design through multiple iterations, testing with users and improving the interface until it was intuitive' }
+                ]
+            }
+        };
+
+        // Helper function to get age bracket from year level
+        function getAgeBracket(yearLevel) {
+            if (!yearLevel) return 'Years 5-8';
+            const yearNum = parseInt(yearLevel.replace('Year ', ''));
+            if (yearNum >= 5 && yearNum <= 8) return 'Years 5-8';
+            if (yearNum >= 9 && yearNum <= 13) return 'Years 9-13';
+            return 'Years 5-8';
+        }
+
+        // Function to render examples for "What I Did" step with filtering
+        function renderWhatIDidExamples(yearLevel, subject) {
+            const ageBracket = getAgeBracket(yearLevel);
+            const examples = whatIDidExamples[ageBracket] || [];
+            
+            // Filter examples based on subject if provided
+            let filteredExamples = examples;
+            if (subject && subject !== 'Other') {
+                // Enhanced subject mapping for better filtering
+                const subjectMap = {
+                    'Maths': ['Math', 'Maths'],
+                    'English': ['English'],
+                    'Science': ['Science', 'Chemistry', 'Physics', 'Biology'],
+                    'Chemistry': ['Science', 'Chemistry'],
+                    'Physics': ['Science', 'Physics'], 
+                    'Biology': ['Science', 'Biology'],
+                    'Social Studies': ['Social Studies', 'History', 'Economics', 'Geography'],
+                    'History': ['Social Studies', 'Economics', 'Geography'],
+                    'Economics': ['Social Studies', 'History', 'Geography'], 
+                    'Geography': ['Social Studies', 'History', 'Economics'],
+                    'Visual Arts': ['Art'],
+                    'Performing Arts': ['Music', 'Drama', 'Dance'],
+                    'Music': ['Performing Arts', 'Drama', 'Dance'],
+                    'Drama': ['Performing Arts', 'Music', 'Dance'],
+                    'Dance': ['Performing Arts', 'Drama', 'Music'],
+                    'Languages': ['Languages', 'French', 'Spanish', 'Māori'],
+                    'Physical Education': ['Physical Education', 'PE'],
+                    'Technology': ['Technology']
+                };
+                
+                const matchingSubjects = subjectMap[subject] || [subject];
+                filteredExamples = examples.filter(example => 
+                    matchingSubjects.some(s => example.subject.includes(s))
+                );
+                
+                // If no examples match the specific subject, show all examples from the age bracket
+                if (filteredExamples.length === 0) {
+                    filteredExamples = examples;
+                }
+            }
+            
+            let examplesHtml = '';
+            filteredExamples.forEach(example => {
+                examplesHtml += `
+                    <div class="example-card">
+                        <div class="example-header">${example.year} - ${example.subject}</div>
+                        <div class="example-text">"${example.text}"</div>
+                    </div>
+                `;
+            });
+            
+            // Add a note if we're showing filtered results
+            if (subject && subject !== 'Other' && filteredExamples.length < examples.length) {
+                examplesHtml = `
+                    <div style="color: #0f766e; font-size: 0.875rem; margin-bottom: 1rem; padding: 0.75rem; background: #f0fdfa; border-radius: 0.5rem; border: 1px solid #99f6e4;">
+                        📚 Examples from ${subject} and related subjects for students like you
+                    </div>
+                ` + examplesHtml;
+            }
+            
+            return examplesHtml;
+        }
+
+        // Function to render examples for selected dispositions with filtering
+        function renderExamplesForSelectedDispositions(selectedDispositions, yearLevel) {
+            const ageBracket = getAgeBracket(yearLevel);
+            
+            let examplesHtml = '';
+            selectedDispositions.forEach(dispositionName => {
+                const examples = dispositionExamples[dispositionName] && dispositionExamples[dispositionName][ageBracket] 
+                    ? dispositionExamples[dispositionName][ageBracket] 
+                    : [];
+                
+                // Use all examples for this disposition and age bracket
+                let filteredExamples = examples.slice(0, 2);
+                
+                filteredExamples.forEach(example => {
+                    examplesHtml += `
+                        <div class="example-card">
+                            <div class="example-header">${example.year} - ${example.subject} - ${dispositionName}</div>
+                            <div class="example-text">"${example.text}"</div>
+                        </div>
+                    `;
+                });
+            });
+            
+            return examplesHtml;
+        }
+
+        // Future prompts examples organized by prompt type - NEW
+        const futurePromptsExamples = {
+            'What new questions do I have about this topic?': {
+                'Years 5-8': [
+                    { year: 'Year 5', subject: 'Science', text: 'Now I want to know if different types of seeds grow at different speeds. Maybe I could test sunflower seeds vs bean seeds next time.' },
+                    { year: 'Year 7', subject: 'History', text: 'I wonder what ordinary kids my age were doing during this time period. The textbook only talks about kings and wars.' },
+                    { year: 'Year 8', subject: 'Math', text: 'I\'m curious about whether these patterns appear in nature. Do flower petals follow mathematical rules like we learned about?' }
+                ],
+                'Years 9-13': [
+                    { year: 'Year 10', subject: 'Psychology', text: 'This research made me question whether personality tests are actually reliable. I want to investigate the science behind different testing methods.' },
+                    { year: 'Year 12', subject: 'Chemistry', text: 'I\'m now curious about how pharmaceutical companies use these principles to design new medicines. What ethical considerations do they face?' },
+                    { year: 'Year 11', subject: 'English', text: 'I want to explore how other authors from this time period dealt with similar themes. Are these concerns universal or specific to this writer?' }
+                ]
+            },
+            'How can I apply this learning in a different context?': {
+                'Years 5-8': [
+                    { year: 'Year 6', subject: 'Math', text: 'I can use fractions when I help my dad with cooking. Now I understand why he measures ingredients so carefully.' },
+                    { year: 'Year 7', subject: 'Art', text: 'I want to use these colour techniques to redecorate my bedroom. I think I could create the same peaceful feeling we learned about.' },
+                    { year: 'Year 8', subject: 'English', text: 'I could use these persuasive writing skills to convince my parents to let me have a pet. I need to think about their concerns and address them.' }
+                ],
+                'Years 9-13': [
+                    { year: 'Year 10', subject: 'Technology', text: 'I can apply these programming concepts to create an app that helps my grandmother manage her medications more easily.' },
+                    { year: 'Year 13', subject: 'Biology', text: 'I want to use my understanding of ecosystems to design a sustainable garden for our school that supports local wildlife.' },
+                    { year: 'Year 12', subject: 'Economics', text: 'These principles help me understand the news better. I can now analyse political decisions from an economic perspective.' }
+                ]
+            },
+            'What challenges did I overcome, and how can I use that strength again?': {
+                'Years 5-8': [
+                    { year: 'Year 5', subject: 'Music', text: 'I learned not to give up when something sounds terrible at first. I can use this patience when I\'m learning new sports or skills.' },
+                    { year: 'Year 7', subject: 'Science', text: 'When my experiment didn\'t work, I learned to ask \'what went wrong?\' instead of giving up. I can use this problem-solving approach in other subjects.' },
+                    { year: 'Year 8', subject: 'Drama', text: 'I overcame my fear of performing in front of people. This will help me when I have to give presentations in other classes.' }
+                ],
+                'Years 9-13': [
+                    { year: 'Year 9', subject: 'Math', text: 'I learned to break down complex problems into smaller steps. This systematic approach will help me tackle challenging projects in any subject.' },
+                    { year: 'Year 11', subject: 'History', text: 'I developed skills in analysing conflicting sources. This critical thinking will be useful in understanding media and making informed decisions.' },
+                    { year: 'Year 12', subject: 'Physics', text: 'I learned to persist through confusion and keep testing my understanding. This resilience will serve me well in university and my future career.' }
+                ]
+            },
+            'How has this learning changed my thinking or perspective?': {
+                'Years 5-8': [
+                    { year: 'Year 6', subject: 'Social Studies', text: 'I used to think history was just memorising dates, but now I see it\'s about understanding why people made certain choices.' },
+                    { year: 'Year 7', subject: 'Science', text: 'I never realised how connected everything in nature is. Now I notice these connections everywhere I go.' },
+                    { year: 'Year 8', subject: 'English', text: 'I used to think there was only one \'right\' way to interpret a story, but now I see that different readers can find different meanings.' }
+                ],
+                'Years 9-13': [
+                    { year: 'Year 10', subject: 'Geography', text: 'This study of climate change has completely shifted how I think about my daily choices and their environmental impact.' },
+                    { year: 'Year 12', subject: 'Philosophy', text: 'These ethical discussions have changed how I approach moral decisions. I now consider multiple perspectives before making judgments.' },
+                    { year: 'Year 13', subject: 'Art', text: 'Studying different cultural art forms has opened my eyes to how creativity is expressed differently across the world.' }
+                ]
+            },
+            'What is one thing I could do to make my next learning even better?': {
+                'Years 5-8': [
+                    { year: 'Year 5', subject: 'Math', text: 'Next time I\'ll draw pictures for word problems from the start. That really helped me understand what the problem was asking.' },
+                    { year: 'Year 7', subject: 'English', text: 'I want to read my writing out loud more often. When I did that, I caught mistakes and awkward sentences I hadn\'t noticed.' },
+                    { year: 'Year 8', subject: 'Science', text: 'I need to record my observations more carefully during experiments. When I was detailed, I noticed patterns I might have missed.' }
+                ],
+                'Years 9-13': [
+                    { year: 'Year 9', subject: 'History', text: 'I want to start by looking at multiple sources from the beginning, not just finding sources that support what I already think.' },
+                    { year: 'Year 11', subject: 'Chemistry', text: 'I need to spend more time planning my experiments before I start. The times I planned carefully gave much better results.' },
+                    { year: 'Year 12', subject: 'English', text: 'I want to discuss my ideas with others earlier in the writing process. Their questions help me clarify my thinking before I get too attached to weak arguments.' }
+                ]
+            },
+            'How did collaborating with others enhance my learning?': {
+                'Years 5-8': [
+                    { year: 'Year 6', subject: 'Art', text: 'Working with my partner taught me new techniques I never would have discovered on my own. We each brought different ideas.' },
+                    { year: 'Year 7', subject: 'Math', text: 'Explaining my thinking to others helped me realise when I didn\'t actually understand something properly. Teaching them helped me learn.' },
+                    { year: 'Year 8', subject: 'Science', text: 'My lab group noticed different things during our experiment. Together we collected much more complete data than any of us could alone.' }
+                ],
+                'Years 9-13': [
+                    { year: 'Year 10', subject: 'Technology', text: 'Each team member had different coding strengths. Collaborating taught me new programming techniques and showed me the power of different skills.' },
+                    { year: 'Year 12', subject: 'History', text: 'Debating with classmates forced me to examine my assumptions and strengthen my arguments with better evidence.' },
+                    { year: 'Year 11', subject: 'Drama', text: 'Working closely with scene partners taught me to truly listen and respond authentically. This will help me beyond acting.' }
+                ]
+            }
+        };
+
+        // Function to render examples for future prompts
+        function renderFuturePromptsExamples(selectedPrompts, yearLevel, subject) {
+            const ageBracket = getAgeBracket(yearLevel);
+            
+            let examplesHtml = '';
+            selectedPrompts.forEach(promptQuestion => {
+                const examples = futurePromptsExamples[promptQuestion] && futurePromptsExamples[promptQuestion][ageBracket] 
+                    ? futurePromptsExamples[promptQuestion][ageBracket] 
+                    : [];
+                
+                // Filter examples based on subject if provided
+                let filteredExamples = examples;
+                if (subject && subject !== 'Other') {
+                    const subjectMap = {
+                    'Maths': ['Math', 'Maths'],
+                    'English': ['English'],
+                    'Science': ['Science', 'Chemistry', 'Physics', 'Biology'],
+                    'Social Studies': ['Social Studies', 'History', 'Economics', 'Geography'],
+                    'Visual Arts': ['Art',],
+                    'Performing Arts': ['Music', 'Drama', 'Dance'],
+                    'Languages': ['Languages', 'French', 'Spanish', 'Māori'],
+                    'Physical Education': ['Physical Education', 'PE'],
+                    'Technology': ['Technology', 'Engineering']
+                    };
+                    
+                    const matchingSubjects = subjectMap[subject] || [subject];
+                    filteredExamples = examples.filter(example => 
+                        matchingSubjects.some(s => example.subject.includes(s))
+                    );
+                    
+                    // If no examples match the specific subject, show all examples for this prompt
+                    if (filteredExamples.length === 0) {
+                        filteredExamples = examples;
+                    }
+                }
+                
+                if (filteredExamples.length > 0) {
+                    examplesHtml += `
+                        <div style="margin-bottom: 1.5rem;">
+                            <div style="color: #0f766e; font-weight: 600; margin-bottom: 0.75rem; font-size: 0.95rem;">${promptQuestion}</div>
+                    `;
+                    
+                    filteredExamples.forEach(example => {
+                        examplesHtml += `
+                            <div class="example-card" style="margin-left: 1rem;">
+                                <div class="example-header">${example.year} - ${example.subject}</div>
+                                <div class="example-text">"${example.text}"</div>
+                            </div>
+                        `;
+                    });
+                    
+                    examplesHtml += `</div>`;
+                }
+            });
+            
+            return examplesHtml;
+        }
+
+        // Function to toggle examples visibility
+        function toggleExamples() {
+            const toggle = document.getElementById('examplesToggle');
+            const content = document.getElementById('examplesContent');
+            const isExpanded = content.classList.contains('visible');
+            
+            if (isExpanded) {
+                content.classList.remove('visible');
+                toggle.classList.remove('expanded');
+                toggle.innerHTML = '💡 See examples from other students';
+            } else {
+                content.classList.add('visible');
+                toggle.classList.add('expanded');
+                toggle.innerHTML = '🔼 Hide examples';
+            }
+        }
+
+        // Function to toggle "What I Did" examples visibility
+        function toggleWhatIDidExamples() {
+            const toggle = document.getElementById('whatIDidExamplesToggle');
+            const content = document.getElementById('whatIDidExamplesContent');
+            const isExpanded = content.classList.contains('visible');
+            
+            if (isExpanded) {
+                content.classList.remove('visible');
+                toggle.classList.remove('expanded');
+                toggle.innerHTML = '💡 See examples from other students';
+            } else {
+                content.classList.add('visible');
+                toggle.classList.add('expanded');
+                toggle.innerHTML = '🔼 Hide examples';
+            }
+        }
+
+        // Function to toggle "Future Prompts" examples visibility
+        function toggleFuturePromptsExamples() {
+            const toggle = document.getElementById('futurePromptsExamplesToggle');
+            const content = document.getElementById('futurePromptsExamplesContent');
+            const isExpanded = content.classList.contains('visible');
+            
+            if (isExpanded) {
+                content.classList.remove('visible');
+                toggle.classList.remove('expanded');
+                toggle.innerHTML = '💡 See examples from other students';
+            } else {
+                content.classList.add('visible');
+                toggle.classList.add('expanded');
+                toggle.innerHTML = '🔼 Hide examples';
+            }
+        }
+
+        const futurePrompts = [
+            {
+                question: 'What new questions do I have about this topic?',
+                helper: 'How has this learning opened up new avenues of inquiry or curiosity for you?',
+                details: [
+                    'What unanswered questions do you have now?',
+                    'What do you want to explore next?',
+                    'How has this work sparked new curiosity for you?'
+                ]
+            },
+            {
+                question: 'How can I apply this learning in a different context?',
+                helper: 'Think about how this skill or knowledge could be useful in another subject, at home, or in a hobby.',
+                details: [
+                    'Where else could you use this skill or knowledge?',
+                    'How could you teach this to someone else?',
+                    'What real-world problem could this help you solve?'
+                ]
+            },
+            {
+                question: 'What challenges did I overcome, and how can I use that strength again?',
+                helper: 'Reflect on moments of persistence and resilience. How can you apply those strategies next time you face difficulty?',
+                details: [
+                    'What was difficult about this work, and how did you push through?',
+                    'What specific strategies did you use to overcome challenges?',
+                    'How can you use this experience to tackle difficult tasks in the future?'
+                ]
+            },
+            {
+                question: 'How has this learning changed my thinking or perspective?',
+                helper: 'Consider how this experience has broadened your understanding or shifted your viewpoint.',
+                details: [
+                    'What new ideas do you have after doing this work?',
+                    'Has your opinion on anything changed? Why?',
+                    'How has this learning influenced your way of looking at the world?'
+                ]
+            },
+            {
+                question: 'What is one thing I could do to make my next learning even better?',
+                helper: 'Think about craftsmanship and continuous improvement. What small refinement could make a big difference?',
+                details: [
+                    'What\'s a small adjustment you could make for next time?',
+                    'How could you apply feedback to improve?',
+                    'What would "even better" look like for your next piece of work?'
+                ]
+            },
+            {
+                question: 'How did collaborating with others enhance my learning?',
+                helper: 'If you worked with others, reflect on the power of shared ideas and teamwork.',
+                details: [
+                    'What did you learn from listening to others?',
+                    'How did sharing your ideas help you?',
+                    'How can you be an even better collaborator next time?'
+                ]
+            }
+        ];
+
+        // Function to toggle "Discussion Questions" visibility
+        function toggleDiscussionQuestions() {
+            const toggle = document.getElementById('discussionQuestionsToggle');
+            const content = document.getElementById('discussionQuestionsContent');
+            const isExpanded = content.classList.contains('visible');
+            
+            if (isExpanded) {
+                content.classList.remove('visible');
+                toggle.classList.remove('expanded');
+                toggle.innerHTML = '❓ Questions for your discussion';
+            } else {
+                content.classList.add('visible');
+                toggle.classList.add('expanded');
+                toggle.innerHTML = '🔼 Hide questions';
+            }
+        }
+
+        // Function to toggle "Comment Guidance" visibility
+        function toggleCommentGuidance() {
+            const toggle = document.getElementById('commentGuidanceToggle');
+            const content = document.getElementById('commentGuidanceContent');
+            const isExpanded = content.classList.contains('visible');
+            
+            if (isExpanded) {
+                content.classList.remove('visible');
+                toggle.classList.remove('expanded');
+                toggle.innerHTML = '❓ How to write your comment';
+            } else {
+                content.classList.add('visible');
+                toggle.classList.add('expanded');
+                toggle.innerHTML = '🔼 Hide guidance';
+            }
+        }
+
+        function init() {
+            renderStep();
+            updateProgress();
+            updateNavigation();
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps - 1) {
+                currentStep++;
+                renderStep();
+                updateProgress();
+                updateNavigation();
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                renderStep();
+                updateProgress();
+                updateNavigation();
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            const percentage = ((currentStep + 1) / totalSteps) * 100;
+            
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `Step ${currentStep + 1} of ${totalSteps}`;
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            if (currentStep === totalSteps - 1) {
+                document.getElementById('navigation').innerHTML = `
+                    <div class="nav-left">
+                        <button class="btn btn-secondary" onclick="previousStep()">
+                            ← Back to Edit
+                        </button>
+                    </div>
+                    <div class="nav-right">
+                        <button class="btn btn-secondary" onclick="goToHub()">
+                            🏠 Back to Hub
+                        </button>
+                        <button class="btn btn-secondary" onclick="startNewReflection()">
+                            🔄 Start New Reflection
+                        </button>
+                        <button class="btn btn-primary" onclick="saveToPDF()">
+                            💾 Save My Reflection as PDF
+                        </button>
+                    </div>
+                `;
+            } else {
+                document.getElementById('navigation').innerHTML = `
+                    <div class="nav-left">
+                        <button class="btn btn-secondary" id="prevBtn" onclick="previousStep()" ${currentStep === 0 ? 'style="display: none;"' : ''}>
+                            ← Previous
+                        </button>
+                    </div>
+                    <div class="nav-right">
+                        <button class="btn btn-secondary" onclick="goToHub()">
+                            🏠 Back to Hub
+                        </button>
+                        <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">
+                            ${currentStep === totalSteps - 2 ? 'Complete Reflection' : 'Next →'}
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function updateReflection(field, value) {
+            reflection[field] = value;
+            if (field === 'includeTeacherParentComment') {
+                 renderStep();
+                 if (value) {
+                    scrollToElement('teacherCommentSection');
+                 }
+            }
+        }
+
+        function toggleStrength(strength) {
+            const index = reflection.learningStrengths.indexOf(strength);
+            if (index > -1) {
+                reflection.learningStrengths.splice(index, 1);
+            } else {
+                reflection.learningStrengths.push(strength);
+            }
+            renderStep();
+        }
+
+        function toggleFuturePrompt(prompt) {
+            const index = reflection.selectedFuturePrompts.indexOf(prompt);
+            if (index > -1) {
+                reflection.selectedFuturePrompts.splice(index, 1);
+            } else {
+                reflection.selectedFuturePrompts.push(prompt);
+            }
+            renderStep();
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('File size must be less than 10MB');
+                    return;
+                }
+                
+                const allowedTypes = ['image/', 'video/', 'audio/'];
+                if (!allowedTypes.some(type => file.type.startsWith(type))) {
+                    alert('This file type is not supported. Please upload images, videos, or audio files.');
+                    return;
+                }
+
+                reflection.evidenceFile = file;
+                reflection.evidenceFileName = file.name;
+                renderStep();
+            }
+        }
+
+        function removeFile() {
+            if (reflection.evidenceFile) {
+                URL.revokeObjectURL(reflection.evidenceFile.url);
+            }
+            reflection.evidenceFile = null;
+            reflection.evidenceFileName = '';
+            renderStep();
+        }
+
+        function saveToPDF() {
+            function fileToBase64(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            async function generateAndPrint() {
+                let imagesHtml = '';
+                
+                if (reflection.evidenceFile && reflection.evidenceFile.type.startsWith('image/')) {
+                    try {
+                        const base64Data = await fileToBase64(reflection.evidenceFile);
+                        imagesHtml = `<div style="text-align: center; margin: 1rem 0; page-break-inside: avoid;"><img src="${base64Data}" alt="Learning Evidence" style="max-width: 100%; max-height: 300px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;"></div>`;
+                    } catch (error) {
+                        imagesHtml = `<div style="background-color: #dbeafe; border: 1px solid #93c5fd; padding: 0.75rem; border-radius: 6px; margin: 1rem; font-size: 13px; color: #1e40af;">📎 Evidence: ${reflection.evidenceFileName}</div>`;
+                    }
+                } else if (reflection.evidenceFile) {
+                    const fileType = reflection.evidenceFile.type.startsWith('video/') ? 'Video' : 'Audio';
+                    imagesHtml = `<div style="background-color: #dbeafe; border: 1px solid #93c5fd; padding: 0.75rem; border-radius: 6px; margin: 1rem; font-size: 13px; color: #1e40af;">📎 Evidence: ${fileType}: ${reflection.evidenceFileName}</div>`;
+                }
+
+                const studentWhatIDidSection = `
+                    <div style="margin-bottom: 1.5rem; page-break-inside: avoid;">
+                        <div style="background: #14b8a6; color: white; padding: 0.75rem 1rem; border-radius: 6px 6px 0 0; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                            <span style="font-size: 18px;">📝</span>
+                            What I Did
+                        </div>
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 6px 6px; padding: 1rem; min-height: 40px; text-align: left;">
+                            <div style="color: #374151; line-height: 1.6; white-space: pre-wrap;">${reflection.whatIDid}</div>
+                            ${imagesHtml}
+                        </div>
+                    </div>
+                `;
+
+                const studentHowIGrewSection = `
+                    <div style="margin-bottom: 1.5rem; page-break-inside: avoid;">
+                        <div style="background: #14b8a6; color: white; padding: 0.75rem 1rem; border-radius: 6px 6px 0 0; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                            <span style="font-size: 18px;">⭐</span>
+                            How I Grew as a Learner
+                        </div>
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 6px 6px; padding: 1rem; min-height: 40px; text-align: left;">
+                            ${reflection.learningStrengths.length > 0 ? `
+                            <div style="background: linear-gradient(135deg, #f0fdfa, #ccfbf1); border: 1px solid #14b8a6; padding: 0.75rem; border-radius: 4px; margin-bottom: 0.75rem;">
+                                <div style="font-weight: 600; color: #0f766e; margin-bottom: 0.25rem;">My learning was powered by:</div>
+                                <div style="color: #134e4a; font-style: italic;">${reflection.learningStrengths.join(' • ')}</div>
+                            </div>
+                            ` : ''}
+                            ${reflection.learningStrengthsReflection ? `
+                            <div style="color: #374151; line-height: 1.6; white-space: pre-wrap;">${reflection.learningStrengthsReflection}</div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+
+                const studentWhereThisTakesMeSection = `
+                    <div style="margin-bottom: 1.5rem; page-break-inside: avoid;">
+                        <div style="background: #14b8a6; color: white; padding: 0.75rem 1rem; border-radius: 6px 6px 0 0; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                            <span style="font-size: 18px;">🚀</span>
+                            Where This Could Take Me
+                        </div>
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 6px 6px; padding: 1rem; min-height: 40px; text-align: left;">
+                            <div style="color: #374151; line-height: 1.6; white-space: pre-wrap;">${reflection.whereThisTakesMe}</div>
+                        </div>
+                    </div>
+                `;
+
+                let teacherParentCommentSection = '';
+                if (reflection.includeTeacherParentComment) {
+                    let teacherCommentContentHTML;
+                    const blankSpaceForHandwrittenNotes = `
+                        <div style="height: 180px; background-color: #ffffff; border: 1px dashed #cbd5e1; padding: 1rem; border-radius: 0.5rem; text-align: left; display: flex; align-items: center; justify-content: center;">
+                            </div>
+                    `;
+
+                    if (reflection.teacherParentComment) {
+                        teacherCommentContentHTML = `<div style="color: #374151; line-height: 1.6; white-space: pre-wrap; text-align: left !important; padding: 1rem; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.5rem;">${reflection.teacherParentComment}</div>`;
+                    } else {
+                        teacherCommentContentHTML = blankSpaceForHandwrittenNotes;
+                    }
+
+                    teacherParentCommentSection = `
+                        <div style="margin-top: 2rem; margin-bottom: 1.5rem; page-break-inside: avoid;">
+                            <div style="background: linear-gradient(135deg, #0891b2, #14b8a6); color: white; padding: 0.75rem 1rem; border-radius: 6px 6px 0 0; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                                <span style="font-size: 18px;">✍️</span>
+                                A Note from Your Teacher/Parent
+                            </div>
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 6px 6px; padding: 1rem; min-height: 80px; text-align: left;">
+                                ${teacherCommentContentHTML}
+                            </div>
+                            <p style="margin-top: 0.5rem; font-style: italic; font-size: 0.875rem; color: #6b7280; text-align: left;">
+                                This learning story is not stored by the app: make sure you save it to your device.
+                            </p>
+                        </div>
+                    `;
+                }
+
+                const printContent = `
+                    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.5; color: #0f172a; max-width: 8.5in; margin: 0 auto; padding: 0.5rem; background: white;">
+                        <div style="text-align: center; margin-bottom: 1rem;">
+                            <div style="font-size: 28px; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem;">Learning Reflection</div>
+                            <div style="font-size: 18px; font-weight: 500; color: #14b8a6; margin-bottom: 1rem;">${reflection.studentName}</div>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #f0fdfa, #ccfbf1); border: 1px solid #14b8a6; border-radius: 6px; padding: 1rem; margin-bottom: 1rem; text-align: center;">
+                            <div style="margin-bottom: 0.25rem; font-size: 14px;">
+                                <span class="reflection-meta-label">Date:</span> ${formatDate(reflection.date)}
+                            </div>
+                            <div style="margin-bottom: 0.25rem; font-size: 14px;">
+                                <span class="reflection-meta-label">Year Level:</span> ${reflection.yearLevel}
+                            </div>
+                            <div style="font-size: 14px;">
+                                <span class="reflection-meta-label">Subject:</span> ${reflection.subject}
+                            </div>
+                        </div>
+                        
+                        ${studentWhatIDidSection}
+                        ${studentHowIGrewSection}
+                        ${studentWhereThisTakesMeSection}
+                        ${teacherParentCommentSection}
+                        
+                        <div style="margin-top: 2rem; padding-top: 0.75rem; border-top: 1px solid #e2e8f0; text-align: center; font-size: 11px; color: #64748b;">
+                            <div style="font-weight: 600; color: #14b8a6; margin-bottom: 0.125rem;">Learner Threads</div>
+                            <div>© Bevan Holloway | Student Learning Reflection | Learner Threads is powered by Smata</div>
+                        </div>
+                    </div>
+                `;
+
+                const printContainer = document.createElement('div');
+                printContainer.innerHTML = printContent;
+                printContainer.style.display = 'none';
+                printContainer.id = 'print-content';
+                
+                const existing = document.getElementById('print-content');
+                if (existing) {
+                    existing.remove();
+                }
+                
+                document.body.appendChild(printContainer);
+                document.getElementById('mainApp').style.display = 'none';
+
+                setTimeout(() => {
+                    window.print();
+                    
+                    setTimeout(() => {
+                        printContainer.remove();
+                        document.getElementById('mainApp').style.display = 'block';
+                    }, 1000);
+                }, 100);
+            }
+
+            generateAndPrint();
+        }
+
+        function startNewReflection() {
+            reflection = {
+                studentName: '',
+                yearLevel: '',
+                date: '',
+                subject: '',
+                whatIDid: '',
+                evidenceFile: null,
+                evidenceFileName: '',
+                evidenceDescription: '',
+                learningStrengths: [],
+                learningStrengthsReflection: '',
+                selectedFuturePrompts: [],
+                whereThisTakesMe: '',
+                includeTeacherParentComment: false,
+                teacherParentComment: ''
+            };
+            currentStep = 0;
+            init();
+        }
+
+        function goToHub() {
+            window.location.href = 'index.html';
+        }
+
+        function scrollToElement(elementId) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100); 
+            }
+        }
+
+        function renderStep() {
+            const content = document.getElementById('content');
+            
+            switch (currentStep) {
+                case 0:
+                    content.innerHTML = renderSetupStep();
+                    break;
+                case 1:
+                    content.innerHTML = renderWhatIDidStep();
+                    break;
+                case 2:
+                    content.innerHTML = renderLearningStrengthsStep();
+                    break;
+                case 3:
+                    content.innerHTML = renderWhereThisTakesMeStep();
+                    if (reflection.includeTeacherParentComment) {
+                        scrollToElement('teacherCommentSection'); 
+                    }
+                    break;
+                case 4:
+                    content.innerHTML = renderReviewStep();
+                    break;
+            }
+        }
+
+        function renderSetupStep() {
+            return `
+                <div class="section-intro">
+                    <h2>Let's Start Your Learning Reflection</h2>
+                    <p>Type your name, enter your year level and today's date, and pick the subject you have been growing your learning powers in. This helps create a personalised reflection of your learning journey.</p>
+                </div>
+
+                <div class="text-fields-container">
+                    <div class="form-group">
+                        <label class="form-label">Your Name</label>
+                        <input type="text" class="form-input" value="${reflection.studentName}" 
+                               onchange="updateReflection('studentName', this.value)">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Year Level</label>
+                        <div class="input-guidance">This helps us show you the most relevant examples</div>
+                        <select class="form-select" value="${reflection.yearLevel}"
+                                onchange="updateReflection('yearLevel', this.value)">
+                            <option value="">Select year level...</option>
+                            ${yearLevels.map(year => 
+                                `<option value="${year}" ${reflection.yearLevel === year ? 'selected' : ''}>${year}</option>`
+                            ).join('')}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-input" value="${reflection.date}"
+                               onchange="updateReflection('date', this.value)">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Subject Area</label>
+                        <div class="input-guidance">What subject were you working on?</div>
+                        <select class="form-select" value="${reflection.subject}"
+                                onchange="updateReflection('subject', this.value)">
+                            <option value="">Select subject...</option>
+                            ${subjects.map(subject => 
+                                `<option value="${subject}" ${reflection.subject === subject ? 'selected' : ''}>${subject}</option>`
+                            ).join('')}
+                        </select>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderWhatIDidStep() {
+            return `
+                <div class="section-intro">
+                    <h2>What I Did</h2>
+                    <p>Describe what you worked on.<br> 
+                    Be specific about what you actually did, for how long, and why you were doing it.</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Add Evidence (Optional)</label>
+                    <div class="file-upload-area">
+                        ${reflection.evidenceFile ? `
+                            <div class="file-uploaded">
+                                <div class="file-info">
+                                    <span class="file-name">${reflection.evidenceFileName}</span>
+                                    <span class="file-remove" onclick="removeFile()">Remove</span>
+                                </div>
+                                ${reflection.evidenceFile.type.startsWith('image/') ? 
+                                    `<img src="${URL.createObjectURL(reflection.evidenceFile)}" alt="Evidence" class="file-preview">` : 
+                                reflection.evidenceFile.type.startsWith('video/') ? 
+                                    `<video src="${URL.createObjectURL(reflection.evidenceFile)}" controls class="file-preview"></video>` :
+                                reflection.evidenceFile.type.startsWith('audio/') ? 
+                                    `<audio src="${URL.createObjectURL(reflection.evidenceFile)}" controls style="width: 200px;"></audio>` : ''}
+                            </div>
+                        ` : `
+                            <div>
+                                <input type="file" accept="image/*,video/*,audio/*"
+                                        onchange="handleFileUpload(event)" style="display: none;" id="evidence-upload">
+                                <label for="evidence-upload" class="upload-button">📎 Choose File</label>
+                                <p style="margin-top: 0.5rem; color: #64748b;">
+                                    Upload a photo of your work (max 10MB)
+                                </p>
+                            </div>
+                        `}
+                    </div>
+                </div>
+
+                <div class="text-fields-container">
+                    <div class="form-group">
+                        <div class="examples-section">
+                            <button class="examples-toggle" id="whatIDidExamplesToggle" onclick="toggleWhatIDidExamples()">
+                                💡 See examples from other students
+                            </button>
+                            <div class="examples-content" id="whatIDidExamplesContent">
+                                <div class="examples-intro">Examples to inspire your reflection:</div>
+                                ${renderWhatIDidExamples(reflection.yearLevel, reflection.subject)}
+                            </div>
+                        </div>
+                        <label class="form-label">Describe what you worked on</label>
+                        <div class="input-guidance">
+                            <strong>Describe what you worked on:</strong><br>
+                            • What was the task, how long did you work on it, and why were you doing it?<br>
+                            • Use the examples if you need ideas.
+                        </div>
+
+                        <textarea class="form-textarea" rows="6" 
+                                        data-field="whatIDid"
+                                        onchange="updateReflection('whatIDid', this.value)">${reflection.whatIDid}</textarea>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderLearningStrengthsStep() {
+            return `
+                <div class="section-intro">
+                    <h2>How I Grew as a Learner</h2>
+                    <p>What was your learning powered by?<br> 
+                    Select one or two that best describe how you learned during this work, then use the prompts to write about how you used them.</p>
+                </div>
+
+                <div class="dispositions-grid">
+                    ${dispositions.map(disposition => `
+                        <div class="disposition-card ${reflection.learningStrengths.includes(disposition.name) ? 'selected' : ''}"
+                               onclick="toggleStrength('${disposition.name}')">
+                            <div class="disposition-icon">${disposition.icon}</div>
+                            <div class="disposition-name">${disposition.name}</div>
+                            <div class="disposition-desc">${disposition.description}</div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="text-fields-container">
+                    ${reflection.learningStrengths.length > 0 ? `
+                        <div class="disposition-prompts">
+                            <h4 style="color: #0f766e; margin-bottom: 1rem;">Ideas for your reflection:</h4>
+                            ${dispositions.filter(d => reflection.learningStrengths.includes(d.name)).map(disposition => `
+                                    <div style="margin-bottom: 1rem; padding: 1rem; background: #f0fdfa; border-radius: 0.5rem; border-left: 3px solid #14b8a6;">
+                                        <div style="color: #0f766e; font-weight: 600; margin-bottom: 0.5rem;">When ${disposition.name.toLowerCase()} powers your learning, you might find yourself:</div>
+                                        ${disposition.prompts.map(prompt => `
+                                            <div style="color: #134e4a; font-size: 0.875rem; margin: 0.25rem 0; padding-left: 1rem;">• ${prompt}</div>
+                                        `).join('')}
+                                    </div>
+                                `).join('')}
+                        </div>
+
+                        <div class="examples-section">
+                            <button class="examples-toggle" id="examplesToggle" onclick="toggleExamples()">
+                                💡 See examples from other students
+                            </button>
+                            <div class="examples-content" id="examplesContent">
+                                <div class="examples-intro">Examples to inspire your reflection:</div>
+                                ${renderExamplesForSelectedDispositions(reflection.learningStrengths, reflection.yearLevel,)}
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="form-group">
+                        <label class="form-label">How I Used These to Power My Learning</label>
+                        <div class="input-guidance">
+                            <strong>What did this power actually help you do?:</strong><br>
+                            • What impact did it have on your ability, motivation, or understanding?<br>
+                            • Use the examples above for inspiration.
+                        </div>
+
+                        <textarea class="form-textarea" rows="6" 
+                                        onchange="updateReflection('learningStrengthsReflection', this.value)"
+                                        placeholder="Curiosity helped my learning because ...">${reflection.learningStrengthsReflection || ''}</textarea>
+                            </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderWhereThisTakesMeStep() {
+            return `
+                <div class="section-intro">
+                    <h2>Where This Could Take Me</h2>
+                    <p>Think about the future and what's possible for you now.<br> 
+                    Select a question to open up a guide for your reflection, and examples for inspiration:</p>
+                </div>
+
+                <div class="dispositions-grid">
+                    ${futurePrompts.map(prompt => `
+                        <div class="disposition-card ${reflection.selectedFuturePrompts.includes(prompt.question) ? 'selected' : ''}"
+                               onclick="toggleFuturePrompt('${prompt.question}')">
+                            <div class="disposition-icon">🤔</div>
+                            <div class="disposition-name">${prompt.question}</div>
+                            <div class="disposition-desc">${prompt.helper}</div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="text-fields-container">
+                    ${reflection.selectedFuturePrompts.length > 0 ? `
+                        <div class="disposition-prompts">
+                            <h4 style="color: #0f766e; margin-bottom: 1rem;">Ideas for your reflection:</h4>
+                            ${reflection.selectedFuturePrompts.map(selectedQuestion => {
+                                const prompt = futurePrompts.find(p => p.question === selectedQuestion);
+                                return prompt ? `
+                                        <div style="margin-bottom: 1rem; padding: 1rem; background: #f0fdfa; border-radius: 0.5rem; border-left: 3px solid #14b8a6;">
+                                            <div style="color: #0f766e; font-weight: 600; margin-bottom: 0.5rem;">${selectedQuestion}</div>
+                                            ${prompt.details.map(detail => `
+                                                <div style="color: #134e4a; font-size: 0.875rem; margin: 0.25rem 0; padding-left: 1rem;">• ${detail}</div>
+                                            `).join('')}
+                                        </div>
+                                    ` : '';
+                            }).join('')}
+                        </div>
+
+                        <div class="examples-section">
+                            <button class="examples-toggle" id="futurePromptsExamplesToggle" onclick="toggleFuturePromptsExamples()">
+                                💡 See examples from other students
+                            </button>
+                            <div class="examples-content" id="futurePromptsExamplesContent">
+                                <div class="examples-intro">Examples to inspire your reflection:</div>
+                                ${renderFuturePromptsExamples(reflection.selectedFuturePrompts, reflection.yearLevel, reflection.subject)}
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="form-group">
+                        <label class="form-label">Future Possibilities</label>
+                        <div class="input-guidance">
+                            <strong>What doors has this opened?</strong><br>
+                            • Use the questions 👆 to help you think about what you might do next<br>
+                            • Look at the examples if you need guidance.
+                        </div>
+
+                        <textarea class="form-textarea" rows="6" 
+                                        onchange="updateReflection('whereThisTakesMe', this.value)"
+                                        placeholder="Next time, I think I ...">${reflection.whereThisTakesMe}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="opt-in-form-group">
+                        <label class="form-label">
+                            <input type="checkbox" style="width: 20px; height: 20px; border: 2px solid #14b8a6; border-radius: 4px; flex-shrink: 0;"
+                                        ${reflection.includeTeacherParentComment ? 'checked' : ''}
+                                        onchange="updateReflection('includeTeacherParentComment', this.checked); if(this.checked) scrollToElement('teacherCommentSection');">
+                            <span><strong>Would you like to include Teacher/Parent Notes on your reflection?</strong></span>
+                        </label>
+                        <p class="input-guidance">
+                            <strong>This is a great opportunity to chat with a teacher or parent about your learning.</strong> After your discussion, they can type their notes directly into the space provided on the final review screen. Or, leave it blank and space will be provided for them to handwrite their notes later.
+                        </p>
+                    </div>
+
+                    ${reflection.includeTeacherParentComment ? `
+                        <div id="teacherCommentStudentContext" style="margin-top: 3rem;">
+                            <h4 style="color: #0f766e; margin-bottom: 1rem; font-size: 1.1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem;">Student's Reflection for Discussion:</h4>
+                            
+                            <div class="reflection-section" style="border-left: 4px solid #14b8a6; padding: 1rem 1.5rem; margin-bottom: 1.5rem;">
+                                <h3 style="background: #14b8a6; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem 0.5rem 0 0; font-size: 1rem; margin: -1rem -1.5rem 1rem -1.5rem;">What I Did</h3>
+                                <div class="reflection-content">${reflection.whatIDid || '<i>(Student has not yet completed this section)</i>'}</div>
+                                ${reflection.evidenceFile ? `
+                                <div style="margin-top: 1rem; text-align: center;">
+                                    ${reflection.evidenceFile.type.startsWith('image/') ? `
+                                        <img src="${URL.createObjectURL(reflection.evidenceFile)}" alt="Learning Evidence" style="max-width: 100%; max-height: 200px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                    ` : `
+                                        <div style="background: #e0f2f7; padding: 0.5rem; border-radius: 0.25rem; border: 1px solid #a7d9ee; font-size: 0.85rem; color: #086d8a;">📎 Evidence: ${reflection.evidenceFileName}</div>
+                                    `}
+                                </div>
+                                ` : ''}
+                            </div>
+
+                            <div class="reflection-section" style="border-left: 4px solid #14b8a6; padding: 1rem 1.5rem; margin-bottom: 1.5rem;">
+                                <h3 style="background: #14b8a6; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem 0.5rem 0 0; font-size: 1rem; margin: -1rem -1.5rem 1rem -1.5rem;">How I Grew as a Learner</h3>
+                                <div class="reflection-content">${reflection.learningStrengthsReflection || '<i>(Student has not yet completed this section)</i>'}</div>
+                                ${reflection.learningStrengths.length > 0 ? `
+                                <div style="background: #e0f2f7; padding: 0.75rem; border-radius: 0.5rem; margin-top: 1rem; border: 1px solid #a7d9ee;">
+                                    <strong style="color: #0f766e; font-size: 0.95rem;">Powered by:</strong> <span style="color: #134e4a;">${reflection.learningStrengths.join(' • ')}</span>
+                                </div>
+                                ` : ''}
+                            </div>
+
+                            <div class="reflection-section" style="border-left: 4px solid #14b8a6; padding: 1rem 1.5rem; margin-bottom: 1.5rem;">
+                                <h3 style="background: #14b8a6; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem 0.5rem 0 0; font-size: 1rem; margin: -1rem -1.5rem 1rem -1.5rem;">Where This Could Take Me</h3>
+                                <div class="reflection-content">${reflection.whereThisTakesMe || '<i>(Student has not yet completed this section)</i>'}</div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="teacherCommentSection">
+                            <label class="form-label">A Note from Your Teacher/Parent</label>
+                            <div class="input-guidance">
+                                <strong>In this discussion, look for the unique 'threads' this learner has left:</strong><br>
+                                • A first question, a moment of bravery, a flicker of agency, the use of a disposition, a breakthrough<br>
+                                • Think about the growth that is evident in the story<br>
+                                • See the guidance below for questions to ask and ways to write your observations.
+                            </div>
+
+                        <div class="examples-section">
+                            <button class="examples-toggle" id="discussionQuestionsToggle" onclick="toggleDiscussionQuestions()">
+                                ❓ Questions for your discussion
+                            </button>
+                            <div class="examples-content" id="discussionQuestionsContent">
+                                <div class="examples-intro">During your conversation, you could ask:</div>
+                                <div class="example-card">
+                                    <div class="example-text">• What surprised you about this learning?<br>
+                                    • Which part are you most proud of and why?<br>
+                                    • How did you handle the tricky bits?<br>
+                                    • What has this showed you is possible?<br>
+                                    • What would you tell another teacher or family member about this?<br>
+                                    • What questions do you have now?</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="examples-section">
+                            <button class="examples-toggle" id="commentGuidanceToggle" onclick="toggleCommentGuidance()">
+                                ❓ How to write your comment
+                            </button>
+                            <div class="examples-content" id="commentGuidanceContent">
+                                <div class="examples-intro">Writing tips and example:</div>
+                                <div class="example-card">
+                                    <div class="example-header">Tips:</div>
+                                    <div class="example-text">• Use their name and speak directly to them<br>
+                                    • Notice specific dispositions they used (curiosity, persistence, etc.)<br>
+                                    • Celebrate small steps and breakthroughs<br>
+                                    • Focus on what they DID do, not what they didn't<br>
+                                    • Connect to their future learning</div>
+                                </div>
+                                <div class="example-card">
+                                    <div class="example-header">Example Comment:</div>
+                                    <div class="example-text">"Jordan, I noticed you wrote that you 'didn't give up even when it was hard.' That's persistence - one of the most powerful learning strengths. When you got stuck, instead of saying 'I can't do this,' you tried a different way. That's exactly what mathematicians do! I'm excited to see where this persistence takes you next."</div>
+                                </div>
+                            </div>
+                        </div>
+
+                            <textarea class="form-textarea" rows="4" 
+                                            placeholder="Type comments here..."
+                                            style="text-align: left; padding: 1rem;" 
+                                            onchange="updateReflection('teacherParentComment', this.value)">${reflection.teacherParentComment || ''}</textarea>
+                            <p style="margin-top: 0.5rem; font-style: italic; font-size: 0.875rem; color: #6b7280;">
+                                This learning story is not stored by the app: make sure you save it to your device.
+                            </p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function renderReviewStep() {
+            return `
+                <div class="section-intro">
+                    <h2>Review Your Learning Reflection</h2>
+                    <p>Here's your complete learning reflection. Review it carefully, and if you need to make any changes, use the "Back to Edit" button. When you're happy with it, save it as a PDF.</p>
+                </div>
+
+                <div class="reflection-preview">
+                    <div class="reflection-title">Learning Reflection</div>
+                    <div class="reflection-subtitle">${reflection.studentName}</div>
+                    <div class="reflection-meta">
+                        <div class="reflection-meta-item">
+                            <span class="reflection-meta-label">Date:</span> ${formatDate(reflection.date)}
+                        </div>
+                        <div class="reflection-meta-item">
+                            <span class="reflection-meta-label">Year:</span> ${reflection.yearLevel}
+                        </div>
+                        <div class="reflection-meta-item">
+                            <span class="reflection-meta-label">Subject:</span> ${reflection.subject}
+                        </div>
+                    </div>
+
+                    <div class="reflection-section">
+                        <h3>What I Did</h3>
+                        <div class="reflection-content">${reflection.whatIDid}</div>
+                        ${reflection.evidenceFile ? `
+                        <div style="margin-top: 1rem;">
+                            ${reflection.evidenceFile.type.startsWith('image/') ? `
+                                <div style="text-align: center; margin: 1rem 0;">
+                                    <img src="${URL.createObjectURL(reflection.evidenceFile)}" alt="Learning Evidence" 
+                                                style="max-width: 100%; max-height: 300px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;">
+                                </div>
+                            ` : `
+                                <div style="background: #f0fdfa; padding: 0.75rem; border-radius: 0.5rem; margin: 0.5rem 0; border: 1px solid #14b8a6;">
+                                    <span style="color: #0f766e; font-weight: 500;">📎 Evidence:</span> 
+                                    <span style="color: #64748b;">${reflection.evidenceFileName}</span>
+                                </div>
+                            `}
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="reflection-section">
+                        <h3>How I Grew as a Learner</h3>
+                        <div class="reflection-content">${reflection.learningStrengthsReflection}</div>
+                        ${reflection.learningStrengths.length > 0 ? `
+                        <div class="reflection-dispositions">
+                            <strong>My learning was powered by:</strong> ${reflection.learningStrengths.join(', ')}
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="reflection-section">
+                        <h3>Where This Could Take Me</h3>
+                        <div class="reflection-content">${reflection.whereThisTakesMe}</div>
+                    </div>
+
+                    ${reflection.includeTeacherParentComment ? `
+                        <div class="reflection-section" style="border-left: 4px solid #0891b2;">
+                            <h3>A Note from Your Teacher/Parent</h3>
+                            <div style="color: #374151; line-height: 1.6; white-space: pre-wrap; text-align: left; padding: 0;">
+                                ${reflection.teacherParentComment ? reflection.teacherParentComment : `<p style="color: #6b7280; font-style: italic; margin-bottom: 0; text-align: left;">Space for Teacher/Parent Notes (for handwritten additions)</p>`}
+                            </div>
+                            <p style="margin-top: 0.5rem; font-style: italic; font-size: 0.875rem; color: #6b7280;">
+                                This learning story is not stored by the app: make sure you save it to your device.
+                            </p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            return date.toLocaleDateString('en-NZ', options);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

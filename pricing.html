@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - Learner Threads</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #2c3e50;
+        }
+
+        /* --- Global Header & Footer Styles --- */
+        .global-header {
+            max-width: 1400px;
+            margin: 0 auto 2.5rem auto;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .global-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: #1e3a5f;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        .logo-link img {
+            max-height: 40px;
+            border-radius: 50%;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        .nav-links a {
+            color: #475569;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .nav-links a:hover { color: #1e3a5f; }
+        .global-footer {
+            max-width: 1400px;
+            margin: 4rem auto 0 auto;
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        .global-footer p {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        .global-footer a { color: #1e3a5f; text-decoration: none; }
+        .global-footer a:hover { text-decoration: underline; }
+
+        /* --- Pricing Page Styles --- */
+        .pricing-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .section-title {
+            text-align: center;
+            color: #1e3a5f;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .section-subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            align-items: start;
+        }
+        .pricing-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+        }
+        .pricing-card.recommended {
+            border: 2px solid #1e3a5f;
+            transform: scale(1.03);
+        }
+        .badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e3a5f;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 0.5rem;
+        }
+        .card-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 0.25rem;
+        }
+        .card-price .term {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #64748b;
+        }
+        .card-description {
+            color: #475569;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+        }
+        .features-list {
+            list-style: none;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+        }
+        .features-list li {
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 0.75rem;
+            color: #334155;
+        }
+        .features-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #1e3a5f;
+            font-weight: bold;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: #1e3a5f;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #2c4a6f;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+        .school-section {
+            margin-top: 5rem;
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 1rem;
+            padding: 3rem;
+        }
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: auto; /* Pushes buttons to the bottom of the card */
+        }
+    </style>
+</head>
+<body>
+    <header class="global-header">
+        <nav class="global-nav">
+            <a href="index.html" class="logo-link">
+                <img src="logo.png" alt="Learner Threads Logo">
+                <span>Learner Threads</span>
+            </a>
+            <div class="nav-links">
+                <a href="pricing.html">Pricing</a>
+                <a href="https://blog.learnerthreads.com">Blog</a>
+                <a href="access.html">Sign In</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="pricing-container">
+        <h2 class="section-title">For Individuals & Tutors</h2>
+        <p class="section-subtitle">Choose the plan that's right for you. Get access to powerful tools to enhance learning and reflection.</p>
+
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3 class="card-title">A La Carte Tools</h3>
+                <p class="card-price">$15 <span class="term">NZD / year / tool</span></p>
+                <p class="card-description">Get full access to a single, powerful tool for one year.</p>
+                <ul class="features-list">
+                    <li><strong>Language Lens:</strong> Full access to all 50+ literary and grammatical features.</li>
+                    <li><strong>Learning Navigator:</strong> Full access to the Learning Navigator.</li>
+                    <li><strong>Learning Reflections:</strong> Full access to Learning Reflections.</li>
+                </ul>
+                <div class="button-group">
+                    <a href="https://buy.stripe.com/aFadRbfgv2ZReIVbFA4Ni04" class="btn btn-secondary">Buy Language Lens</a>
+                    <a href="https://buy.stripe.com/dRmbJ3ecrcAr1W99xs4Ni09" class="btn btn-secondary">Buy Learning Navigator</a>
+                    <a href="https://buy.stripe.com/7sY8wR7O343VfMZ6lg4Ni08" class="btn btn-secondary">Buy Learning Reflections</a>
+                </div>
+            </div>
+
+            <div class="pricing-card recommended">
+                <div class="badge">Best Value ✨</div>
+                <h3 class="card-title">The Learner Threads Bundle</h3>
+                <p class="card-price">$25 <span class="term">NZD / year</span></p>
+                <p class="card-description">Get everything! Full access to all current and future Learner Threads tools.</p>
+                <ul class="features-list">
+                    <li>Includes the full <strong>Language Lens.</strong></li>
+                    <li>Includes the full <strong>Learning Navigator.</strong></li>
+                    <li>Includes the full <strong>Learning Reflections.</strong></li>
+                    <li>Access to all <strong>future tools</strong> added to the suite.</li>
+                </ul>
+                <a href="https://buy.stripe.com/7sY00l4BR6c31W94d84Ni07" class="btn btn-primary">Get the Full Suite</a>
+            </div>
+        </div>
+
+        <div class="school-section">
+            <h2 class="section-title">For Schools & Institutions 🏫</h2>
+            <p class="section-subtitle">Equip your entire school with the full suite of Learner Threads tools for a single annual fee.</p>
+            <div class="pricing-grid" style="grid-template-columns: 1fr;">
+                <div class="pricing-card">
+                    <h3 class="card-title">The Learner Threads Bundle for Schools</h3>
+                    <p class="card-price">$299 <span class="term">NZD / year</span></p>
+                    <p class="card-description">One simple license provides unlimited access for your whole learning community.</p>
+                    <ul class="features-list">
+                        <li>Unlimited access for <strong>all students and staff</strong>.</li>
+                        <li>Includes the full <strong>Language Lens</strong> tool.</li>
+                        <li>Includes the full <strong>Dispositions Hub</strong> (Navigator & Reflections).</li>
+                        <li>Simple, single annual invoice for easy administration.</li>
+                        <li>Dedicated educator support.</li>
+                    </ul>
+                    <a href="mailto:bevan@learnerthreads.com?subject=School%20Licence%20Inquiry%20for%20Learner%20Threads" class="btn btn-primary">Request an Invoice</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="global-footer">
+        <p>&copy; 2025 Learner Threads | <a href="mailto:bevan@learnerthreads.com">Contact Support</a></p>
+    </footer>
+
+</body>
+</html>
