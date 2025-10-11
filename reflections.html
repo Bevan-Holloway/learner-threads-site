@@ -77,10 +77,11 @@
             margin-bottom: 0.75rem;
             position: relative;
             letter-spacing: -0.025em;
+            color: white;
         }
 
         .header p {
-            color: #bae6fd;
+            color: #e2e8f0;
             font-size: 1.1rem;
             position: relative;
             font-weight: 500;
@@ -155,7 +156,7 @@
             right: 0;
             width: 100px;
             height: 100px;
-            background: radial-gradient(circle, rgba(20, 184, 166, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle,  rgba(30, 58, 95, 0.1) 0%, transparent 70%);
         }
 
         .section-intro h2 {
@@ -199,7 +200,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(20, 184, 166, 0.02), rgba(8, 145, 178, 0.02));
+            background: linear-gradient(135deg,  rgba(30, 58, 95, 0.02), rgba(8, 145, 178, 0.02));
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -302,7 +303,7 @@
         }
 
         .examples-toggle:hover {
-            background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%);
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(30, 58, 95, 0.25);
             border-color: #1e3a5f
@@ -559,7 +560,7 @@
             background: #f8fafc;
             border-radius: 0.5rem;
             border: 1px solid #e2e8f0;
-            border-left: 4px solid #14b8a6;
+            border-left: 4px solid #1e3a5f;
         }
 
         .reflection-section h3 {
@@ -610,7 +611,7 @@
             padding: 1rem;
             border-radius: 0.5rem;
             margin-top: 1rem;
-            border: 1px solid #14b8a6;
+            border: 1px solid #1e3a5f;
         }
 
         .reflection-dispositions strong {
@@ -1768,9 +1769,9 @@
                         </div>
                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 6px 6px; padding: 1rem; min-height: 40px; text-align: left;">
                             ${reflection.learningStrengths.length > 0 ? `
-                            <div style="background: linear-gradient(135deg, #f1f5f9, #e2e8f0); border: 1px solid #14b8a6; padding: 0.75rem; border-radius: 4px; margin-bottom: 0.75rem;">
+                            <div style="background: linear-gradient(135deg, #f1f5f9, #e2e8f0); border: 1px solid #1e3a5f; padding: 0.75rem; border-radius: 4px; margin-bottom: 0.75rem;">
                                 <div style="font-weight: 600; color: #1e3a5f; margin-bottom: 0.25rem;">My learning was powered by:</div>
-                                <div style="color: #134e4a; font-style: italic;">${reflection.learningStrengths.join(' • ')}</div>
+                                <div style="color: #334155; font-style: italic;">${reflection.learningStrengths.join(' • ')}</div>
                             </div>
                             ` : ''}
                             ${reflection.learningStrengthsReflection ? `
@@ -1808,7 +1809,7 @@
 
                     teacherParentCommentSection = `
                         <div style="margin-top: 2rem; margin-bottom: 1.5rem; page-break-inside: avoid;">
-                            <div style="background: linear-gradient(135deg, #0891b2, #14b8a6); color: white; padding: 0.75rem 1rem; border-radius: 6px 6px 0 0; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                            <div style="background: linear-gradient(135deg, #0891b2, #1e3a5f); color: white; padding: 0.75rem 1rem; border-radius: 6px 6px 0 0; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
                                 <span style="font-size: 18px;">✍️</span>
                                 A Note from Your Teacher/Parent
                             </div>
@@ -1826,10 +1827,10 @@
                     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.5; color: #0f172a; max-width: 8.5in; margin: 0 auto; padding: 0.5rem; background: white;">
                         <div style="text-align: center; margin-bottom: 1rem;">
                             <div style="font-size: 28px; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem;">Learning Reflection</div>
-                            <div style="font-size: 18px; font-weight: 500; color: #14b8a6; margin-bottom: 1rem;">${reflection.studentName}</div>
+                            <div style="font-size: 18px; font-weight: 500; color: #1e3a5f; margin-bottom: 1rem;">${reflection.studentName}</div>
                         </div>
                         
-                        <div style="background: linear-gradient(135deg, #f1f5f9, #e2e8f0); border: 1px solid #14b8a6; border-radius: 6px; padding: 1rem; margin-bottom: 1rem; text-align: center;">
+                        <div style="background: linear-gradient(135deg, #f1f5f9, #e2e8f0); border: 1px solid #1e3a5f; border-radius: 6px; padding: 1rem; margin-bottom: 1rem; text-align: center;">
                             <div style="margin-bottom: 0.25rem; font-size: 14px;">
                                 <span class="reflection-meta-label">Date:</span> ${formatDate(reflection.date)}
                             </div>
@@ -1847,7 +1848,7 @@
                         ${teacherParentCommentSection}
                         
                         <div style="margin-top: 2rem; padding-top: 0.75rem; border-top: 1px solid #e2e8f0; text-align: center; font-size: 11px; color: #64748b;">
-                            <div style="font-weight: 600; color: #14b8a6; margin-bottom: 0.125rem;">Learner Threads</div>
+                            <div style="font-weight: 600; color: #1e3a5f; margin-bottom: 0.125rem;">Learner Threads</div>
                             <div>© Bevan Holloway | Student Learning Reflection | Learner Threads is powered by Smata</div>
                         </div>
                     </div>
@@ -2068,10 +2069,10 @@
                         <div class="disposition-prompts">
                             <h4 style="color: #1e3a5f; margin-bottom: 1rem;">Ideas for your reflection:</h4>
                             ${dispositions.filter(d => reflection.learningStrengths.includes(d.name)).map(disposition => `
-                                    <div style="margin-bottom: 1rem; padding: 1rem; background: #f1f5f9; border-radius: 0.5rem; border-left: 3px solid #14b8a6;">
+                                    <div style="margin-bottom: 1rem; padding: 1rem; background: #f1f5f9; border-radius: 0.5rem; border-left: 3px solid #1e3a5f;">
                                         <div style="color: #1e3a5f; font-weight: 600; margin-bottom: 0.5rem;">When ${disposition.name.toLowerCase()} powers your learning, you might find yourself:</div>
                                         ${disposition.prompts.map(prompt => `
-                                            <div style="color: #134e4a; font-size: 0.875rem; margin: 0.25rem 0; padding-left: 1rem;">• ${prompt}</div>
+                                            <div style="color: #334155; font-size: 0.875rem; margin: 0.25rem 0; padding-left: 1rem;">• ${prompt}</div>
                                         `).join('')}
                                     </div>
                                 `).join('')}
@@ -2131,10 +2132,10 @@
                             ${reflection.selectedFuturePrompts.map(selectedQuestion => {
                                 const prompt = futurePrompts.find(p => p.question === selectedQuestion);
                                 return prompt ? `
-                                        <div style="margin-bottom: 1rem; padding: 1rem; background: #f1f5f9; border-radius: 0.5rem; border-left: 3px solid #14b8a6;">
+                                        <div style="margin-bottom: 1rem; padding: 1rem; background: #f1f5f9; border-radius: 0.5rem; border-left: 3px solid #1e3a5f;">
                                             <div style="color: #1e3a5f; font-weight: 600; margin-bottom: 0.5rem;">${selectedQuestion}</div>
                                             ${prompt.details.map(detail => `
-                                                <div style="color: #134e4a; font-size: 0.875rem; margin: 0.25rem 0; padding-left: 1rem;">• ${detail}</div>
+                                                <div style="color: #334155; font-size: 0.875rem; margin: 0.25rem 0; padding-left: 1rem;">• ${detail}</div>
                                             `).join('')}
                                         </div>
                                     ` : '';
@@ -2183,7 +2184,7 @@
                         <div id="teacherCommentStudentContext" style="margin-top: 3rem;">
                             <h4 style="color: #1e3a5f; margin-bottom: 1rem; font-size: 1.1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem;">Student's Reflection for Discussion:</h4>
                             
-                            <div class="reflection-section" style="border-left: 4px solid #14b8a6; padding: 1rem 1.5rem; margin-bottom: 1.5rem;">
+                            <div class="reflection-section" style="border-left: 4px solid #1e3a5f; padding: 1rem 1.5rem; margin-bottom: 1.5rem;">
                                 <h3 style="background: #1e3a5f; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem 0.5rem 0 0; font-size: 1rem; margin: -1rem -1.5rem 1rem -1.5rem;">What I Did</h3>
                                 <div class="reflection-content">${reflection.whatIDid || '<i>(Student has not yet completed this section)</i>'}</div>
                                 ${reflection.evidenceFile ? `
@@ -2197,17 +2198,17 @@
                                 ` : ''}
                             </div>
 
-                            <div class="reflection-section" style="border-left: 4px solid #14b8a6; padding: 1rem 1.5rem; margin-bottom: 1.5rem;">
+                            <div class="reflection-section" style="border-left: 4px solid #1e3a5f; padding: 1rem 1.5rem; margin-bottom: 1.5rem;">
                                 <h3 style="background: #1e3a5f; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem 0.5rem 0 0; font-size: 1rem; margin: -1rem -1.5rem 1rem -1.5rem;">How I Grew as a Learner</h3>
                                 <div class="reflection-content">${reflection.learningStrengthsReflection || '<i>(Student has not yet completed this section)</i>'}</div>
                                 ${reflection.learningStrengths.length > 0 ? `
                                 <div style="background: #e0f2f7; padding: 0.75rem; border-radius: 0.5rem; margin-top: 1rem; border: 1px solid #a7d9ee;">
-                                    <strong style="color: #1e3a5f; font-size: 0.95rem;">Powered by:</strong> <span style="color: #134e4a;">${reflection.learningStrengths.join(' • ')}</span>
+                                    <strong style="color: #1e3a5f; font-size: 0.95rem;">Powered by:</strong> <span style="color: #334155;">${reflection.learningStrengths.join(' • ')}</span>
                                 </div>
                                 ` : ''}
                             </div>
 
-                            <div class="reflection-section" style="border-left: 4px solid #14b8a6; padding: 1rem 1.5rem; margin-bottom: 1.5rem;">
+                            <div class="reflection-section" style="border-left: 4px solid #1e3a5f; padding: 1rem 1.5rem; margin-bottom: 1.5rem;">
                                 <h3 style="background: #1e3a5f; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem 0.5rem 0 0; font-size: 1rem; margin: -1rem -1.5rem 1rem -1.5rem;">Where This Could Take Me</h3>
                                 <div class="reflection-content">${reflection.whereThisTakesMe || '<i>(Student has not yet completed this section)</i>'}</div>
                             </div>
@@ -2305,7 +2306,7 @@
                                                 style="max-width: 100%; max-height: 300px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;">
                                 </div>
                             ` : `
-                                <div style="background: #f1f5f9; padding: 0.75rem; border-radius: 0.5rem; margin: 0.5rem 0; border: 1px solid #14b8a6;">
+                                <div style="background: #f1f5f9; padding: 0.75rem; border-radius: 0.5rem; margin: 0.5rem 0; border: 1px solid #1e3a5f;">
                                     <span style="color: #1e3a5f; font-weight: 500;">📎 Evidence:</span> 
                                     <span style="color: #64748b;">${reflection.evidenceFileName}</span>
                                 </div>
@@ -2354,6 +2355,15 @@
                 day: 'numeric' 
             };
             return date.toLocaleDateString('en-NZ', options);
+        }
+        function handleLogout() {
+            if (confirm('Are you sure you want to log out?')) {
+                localStorage.removeItem('languageLensAccessCode');
+                localStorage.removeItem('navigatorAccessCode');
+                localStorage.removeItem('reflectionsAccessCode');
+                localStorage.removeItem('learnerThreadsAccessType');
+                window.location.href = 'index.html';
+            }
         }
 
         document.addEventListener('DOMContentLoaded', init);
