@@ -1,1 +1,6 @@
-www.learnerthreads.com/* https://learnerthreads.com/:splat 200
+# Redirect www to the main domain
+https://www.learnerthreads.com/* https://learnerthreads.com/:splat   301!
+
+# Redirect old subdomains to their new homes
+https://languagelens.learnerthreads.com/* https://learnerthreads.com/lens-sample.html   301!
+https://learnerhub.learnerthreads.com/* https://learnerthreads.com/                    301!
