@@ -753,7 +753,7 @@
             </a>
             <div class="nav-links">
                 <a href="dashboard.html">Dashboard</a>
-                <a href="access.html">Access Tools</a>
+                <button class="logout-btn" onclick="handleLogout()">Log Out</button>
             </div>
         </nav>
         </header>
@@ -1801,6 +1801,15 @@
             if (event.target == modal) {
                 modal.style.display = "none";
             }
+        }
+        function handleLogout() {
+        if (confirm('Are you sure you want to log out?')) {
+            localStorage.removeItem('languageLensAccessCode');
+            localStorage.removeItem('navigatorAccessCode');
+            localStorage.removeItem('reflectionsAccessCode');
+            localStorage.removeItem('learnerThreadsAccessType');
+            window.location.href = 'index.html';
+        }
         }
         */
     </script>
