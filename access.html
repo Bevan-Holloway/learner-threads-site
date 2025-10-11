@@ -48,7 +48,6 @@
             </a>
             <div class="nav-links">
                 <a href="pricing.html">Pricing</a>
-                <a href="https://blog.learnerthreads.com">Blog</a>
                 <a href="access.html">Access Tools</a>
             </div>
         </nav>
@@ -77,70 +76,62 @@
     </footer>
 
     <script>
-        // Define unique storage keys for each tool
+        // Define unique storage keys
         const ACCESS_KEYS = {
             lens: 'languageLensAccessCode',
             navigator: 'navigatorAccessCode',
-            reflections: 'reflectionsAccessCode'
+            reflections: 'reflectionsAccessCode',
+            type: 'learnerThreadsAccessType' // Key to store the code type
         };
 
-        // --- SCRIPT TO REDIRECT LOGGED-IN USERS ---
-        // This runs immediately when the page loads.
+        // --- SCRIPT TO REDIRECT LOGGED-IN USERS (NOW SMARTER) ---
         (function() {
-            const hasLens = localStorage.getItem(ACCESS_KEYS.lens);
-            const hasNav = localStorage.getItem(ACCESS_KEYS.navigator);
-            const hasRef = localStorage.getItem(ACCESS_KEYS.reflections);
-
-            // If user has any key, send them to their dashboard instead of the login page.
-            if (hasLens || hasNav || hasRef) {
+            const accessType = localStorage.getItem(ACCESS_KEYS.type);
+            // ONLY redirect if the user has a 'permanent' pass.
+            if (accessType === 'permanent') {
                 window.location.href = 'dashboard.html';
             }
         })();
         // --- END REDIRECT SCRIPT ---
 
-        // Central map of codes to the tools they unlock
+        // Central map of codes, now including a 'type' for each
         const CODE_MAPPING = {
-            // Single Product Codes
-            'PC2025': { tools: ['lens'], redirect: 'lens.html' },
-            'O$2TE@7B': { tools: ['lens'], redirect: 'lens.html', },
-            'NAVIGATOR2025': { tools: ['navigator'], redirect: 'navigator.html' },
-            'REFLECT2025': { tools: ['reflections'], redirect: 'reflections.html' },
-
-            // Combo Codes (unlocks specific multiple tools)
-            'COMBO2025': { tools: ['navigator', 'reflections'], redirect: 'dashboard.html' },
-
-            // Bundle/Suite Code (unlocks all tools)
-            'SUITE2025': { tools: ['lens', 'navigator', 'reflections'], redirect: 'dashboard.html' }
+            // --- PERMANENT CODES ---
+            'PC2025': { tools: ['lens'], redirect: 'lens.html', type: 'permanent' },
+            'NAVIGATOR2025': { tools: ['navigator'], redirect: 'navigator.html', type: 'permanent' },
+            'REFLECT2025': { tools: ['reflections'], redirect: 'reflections.html', type: 'permanent' },
+            'COMBO2025': { tools: ['navigator', 'reflections'], redirect: 'dashboard.html', type: 'permanent' },
+            'SUITE2025': { tools: ['lens', 'navigator', 'reflections'], redirect: 'bundle.html', type: 'permanent' },
+            
+            // --- TEMPORARY INSTANT-ACCESS CODES ---
+            'LNS-4A9B': { tools: ['lens'], redirect: 'lens.html', type: 'temporary' },
+            'NAV-7C2D': { tools: ['navigator'], redirect: 'navigator.html', type: 'temporary' },
+            'RFL-1E8F': { tools: ['reflections'], redirect: 'reflections.html', type: 'temporary' },
+            'CMB-5G3H': { tools: ['navigator', 'reflections'], redirect: 'dashboard.html', type: 'temporary' },
+            'BND-6K4J': { tools: ['lens', 'navigator', 'reflections'], redirect: 'bundle.html', type: 'temporary' }
         };
 
         function checkAccessCode() {
             const codeInput = document.getElementById('accessCode');
             const code = codeInput.value.trim();
             const errorMessage = document.getElementById('errorMessage');
-            
             errorMessage.classList.remove('show');
 
-            // Look up the entered code in our central map
             const entry = CODE_MAPPING[code];
 
             if (entry) {
-                // Success! We found a valid code.
+                // Set the type of access pass (permanent or temporary)
+                localStorage.setItem(ACCESS_KEYS.type, entry.type);
                 
-                // Set access keys for all tools this code unlocks
-                entry.tools.forEach(toolKey => {
-                    localStorage.setItem(ACCESS_KEYS[toolKey], code);
-                });
+                // Set individual tool access keys
+                entry.tools.forEach(toolKey => localStorage.setItem(ACCESS_KEYS[toolKey], code));
 
-                // If it's a multi-tool code, give a helpful confirmation message
                 if (entry.tools.length > 1) {
                     alert(`Success! You've unlocked multiple tools. You'll now be taken to your dashboard.`);
                 }
                 
-                // Redirect to the correct page defined in our map
                 window.location.href = entry.redirect;
-
             } else {
-                // If no code is found in the map, show an error
                 errorMessage.classList.add('show');
                 codeInput.focus();
             }
