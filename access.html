@@ -84,13 +84,19 @@
             reflections: 'reflectionsAccessCode'
         };
 
-        // Define valid access codes for each product
-        const VALID_CODES = {
-            lens: new Set(['PC2025', 'O$2TE@7B']),
-            navigator: new Set(['NAVIGATOR2025']),
-            reflections: new Set(['REFLECT2025']),
-            bundle: new Set(['SUITE2025']),
-            lensAndHub: new Set(['COMBO2025'])
+        // NEW: Central map of codes to the tools they unlock
+        const CODE_MAPPING = {
+            // Single Product Codes
+            'PC2025': { tools: ['lens'], redirect: 'lens.html' },
+            'O$2TE@7B': { tools: ['lens'], redirect: 'lens.html' },
+            'NAVIGATOR2025': { tools: ['navigator'], redirect: 'navigator.html' },
+            'REFLECT2025': { tools: ['reflections'], redirect: 'reflections.html' },
+
+            // Combo Codes (unlocks specific multiple tools)
+            'COMBO2025': { tools: ['navigator', 'reflections'], redirect: 'bundle.html' },
+
+            // Bundle/Suite Code (unlocks all tools)
+            'SUITE2025': { tools: ['lens', 'navigator', 'reflections'], redirect: 'bundle.html' }
         };
 
         function checkAccessCode() {
@@ -100,33 +106,24 @@
             
             errorMessage.classList.remove('show');
 
-            if (VALID_CODES.bundle.has(code)) {
-                localStorage.setItem(ACCESS_KEYS.lens, code);
-                localStorage.setItem(ACCESS_KEYS.navigator, code);
-                localStorage.setItem(ACCESS_KEYS.reflections, code);
-                alert("Success! You've unlocked the entire Learner Threads Bundle. You'll now be taken to your new dashboard.");
-                window.location.href = 'bundle.html';
+            const entry = CODE_MAPPING[code];
 
-            } else if (VALID_CODES.lensAndHub.has(code)) {
-                localStorage.setItem(ACCESS_KEYS.lens, code);
-                localStorage.setItem(ACCESS_KEYS.navigator, code);
-                localStorage.setItem(ACCESS_KEYS.reflections, code);
-                alert("Success! You've unlocked Language Lens and the Dispositions Hub tools.");
-                window.location.href = 'bundle.html'; // Also send them to the main dashboard
+            if (entry) {
+                // Set access keys for all tools this code unlocks
+                entry.tools.forEach(toolKey => {
+                    localStorage.setItem(ACCESS_KEYS[toolKey], code);
+                });
 
-            } else if (VALID_CODES.lens.has(code)) {
-                localStorage.setItem(ACCESS_KEYS.lens, code);
-                window.location.href = 'lens.html';
-
-            } else if (VALID_CODES.navigator.has(code)) {
-                localStorage.setItem(ACCESS_KEYS.navigator, code);
-                window.location.href = 'navigator.html';
-
-            } else if (VALID_CODES.reflections.has(code)) {
-                localStorage.setItem(ACCESS_KEYS.reflections, code);
-                window.location.href = 'reflections.html';
+                // Give a confirmation message
+                if (entry.tools.length > 1) {
+                    alert(`Success! You've unlocked multiple tools. You'll now be taken to your dashboard.`);
+                }
+                
+                // Redirect to the correct page
+                window.location.href = entry.redirect;
 
             } else {
+                // If no code matches, show an error
                 errorMessage.classList.add('show');
                 codeInput.focus();
             }

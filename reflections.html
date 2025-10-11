@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learning Reflections - Learner Threads</title>
+    <script>
+        const validCodes = new Set(['REFLECT2025', 'SUITE2025']); // Add all codes that unlock this tool
+        const storedCode = localStorage.getItem('reflectionsAccessCode');
+
+        if (!validCodes.has(storedCode)) {
+            window.location.href = 'access.html';
+        }
+    </script>
     <style>
         * {
             margin: 0;

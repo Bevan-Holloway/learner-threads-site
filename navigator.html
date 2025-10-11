@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learning Navigator - Learner Threads</title>
+    <script>
+        const validCodes = new Set(['NAVIGATOR2025', 'SUITE2025', 'COMBO2025']); // Add all codes that unlock this tool
+        const storedCode = localStorage.getItem('navigatorAccessCode');
+
+        if (!validCodes.has(storedCode)) {
+            window.location.href = 'access.html';
+        }
+    </script>
     <style>
         * {
             margin: 0;
@@ -13,82 +21,14 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(to bottom, #f8f9fa, #e9ecef); /* Standard site background */
+            background-color: #f0f9ff; /* Consistent light background */
             min-height: 100vh;
-            padding: 2rem; /* Standard site padding */
-            color: #2c3e50;
         }
 
-        /* --- Global Header & Footer Styles --- */
-        .global-header {
-            max-width: 1400px;
-            margin: 0 auto 2.5rem auto;
-            padding: 1rem 0;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .global-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo-link {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            text-decoration: none;
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1e3a5f;
-        }
-
-        .logo-link img {
-            max-height: 40px;
-            border-radius: 50%;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #475569;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: #1e3a5f;
-        }
-
-        .global-footer {
-            max-width: 1400px;
-            margin: 3rem auto 0 auto;
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        .global-footer p {
-            color: #64748b;
-            font-size: 0.9rem;
-        }
-
-        .global-footer a {
-            color: #1e3a5f;
-            text-decoration: none;
-        }
-
-        .global-footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* Main App Styles */
+        /* Main App Styles (now visible by default, launched from Hub) */
         .main-app {
-            display: block;
+            display: block; /* Changed from none to block */
+            padding: 1.5rem;
         }
 
         .container {
@@ -107,13 +47,13 @@
         }
 
         .header-main-app {
-            background: #1e3a5f; /* RE-BRANDED: Main site blue */
+            background: linear-gradient(135deg, #14b8a6, #0891b2);
             color: white;
             padding: 2rem;
             text-align: center;
-            position: relative;
+            position: relative; /* Crucial for absolute positioning of back button */
         }
-        
+
         .header-main-app h1 {
             font-size: 2rem;
             font-weight: bold;
@@ -121,7 +61,7 @@
         }
 
         .header-main-app p {
-            color: #cbd5e1; /* RE-BRANDED: Lighter, less saturated color */
+            color: #bae6fd;
             font-size: 1.1rem;
         }
 
@@ -129,11 +69,47 @@
             padding: 2rem;
         }
 
+        /* Intro Section for Hand/Head/Heart */
+        .intro-section {
+            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+            border-left: 4px solid #14b8a6;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .intro-section h2 {
+            color: #0f766e;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .intro-section p {
+            color: #0f766e;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        .intro-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .intro-section ul li {
+            background-color: #e0f2f7; /* Lighter background for list items */
+            border-left: 3px solid #0891b2; /* Secondary brand color highlight */
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.95rem;
+            color: #134e4a;
+        }
+        .intro-section ul li strong {
+            color: #0891b2;
+            /* Removed markdown rendering issue by using plain text in JS */
+        }
+
         .step-title {
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            color: #0f172a;
+            color: #0f172a; /* Darker text for content */
         }
 
         .step-description {
@@ -161,23 +137,23 @@
         }
 
         .option-card:hover {
-            border-color: #1e3a5f; /* RE-BRANDED */
+            border-color: #14b8a6;
             transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(30, 58, 95, 0.15); /* RE-BRANDED */
+            box-shadow: 0 8px 25px rgba(20, 184, 166, 0.15);
         }
 
         .option-card.selected {
-            border-color: #1e3a5f; /* RE-BRANDED */
-            background: linear-gradient(135deg, #f0f9ff, #e0f2fe); /* RE-BRANDED: Blue-toned gradient */
+            border-color: #14b8a6;
+            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.2); /* RE-BRANDED */
+            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.2);
         }
 
         .option-icon {
             font-size: 2.2rem;
             margin-bottom: 0.5rem;
             display: block;
-            color: #1e3a5f; /* RE-BRANDED */
+            color: #0891b2;
         }
 
         .option-title {
@@ -198,52 +174,69 @@
             border-radius: 0.75rem;
             padding: 2rem;
             border: 1px solid #e2e8f0;
+            /* Set to flexbox for stacking on ALL screens */
             display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            flex-direction: column; /* Stack vertically */
+            gap: 1rem; /* Space between cards */
         }
 
         .prompt-card {
             background: white;
-            border-left: 4px solid #1e3a5f; /* RE-BRANDED */
+            border-left: 4px solid #14b8a6;
             border-radius: 0.5rem;
             padding: 0; 
+            transition: all 0.3s ease;
             cursor: pointer;
             perspective: 1000px;
             position: relative;
-            overflow: hidden;
+            overflow: hidden; /* Important for hiding backface during flip */
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            min-height: 140px;
-            width: 100%;
+            min-height: 140px; /* Base min-height for desktop view */
+            width: 100%; /* Ensure full width when stacked */
         }
         .prompt-card .prompt-front,
         .prompt-card .prompt-back {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
+            position: absolute; /* Default to absolute for 3D flip effect on desktop */
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             padding: 1.25rem; 
             border-radius: 0.5rem;
             backface-visibility: hidden;
             transition: transform 0.6s;
-            display: flex;
+            display: flex; /* Crucial: Keep as flex to manage internal content */
             flex-direction: column;
-            justify-content: space-between;
-            min-height: 100%;
+            justify-content: space-between; /* Pushes type and instruction to ends, text fills middle */
+            min-height: 100%; /* Ensures they fill the parent card's height */
         }
+        /* Hide back on load for desktop */
         .prompt-back {
-            display: flex;
-            transform: rotateY(180deg);
+            display: flex; /* Ensure display flex for calculation */
+            transform: rotateY(180deg); /* Initial state for back */
         }
-        .prompt-card.flipped .prompt-front { transform: rotateY(-180deg); }
-        .prompt-card.flipped .prompt-back { transform: rotateY(0deg); }
-        .prompt-front { transform: rotateY(0deg); background: inherit; }
+        /* Styles for flipped state (desktop 3D flip) */
+        .prompt-card.flipped .prompt-front {
+            transform: rotateY(-180deg);
+        }
+
+        .prompt-card.flipped .prompt-back {
+            transform: rotateY(0deg);
+        }
+
+        .prompt-front {
+            transform: rotateY(0deg);
+            background: inherit;
+        }
+
         .prompt-back {
-            background: linear-gradient(135deg, #f0f9ff, #e0f2fe); /* RE-BRANDED */
-            border-left: 4px solid #475569; /* RE-BRANDED: Secondary grey-blue */
+            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+            border-left: 4px solid #0891b2;
         }
 
         .prompt-type {
             display: inline-block;
-            background: #1e3a5f; /* RE-BRANDED */
+            background: #14b8a6;
             color: white;
             padding: 0.25rem 0.75rem;
             border-radius: 1rem;
@@ -256,14 +249,96 @@
         }
 
         .prompt-back .prompt-type {
-            background: #475569; /* RE-BRANDED */
+            background: #0891b2;
         }
         
+        /* Removed .prompt-type .info-icon CSS as the modal is removed */
+
+        /* Modal for Hand/Heart/Head explanation - Removed HTML */
+        /* These CSS rules for modal are now unused as the modal HTML is removed */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 100; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.4); 
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content h3 {
+            color: #0f766e;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .modal-content ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+        .modal-content ul li {
+            background-color: #e0f2f7;
+            border-left: 3px solid #0891b2;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-size: 0.95rem;
+            color: #134e4a;
+        }
+
+        .modal-content ul li strong {
+            color: #0891b2;
+        }
+
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #333;
+            text-decoration: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+
         .prompt-text {
             font-size: 0.95rem;
             line-height: 1.5;
             color: #374151;
-            flex-grow: 1;
+            flex-grow: 1; /* Allows the text to take up available space */
+            word-wrap: break-word; 
+            overflow-wrap: break-word;
+            display: block; /* Ensures natural text flow */
         }
 
         .prompt-back .prompt-text {
@@ -279,7 +354,7 @@
             justify-content: center;
             gap: 1rem;
             border-top: 1px solid #e2e8f0;
-            border-radius: 0 0 1rem 1rem;
+            border-radius: 0 0 1rem 1rem; /* Match card border radius */
         }
 
         .nav-button {
@@ -296,46 +371,63 @@
             text-decoration: none;
         }
 
-        .nav-button.primary {
-            background: #1e3a5f; /* RE-BRANDED */
-            color: white;
-        }
-        .nav-button.primary:hover {
-            background: #2c4a6f; /* RE-BRANDED: Darken */
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+        .nav-button.secondary {
+            background: #cbd5e1;
+            color: #475569;
         }
 
-        .back-link {
+        .nav-button.secondary:hover {
+            background: #aabdd4;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(170, 189, 212, 0.3);
+        }
+
+        .nav-button.primary {
+            background: linear-gradient(135deg, #14b8a6, #0891b2);
+            color: white;
+        }
+
+        .nav-button.primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+        }
+
+        .back-link { /* This is the back link to previous step in the same app */
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            color: #1e3a5f; /* RE-BRANDED */
+            color: #0891b2;
             text-decoration: none;
             font-weight: 600;
             margin-bottom: 1rem;
             transition: color 0.3s;
             font-size: 0.9rem;
         }
-        .back-link:hover { color: #2c4a6f; }
+
+        .back-link:hover {
+            color: #14b8a6;
+        }
 
         .teacher-reminder {
-            background: linear-gradient(135deg, #f0f9ff, #e0f2fe); /* RE-BRANDED */
-            border: 2px solid #1e3a5f; /* RE-BRANDED */
+            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+            border: 2px solid #14b8a6;
             border-radius: 0.75rem;
             padding: 1.25rem;
             margin-bottom: 2rem;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.1); /* RE-BRANDED */
+            box-shadow: 0 2px 8px rgba(20, 184, 166, 0.1);
         }
+
         .teacher-reminder-title {
             font-weight: 700;
-            color: #1e3a5f; /* RE-BRANDED */
+            color: #0f766e;
             margin-bottom: 0.5rem;
             font-size: 1.1rem;
         }
+
         .teacher-reminder-text {
-            color: #334155; /* RE-BRANDED */
+            color: #134e4a;
             font-size: 0.95rem;
             line-height: 1.4;
         }
@@ -343,6 +435,7 @@
         .flip-instruction, .back-instruction {
             font-size: 0.75rem;
             color: #64748b;
+            opacity: 0.7;
             font-weight: 500;
             align-self: flex-end;
             margin-top: 0.5rem;
@@ -353,12 +446,13 @@
             display: flex;
             justify-content: center;
             gap: 0.5rem;
-            margin-bottom: 1rem;
-            background: #e2e8f0;
+            margin-bottom: 1rem; /* Adjust margin to fit new intro text */
+            background: #e2e8f0; /* Light grey background for the tab container */
             border-radius: 0.75rem;
             padding: 0.5rem;
-            flex-wrap: wrap;
+            flex-wrap: wrap; /* Allow tabs to wrap on smaller screens */
         }
+
         .filter-tab {
             padding: 0.6rem 1.2rem;
             border: none;
@@ -370,11 +464,13 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
+
         .filter-tab.active {
-            background-color: #1e3a5f; /* RE-BRANDED */
+            background-color: #14b8a6;
             color: white;
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
+
         .filter-tab:hover:not(.active) {
             background-color: #cbd5e1;
             color: #374151;
@@ -382,99 +478,236 @@
 
         /* Filter Intro Text */
         .filter-intro-text {
-            background: #f1f5f9; /* RE-BRANDED: Consistent light grey */
-            border-left: 4px solid #64748b; /* RE-BRANDED: Grey-blue accent */
+            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+            border-left: 4px solid #0891b2; /* Use a complementary color */
             padding: 1rem 1.5rem;
             border-radius: 0.5rem;
             margin-bottom: 1.5rem;
-            color: #334155;
+            color: #134e4a;
             font-size: 0.95rem;
             line-height: 1.6;
         }
 
-        /* Toggle section styles */
-        .toggle-section { margin-bottom: 2rem; }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        footer .copyright {
+            font-size: 0.75rem;
+            line-height: 1.5; /* Ensures proper spacing if on multiple lines */
+            text-align: center; /* Centered for the footer */
+            display: block; /* Ensures it takes up full width for text-align */
+        }
+
+        /* Toggle section styles using consistent design */
+        .toggle-section {
+            margin-bottom: 2rem;
+        }
+
         .toggle-button {
             width: 100%;
             padding: 1rem;
-            background: white;
-            border: 2px solid #e2e8f0;
+            background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+            border: 2px solid #14b8a6;
             border-radius: 1rem;
-            color: #1e3a5f;
+            color: #0f766e;
             font-weight: 600;
             font-size: 0.95rem;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             justify-content: space-between;
             text-align: left;
+            position: relative;
+            overflow: hidden;
         }
+
+        .toggle-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .toggle-button:hover::before {
+            left: 100%;
+        }
+
         .toggle-button:hover {
-            border-color: #1e3a5f;
-            background: #f8fafc;
+            background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%);
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(30, 58, 95, 0.15);
+            box-shadow: 0 8px 25px rgba(20, 184, 166, 0.25);
+            border-color: #0891b2;
         }
+
         .toggle-button.expanded {
             border-radius: 1rem 1rem 0 0;
-            background: #1e3a5f;
-            border-color: #1e3a5f;
+            background: linear-gradient(135deg, #14b8a6 0%, #0891b2 100%);
             color: white;
         }
+
         .toggle-content {
             display: none;
             background: white;
-            border: 2px solid #1e3a5f;
+            border: 2px solid #14b8a6;
             border-top: none;
             border-radius: 0 0 1rem 1rem;
             padding: 1.5rem;
-            animation: slideDown 0.4s;
-            box-shadow: 0 8px 25px rgba(30, 58, 95, 0.1);
-        }
-        .toggle-content.visible { display: block; }
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(20, 184, 166, 0.15);
         }
 
-        /* MOBILE SPECIFIC STYLES */
+        .toggle-content.visible {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                max-height: 1000px;
+            }
+        }
+
+        /* MOBILE SPECIFIC STYLES (Max-width 768px) */
         @media (max-width: 768px) {
-            body { padding: 1rem; }
-            .container { padding: 0; }
-            .step-container { padding: 1.5rem; }
-            .prompt-card { min-height: auto; }
-            .prompt-front,
-            .prompt-back {
-                position: static !important;
-                transform: none !important;
-                backface-visibility: visible;
-                min-height: auto;
+            .container {
                 padding: 1rem;
             }
-            .prompt-card .prompt-front { display: flex; }
-            .prompt-card .prompt-back { display: none; }
-            .prompt-card.flipped .prompt-front { display: none; }
-            .prompt-card.flipped .prompt-back { display: flex; }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .navigation {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            /* Adjust font sizes for smaller screens to prevent overflow */
+            .prompt-text {
+                font-size: 0.85rem; /* Slightly smaller font for better fit */
+                line-height: 1.4;
+            }
+            .prompt-back .prompt-text {
+                font-size: 0.75rem; /* Even smaller for detailed instructions */
+                line-height: 1.5;
+            }
+
+            /* --- CRITICAL MOBILE CARD FIXES (Copied from index.html logic) --- */
+            .prompt-card {
+                min-height: auto; /* Allow height to be determined by content on mobile */
+            }
+
+            .prompt-front,
+            .prompt-back {
+                position: static !important; /* IMPORTANT: Make static on mobile to allow natural flow and be controlled by display property */
+                transform: none !important; /* Override any lingering transforms for mobile */
+                backface-visibility: visible; /* Ensure visible for mobile toggle */
+                min-height: auto; /* Allow height to be determined by content */
+                padding: 1rem; /* Adjust padding for mobile */
+            }
+
+            /* Mobile flip control - explicitly define display based on flipped class */
+            /* These rules ensure the cards are visible by default before flipping */
+            .prompt-card .prompt-front {
+                display: flex; /* Ensure front is visible by default on mobile */
+                flex-direction: column; /* Keep internal content stacked */
+                justify-content: space-between; /* Maintain spacing */
+            }
+            .prompt-card .prompt-back {
+                display: none; /* Ensure back is hidden by default on mobile */
+                flex-direction: column; /* Keep internal content stacked */
+                justify-content: space-between; /* Maintain spacing */
+            }
+            .prompt-card.flipped .prompt-front {
+                display: none; /* Hide front when flipped on mobile */
+            }
+            .prompt-card.flipped .prompt-back {
+                display: flex; /* Show back when flipped on mobile */
+            }
+            /* --- END CRITICAL MOBILE CARD FIXES --- */
+
+            .filter-tab {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+            .filter-intro-text {
+                font-size: 0.9rem;
+                padding: 0.8rem 1.2rem;
+            }
         }
 
+        @media (max-width: 480px) {
+            .card {
+                padding: 1rem;
+            }
+            .header-main-app {
+                padding: 1.5rem;
+            }
+            .header-main-app h1 {
+                font-size: 1.8rem;
+            }
+            .step-container, .prompts-container {
+                padding: 1rem;
+            }
+            .option-card {
+                padding: 1rem;
+            }
+            .option-title {
+                font-size: 0.9rem;
+            }
+            .option-description {
+                font-size: 0.75rem;
+            }
+            .prompt-front, .prompt-back {
+                padding: 0.75rem;
+            }
+            .prompt-type {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.6rem;
+            }
+            .flip-instruction, .back-instruction {
+                font-size: 0.65rem;
+            }
+            /* Further font size adjustments for very small screens */
+            .prompt-text {
+                font-size: 0.8rem;
+                line-height: 1.3;
+            }
+            .prompt-back .prompt-text {
+                font-size: 0.7rem;
+                line-height: 1.4;
+            }
+            .filter-tabs {
+                justify-content: space-around; /* Spread tabs out more */
+                padding: 0.4rem;
+            }
+            .filter-tab {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+            .filter-intro-text {
+                font-size: 0.85rem;
+                padding: 0.6rem 1rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <header class="global-header">
-        <nav class="global-nav">
-            <a href="index.html" class="logo-link">
-                <img src="logo.png" alt="Learner Threads Logo">
-                <span>Learner Threads</span>
-            </a>
-            <div class="nav-links">
-                <a href="languagelens.html">Language Lens</a>
-                <a href="dispositionshub.html">For Schools</a>
-                <a href="access.html">Sign In</a>
-            </div>
-        </nav>
-    </header>
-
     <div id="mainApp" class="main-app">
         <div class="container">
             <div class="card">
@@ -484,22 +717,45 @@
                 </div>
 
                 <div id="introAndSubjectStep" class="step-container">
-                    <div class="toggle-section">
+                    <div class="nav-buttons-top" style="text-align: right; margin-bottom: 1rem;">
+                        <button class="nav-button secondary" onclick="goToHub()">Back to Hub</button>
+                    </div>
+
+                    <!-- Toggle for Learning Introduction -->
+                    <div class="toggle-section" style="margin-bottom: 2rem;">
                         <button class="toggle-button" id="learningIntroToggle" onclick="toggleLearningIntro()">
                             <span>🌟 How to Power Up Your Learning</span>
                             <span id="learningIntroIcon">+</span>
                         </button>
                         <div class="toggle-content" id="learningIntroContent">
-                            <h2 style="color: #1e3a5f; font-size: 1.25rem; margin-bottom: 1rem;">Discover Who You Are as a Learner</h2>
-                            <p style="color: #475569; line-height: 1.6; margin-bottom: 1.5rem;">This tool helps you discover your identity as a thinker by helping you develop seven core learning dispositions. Whether someone becomes a brilliant scientist, creative artist, or innovative mathematician, they all draw on the same fundamental learning powers:</p>
-                            <p style="font-weight: 600; color: #1e3a5f; text-align: center; margin-bottom: 1.5rem;">Curiosity • Persistence • Imagination • Attention • Thinking • Collaboration • Craftsmanship</p>
-                            <h3 style="color: #1e3a5f; margin: 1.5rem 0 1rem 0; font-size: 1.1rem;">How Each Disposition Works Through Head, Heart & Hand</h3>
-                            <p style="color: #475569; line-height: 1.6; margin-bottom: 1.5rem;">Each learning disposition can be expressed in three different ways:</p>
-                            <ul style="list-style: none; padding-left: 0; display: flex; flex-direction: column; gap: 0.5rem;">
-                                <li style="background-color: #f1f5f9; border-left: 3px solid #1e3a5f; padding: 0.75rem 1rem; border-radius: 0.25rem;"><strong style="color: #1e3a5f;">Hand:</strong> Action and doing – how scientists experiment or artists create.</li>
-                                <li style="background-color: #f1f5f9; border-left: 3px solid #1e3a5f; padding: 0.75rem 1rem; border-radius: 0.25rem;"><strong style="color: #1e3a5f;">Heart:</strong> Emotion and motivation – how historians connect personally with stories.</li>
-                                <li style="background-color: #f1f5f9; border-left: 3px solid #1e3a5f; padding: 0.75rem 1rem; border-radius: 0.25rem;"><strong style="color: #1e3a5f;">Head:</strong> Analysis and deep thinking – how scientists look for patterns or historians examine evidence.</li>
-                            </ul>
+                            <div class="intro-section" style="margin: 0; border: none; padding: 0; background: transparent;">
+                                <h2 style="color: #0f766e; font-size: 1.1rem; margin-bottom: 1rem;">Discover Who You Are as a Learner</h2>
+                                <p style="color: #0f766e; line-height: 1.6; margin-bottom: 1rem;">This tool helps you discover your identity as a thinker by helping you develop seven core learning dispositions that power all great thinking. Whether someone becomes a brilliant scientist, creative artist, insightful historian, or innovative mathematician, they all draw on the same fundamental learning powers.</p>
+
+                                <div style="background: #f0fdfa; border: 1px solid #14b8a6; padding: 1rem; border-radius: 0.5rem; margin: 1.5rem 0;">
+                                    <p style="margin: 0; font-weight: 600; color: #0f766e; text-align: center;">
+                                        <strong>The Magnificent Seven Learning Dispositions:</strong><br>
+                                        Curiosity • Persistence • Imagination • Attention • Thinking • Collaboration • Craftsmanship
+                                    </p>
+                                </div>
+
+                                <p style="color: #0f766e; line-height: 1.6; margin-bottom: 1rem;">Here's the powerful secret: when you choose to be <strong>curious like a scientist</strong>, <strong>persistent like an athlete</strong>, or <strong>imaginative like an artist</strong>, you're not just solving problems – you're becoming someone who thinks like them. You're developing your identity as a learner who can think like an expert in any field.</p>
+
+                                <h3 style="color: #0891b2; margin: 1.5rem 0 1rem 0; font-size: 1.1rem;">How Each Disposition Works Through Head, Heart & Hand</h3>
+                                <p style="color: #0f766e; line-height: 1.6; margin-bottom: 1rem;">Each learning disposition can be expressed in three different ways, and every field uses them uniquely:</p>
+
+                                <ul style="list-style: none; padding-left: 0;">
+                                    <li style="background-color: #e0f2f7; border-left: 3px solid #0891b2; padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 0.25rem; font-size: 0.95rem; color: #134e4a;"><strong style="color: #0891b2;">Hand:</strong> Action and doing – how scientists experiment, artists create, or mathematicians build with materials. Your hands engage your thinking through making and moving.</li>
+                                    <li style="background-color: #e0f2f7; border-left: 3px solid #0891b2; padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 0.25rem; font-size: 0.95rem; color: #134e4a;"><strong style="color: #0891b2;">Heart:</strong> Emotion and motivation – how historians connect personally with stories, or writers find meaning in their work. Your heart drives your passion and purpose.</li>
+                                    <li style="background-color: #e0f2f7; border-left: 3px solid #0891b2; padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 0.25rem; font-size: 0.95rem; color: #134e4a;"><strong style="color: #0891b2;">Head:</strong> Analysis and deep thinking – how scientists look for patterns, artists study composition, or historians examine evidence. Your head connects and sharpens ideas.</li>
+                                </ul>
+
+                                <div style="background: linear-gradient(135deg, #e0f2f7, #ccfbf1); border: 1px solid #0891b2; padding: 1.25rem; border-radius: 0.5rem; margin-top: 1.5rem;">
+                                    <p style="margin: 0; font-weight: 600; color: #0f766e; font-size: 1rem;">
+                                        🌟 <strong>The magic happens when:</strong> You choose a learning disposition (like curiosity) in a subject (like science) and discover specific ways to express it through your head, heart, and hands. This is how you develop your identity as someone who can think like a scientist, artist, historian, or mathematician.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -550,7 +806,10 @@
                 </div>
 
                 <div id="dispositionStep" class="step-container" style="display: none;">
-                    <a href="#" class="back-link" onclick="showIntroAndSubjectStep()">← Back to subjects</a>
+                    <div class="nav-buttons-top" style="text-align: right; margin-bottom: 1rem;">
+                        <a href="#" class="back-link nav-button secondary" onclick="showIntroAndSubjectStep()">← Back to subjects</a>
+                        <button class="nav-button secondary" onclick="goToHub()" style="margin-left: 1rem;">Back to Hub</button>
+                    </div>
                     <h2 class="step-title">Which learning power do you need right now?</h2>
                     <p class="step-description">Choose a "Magnificent Seven" disposition that feels right for powering your learning.</p>
                     
@@ -594,19 +853,24 @@
                 </div>
 
                 <div id="promptsStep" class="step-container" style="display: none;">
-                    <a href="#" class="back-link" onclick="showDispositionStep()">← Choose a different learning power</a>
+                    <div class="nav-buttons-top" style="text-align: right; margin-bottom: 1rem;">
+                        <a href="#" class="back-link nav-button secondary" onclick="showDispositionStep()">← Choose a different learning power</a>
+                        <button class="nav-button secondary" onclick="goToHub()" style="margin-left: 1rem;">Back to Hub</button>
+                    </div>
                     
                     <div class="teacher-reminder">
                         <div class="teacher-reminder-title">💡 Share Your Learning Journey!</div>
                         <div class="teacher-reminder-text">
-                            After you try a strategy, talk to your teacher about how it helped you. You can use your <strong>Learning Reflections</strong> tool to capture these moments!
+                            After you try a strategy, talk to your teacher about how it helped you.
+                            You can also use your <strong>Learning Reflections</strong> tool to capture these moments –
+                            it's a great way to show how you're growing as a learner!
                         </div>
                     </div>
                     
                     <h2 class="step-title" id="promptsTitle">Your Learning Moves</h2>
                     <p class="step-description" id="promptsDescription">
-                        Here are some strategies to use <span id="currentDispositionName"></span> in <span id="currentSubjectName"></span>.
-                        Click a card to see details. Try one, then reflect on how it helped!
+                        Here are some strategies that help you use <span id="currentDispositionName"></span> in <span id="currentSubjectName"></span>.
+                        Click any card to flip and see more details. Try one, then reflect on how it helped power your learning!
                     </p>
 
                     <div class="filter-tabs" id="filterTabs">
@@ -624,19 +888,19 @@
                         </div>
 
                     <div class="navigation" style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem;">
-                        <button class="nav-button primary" onclick="showIntroAndSubjectStep()">Start Over</button>
+                        <button class="nav-button secondary" onclick="showDispositionStep()">Try Different Power</button>
                         </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer class="global-footer">
-        <p>&copy; 2025 Learner Threads | <a href="mailto:bevan@learnerthreads.com">Contact Support</a></p>
+    <footer>
+        <p class="copyright" style="text-align: center;">© Bevan Holloway | Learner Threads, powered by Smata</p>
     </footer>
 
     <script>
-        // All prompts and instructions remain the same
+        // All prompts and instructions, including new subjects
         const promptsWithInstructions = {
             english: {
                 curiosity: [
@@ -1259,64 +1523,101 @@
             }
         }
 
+        // Global variables to store selected choices
+        // Global variables to store selected choices
         let selectedSubject = '';
         let selectedDisposition = '';
-        let currentFilter = 'all';
+        let currentFilter = 'all'; // Default filter
 
+        // Functions for navigation between steps
         function selectSubject(subject) {
             selectedSubject = subject;
+            // Add 'selected' class to the clicked card
             document.querySelectorAll('#introAndSubjectStep .option-card').forEach(card => {
                 card.classList.remove('selected');
             });
             event.target.closest('.option-card').classList.add('selected');
             
+            // Smooth transition to next step
             setTimeout(() => {
-                document.getElementById('introAndSubjectStep').style.display = 'none';
-                document.getElementById('dispositionStep').style.display = 'block';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }, 300);
+                document.getElementById('introAndSubjectStep').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('introAndSubjectStep').style.display = 'none';
+                    document.getElementById('dispositionStep').style.display = 'block';
+                    document.getElementById('dispositionStep').style.opacity = '1';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 300);
+            }, 100);
         }
 
         function selectDisposition(disposition) {
             selectedDisposition = disposition;
+            // Add 'selected' class to the clicked card
             document.querySelectorAll('#dispositionStep .option-card').forEach(card => {
                 card.classList.remove('selected');
             });
             event.target.closest('.option-card').classList.add('selected');
 
+            // Smooth transition to prompts step
             setTimeout(() => {
                 showPrompts(); 
-                document.getElementById('dispositionStep').style.display = 'none';
-                document.getElementById('promptsStep').style.display = 'block';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }, 300);
+                document.getElementById('dispositionStep').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('dispositionStep').style.display = 'none';
+                    document.getElementById('promptsStep').style.display = 'block';
+                    document.getElementById('promptsStep').style.opacity = '1';
+                    window.scrollTo({ top: 0, behaviour: 'smooth' });
+                }, 300);
+            }, 100);
         }
 
         function showPrompts() {
-            const subjectDisplayNames = { 'english': 'English', 'math': 'Mathematics', 'science': 'Science', 'history': 'Social Studies', 'art': 'Visual Arts', 'technology': 'Technology', 'performing_arts': 'Performing Arts', 'physical_education': 'Physical Education' };
-            const dispositionDisplayNames = { 'curiosity': 'Curiosity', 'persistence': 'Persistence', 'imagination': 'Imagination', 'attention': 'Attention', 'thinking': 'Thinking', 'collaboration': 'Communication & Collaboration', 'craftsmanship': 'Craftsmanship' };
+            // Mapping for display names
+            const subjectDisplayNames = {
+                'english': 'English / Literacy',
+                'math': 'Mathematics',
+                'science': 'Science',
+                'history': 'Social Studies',
+                'art': 'Art & Design',
+                'technology': 'Technology & Digital',
+                'performing_arts': 'Performing Arts',
+                'physical_education': 'Physical Education'
+            };
+            const dispositionDisplayNames = {
+                'curiosity': 'Curiosity',
+                'persistence': 'Persistence',
+                'imagination': 'Imagination',
+                'attention': 'Attention',
+                'thinking': 'Thinking',
+                'collaboration': 'Communication & Collaboration',
+                'craftsmanship': 'Craftsmanship'
+            };
 
             document.getElementById('currentDispositionName').textContent = dispositionDisplayNames[selectedDisposition];
             document.getElementById('currentSubjectName').textContent = subjectDisplayNames[selectedSubject];
             
+            // Initialize filter tabs
             const filterTabsContainer = document.getElementById('filterTabs');
+            // Remove existing event listeners to prevent duplicates
             const oldTabs = filterTabsContainer.querySelectorAll('.filter-tab');
             oldTabs.forEach(oldTab => {
                 const newTab = oldTab.cloneNode(true);
                 oldTab.parentNode.replaceChild(newTab, oldTab);
             });
+            // Add new event listeners
             filterTabsContainer.querySelectorAll('.filter-tab').forEach(tab => {
                 tab.onclick = () => filterPrompts(tab.dataset.filter);
             });
             
-            filterPrompts(currentFilter);
+            filterPrompts(currentFilter); // Apply default filter (all)
         }
 
         function filterPrompts(filterType) {
             currentFilter = filterType;
             const promptsContainer = document.getElementById('promptsContainer');
             const subjectPrompts = promptsWithInstructions[selectedSubject][selectedDisposition];
-            promptsContainer.innerHTML = '';
+            
+            promptsContainer.innerHTML = ''; // Clear previous prompts
 
             const filterIntroTextElement = document.getElementById('filterIntroText');
             const filterTexts = {
@@ -1327,55 +1628,141 @@
             };
             filterIntroTextElement.textContent = filterTexts[filterType];
             
+            // Update active tab styling
             document.querySelectorAll('.filter-tab').forEach(tab => {
-                tab.classList.toggle('active', tab.dataset.filter === filterType);
+                if (tab.dataset.filter === filterType) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
             });
 
             subjectPrompts.forEach((prompt, index) => {
                 if (filterType === 'all' || prompt.type === filterType) {
                     const promptCard = document.createElement('div');
                     promptCard.className = 'prompt-card';
+                    
+                    // Removed infoIconHtml and its usage as the modal is removed
+                    // const infoIconHtml = `<span class="info-icon" onclick="showInfoModal(event)">&#9432;</span>`;
+
+                    // The innerHTML structure for front and back, without the info icon and its click handler
                     promptCard.innerHTML = `
                         <div class="prompt-front">
-                            <div class="prompt-type">${prompt.type}</div>
+                            <div class="prompt-type">
+                                ${prompt.type} 
+                            </div>
                             <div class="prompt-text">${prompt.text}</div>
                             <div class="flip-instruction">Click for more details →</div>
                         </div>
                         <div class="prompt-back">
-                            <div class="prompt-type">How to do this</div>
+                            <div class="prompt-type">
+                                How to do this 
+                            </div>
                             <div class="prompt-text">${prompt.instruction}</div>
                             <div class="back-instruction">Click to go back ←</div>
                         </div>
                     `;
-                    promptCard.onclick = () => flipCard(promptCard);
+                    
+                     promptCard.onclick = (event) => {
+                        // Simplified onclick as showInfoModal is removed
+                        flipCard(promptCard);
+                    };
                     promptsContainer.appendChild(promptCard);
                 }
             });
         }
 
+
         function flipCard(card) {
+            // This function now simply toggles the 'flipped' class.
+            // All display logic (positioning, visibility) is handled by CSS rules.
             card.classList.toggle('flipped');
         }
 
+        // Navigation back functions (to Hub)
         function showIntroAndSubjectStep() {
-            document.getElementById('dispositionStep').style.display = 'none';
-            document.getElementById('promptsStep').style.display = 'none';
-            document.getElementById('introAndSubjectStep').style.display = 'block';
-            document.querySelectorAll('.option-card').forEach(card => card.classList.remove('selected'));
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById('dispositionStep').style.opacity = '0';
+            document.getElementById('promptsStep').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('dispositionStep').style.display = 'none';
+                document.getElementById('promptsStep').style.display = 'none';
+                document.getElementById('introAndSubjectStep').style.display = 'block';
+                document.getElementById('introAndSubjectStep').style.opacity = '1';
+                
+                // Remove 'selected' class from all cards for a fresh start
+                document.querySelectorAll('.option-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 300);
         }
 
         function showDispositionStep() {
+            document.getElementById('promptsStep').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('promptsStep').style.display = 'none';
+                document.getElementById('dispositionStep').style.display = 'block';
+                document.getElementById('dispositionStep').style.opacity = '1';
+
+                // Remove 'selected' class from disposition cards only for re-selection
+                document.querySelectorAll('#dispositionStep .option-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                window.scrollTo({ top: 0, behaviour: 'smooth' });
+            }, 300);
+        }
+
+        function goToHub() { // New function to go back to the central hub
+            window.location.href = 'index.html'; // Points to the new hub homepage
+        }
+
+        function startOver() { // Modified to also go to hub, as a "new search" is usually a fresh start from the hub
+            selectedSubject = '';
+            selectedDisposition = '';
+            currentFilter = 'all'; // Reset filter to default
+            
             document.getElementById('promptsStep').style.display = 'none';
-            document.getElementById('dispositionStep').style.display = 'block';
-            document.querySelectorAll('#dispositionStep .option-card').forEach(card => card.classList.remove('selected'));
+            document.getElementById('dispositionStep').style.display = 'none';
+            document.getElementById('introAndSubjectStep').style.display = 'block'; // Ensure it goes back to intro subject
+            
+            // Clear all selections
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Reset active filter tab
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.dataset.filter === 'all') {
+                    tab.classList.add('active');
+                }
+            });
+
+            // Scroll to top smoothly
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        
-        function goToHub() {
-            window.location.href = 'index.html';
+
+        // Removed Modal Functions for Hand/Heart/Head Explanation as per your instruction
+        /*
+        function showInfoModal(event) {
+            event.stopPropagation(); // Prevent the card from flipping when clicking the info icon
+            document.getElementById('infoModal').style.display = 'flex';
         }
-        
+
+        function closeInfoModal() {
+            document.getElementById('infoModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('infoModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+        */
     </script>
+    <footer class="global-footer">
+        <p>&copy; 2025 Learner Threads | <a href="mailto:bevan@learnerthreads.com">Contact Support</a></p>
+    </footer>
 </body>
 </html>
