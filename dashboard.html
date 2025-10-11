@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Tools | Learner Threads</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        a { color: #1e3a5f; text-decoration: none; }
+
+        .global-header { padding: 1rem 2rem; border-bottom: 1px solid #e2e8f0; }
+        .global-nav { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo-link { display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 600; }
+        .logo-link img { height: 40px; width: 40px; border-radius: 50%; }
+        .nav-links a { color: #475569; font-weight: 500; margin-left: 2rem; font-size: 0.95rem; }
+        .nav-links a:hover { color: #1e3a5f; }
+
+        .hero { text-align: center; padding: 4rem 1rem; }
+        .hero h1 { font-size: 3.5rem; color: #1e3a5f; margin-bottom: 1rem; }
+        .hero p { font-size: 1.25rem; color: #64748b; max-width: 650px; margin: 0 auto 2.5rem auto; }
+        
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
+        .tool-card {
+            background: white; border-radius: 1rem; padding: 2.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); display: none; /* Hidden by default */
+            flex-direction: column; transition: all 0.3s;
+        }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.1); }
+        .card-icon { font-size: 3rem; margin-bottom: 1rem; line-height: 1; }
+        .tool-card h3 { font-size: 1.75rem; color: #1e3a5f; margin-bottom: 0.75rem; }
+        .tool-card p { color: #475569; margin-bottom: 2rem; flex-grow: 1; }
+        .btn { display: block; text-align: center; padding: 1rem 2.5rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; margin-top: auto; }
+        .btn-primary { background: #1e3a5f; color: white; }
+        .btn-primary:hover { background: #2c4a6f; }
+        
+        .no-tools-message { text-align: center; padding: 3rem; background: white; border-radius: 1rem; display: none; }
+
+        .global-footer { text-align: center; padding: 3rem 1rem; margin-top: 3rem; border-top: 1px solid #e2e8f0; font-size: 0.9rem; color: #64748b; }
+    </style>
+</head>
+<body>
+    <header class="global-header">
+        <nav class="global-nav">
+            <a href="index.html" class="logo-link"> <img src="logo.png" alt="Learner Threads Logo"> <span>Learner Threads</span> </a>
+            <div class="nav-links"> <a href="pricing.html">Pricing</a> <a href="https://blog.learnerthreads.com">Blog</a> <a href="access.html">Sign In</a> </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="hero">
+                <h1>Your Tools</h1>
+                <p>Welcome back. Here are the Learner Threads tools you have access to. Choose one to get started.</p>
+            </section>
+            <section class="tools-grid">
+                <div id="lens-card" class="tool-card">
+                    <div class="card-icon">📚</div>
+                    <h3>Language Lens</h3>
+                    <p>Your interactive guide to 50+ literary devices is ready to go.</p>
+                    <a href="lens.html" class="btn btn-primary">Launch Language Lens</a>
+                </div>
+                <div id="navigator-card" class="tool-card">
+                    <div class="card-icon">🎯</div>
+                    <h3>Learning Navigator</h3>
+                    <p>Find your next learning move with targeted, practical strategies for any subject.</p>
+                    <a href="navigator.html" class="btn btn-primary">Launch Navigator</a>
+                </div>
+                <div id="reflections-card" class="tool-card">
+                    <div class="card-icon">✨</div>
+                    <h3>Learning Reflections</h3>
+                    <p>Transform activities into powerful learning stories with this guided tool.</p>
+                    <a href="reflections.html" class="btn btn-primary">Launch Reflections</a>
+                </div>
+            </section>
+            <div id="no-tools-message" class="no-tools-message">
+                <h3>No Tools Unlocked</h3>
+                <p>It looks like you don't have an active access code. Please sign in or view pricing to get started.</p>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="global-footer"> <p>&copy; 2025 Learner Threads | <a href="mailto:bevan@learnerthreads.com">Contact Support</a></p> </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const keys = {
+                lens: 'languageLensAccessCode',
+                navigator: 'navigatorAccessCode',
+                reflections: 'reflectionsAccessCode'
+            };
+
+            let unlockedCount = 0;
+
+            // Check for Language Lens access
+            if (localStorage.getItem(keys.lens)) {
+                document.getElementById('lens-card').style.display = 'flex';
+                unlockedCount++;
+            }
+            // Check for Navigator access
+            if (localStorage.getItem(keys.navigator)) {
+                document.getElementById('navigator-card').style.display = 'flex';
+                unlockedCount++;
+            }
+            // Check for Reflections access
+            if (localStorage.getItem(keys.reflections)) {
+                document.getElementById('reflections-card').style.display = 'flex';
+                unlockedCount++;
+            }
+
+            // If no tools are unlocked, show a helpful message
+            if (unlockedCount === 0) {
+                document.getElementById('no-tools-message').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
