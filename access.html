@@ -9,83 +9,39 @@
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
             background: linear-gradient(to bottom, #f8f9fa, #e9ecef); 
-            min-height: 100vh; 
             color: #2c3e50; 
+            line-height: 1.6;
             display: flex;
             flex-direction: column;
+            min-height: 100vh;
         }
         main {
             flex-grow: 1;
         }
-        
-        /* --- Global Header & Footer Styles --- */
-        .global-header {
-            padding: 1rem 2rem;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        .global-nav {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo-link {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            text-decoration: none;
-            color: #1e3a5f;
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-        .logo-link img {
-            max-height: 40px;
-            border-radius: 50%;
-        }
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-        .nav-links a {
-            text-decoration: none;
-            color: #475569;
-            font-weight: 500;
-            transition: color 0.2s;
-            font-size: 0.95rem;
-        }
-        .nav-links a:hover {
-            color: #1e3a5f;
-        }
-        .global-footer {
-            text-align: center;
-            padding: 3rem 1rem 2rem 1rem;
-            border-top: 1px solid #e2e8f0;
-            font-size: 0.9rem;
-            color: #64748b;
-        }
-        .global-footer a {
-            color: #1e3a5f;
-            text-decoration: none;
-        }
-        .global-footer a:hover {
-            text-decoration: underline;
-        }
+        .container { max-width: 500px; margin: 0 auto; padding: 0 2rem; }
+        a { color: #1e3a5f; text-decoration: none; }
 
-        /* Page specific styles */
+        .global-header { padding: 1rem 2rem; border-bottom: 1px solid #e2e8f0; }
+        .global-nav { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo-link { display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 600; }
+        .logo-link img { height: 40px; width: 40px; border-radius: 50%; }
+        .nav-links a { color: #475569; font-weight: 500; margin-left: 2rem; font-size: 0.95rem; }
+        .nav-links a:hover { color: #1e3a5f; }
+        
         .access-container { display: flex; align-items: center; justify-content: center; padding: 4rem 2rem; flex-grow: 1; }
-        .container { max-width: 500px; width: 100%; }
         .hero { background: white; padding: 3rem; border-radius: 0.75rem; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); text-align: center; }
         h1 { color: #1e3a5f; font-size: 2.25rem; font-weight: 600; margin-bottom: 1rem; }
         .subtitle { color: #64748b; font-size: 1.15rem; margin-bottom: 2.5rem; }
         .input-group { margin-bottom: 1.5rem; }
-        input[type="text"] { width: 100%; padding: 0.875rem 1.25rem; border: 1.5px solid #e2e8f0; border-radius: 0.5rem; font-size: 1rem; transition: all 0.2s; }
+        input[type="text"] { width: 100%; padding: 0.875rem 1.25rem; border: 1.5px solid #e2e8f0; border-radius: 0.5rem; font-size: 1rem; transition: all 0.2s; text-align: center; }
         input[type="text"]:focus { outline: none; border-color: #1e3a5f; box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1); }
-        .submit-btn { width: 100%; background: #1e3a5f; color: white; border: none; padding: 1rem 2rem; border-radius: 0.5rem; font-size: 1.05rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .submit-btn { width: 100%; background: #1e3a5f; color: white; border: none; padding: 1rem 2rem; border-radius: 0.5rem; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
         .submit-btn:hover { background: #2c4a6f; transform: translateY(-1px); }
         .error-message { color: #dc2626; font-size: 0.9rem; margin-top: 0.5rem; display: none; }
         .error-message.show { display: block; }
         
+        .global-footer { text-align: center; padding: 3rem 1rem; border-top: 1px solid #e2e8f0; font-size: 0.9rem; color: #64748b; }
+        .global-footer a { color: #1e3a5f; }
     </style>
 </head>
 <body>
@@ -96,7 +52,6 @@
                 <span>Learner Threads</span>
             </a>
             <div class="nav-links">
-                <div class="nav-links">
                 <a href="pricing.html">Pricing</a>
                 <a href="https://blog.learnerthreads.com">Blog</a>
                 <a href="access.html">Sign In</a>
@@ -110,13 +65,13 @@
                 <div class="hero">
                     <h1>Welcome Back</h1>
                     <p class="subtitle">Enter your access code to open your Learner Threads tool.</p>
-                    <div class="access-form">
+                    <form onsubmit="checkAccessCode(); return false;">
                         <div class="input-group">
-                            <input type="text" id="accessCode" placeholder="Enter code here" autocomplete="off">
-                            <p class="error-message" id="errorMessage">Invalid access code. Please try again.</p>
+                            <input type="text" id="accessCode" placeholder="Enter code here" autocomplete="off" required>
+                            <p class="error-message" id="errorMessage">Invalid access code. Please try again or check your purchase email.</p>
                         </div>
-                        <button class="submit-btn" id="submitBtn">Access Tools</button>
-                    </div>
+                        <button type="submit" class="submit-btn" id="submitBtn">Access Tools</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -127,47 +82,64 @@
     </footer>
 
     <script>
-        const languageLensCodes = new Set(['PC2025', 'O$2TE@7B']);
-        const hubCodes = new Set(['SCHOOLCODE1', 'SCHOOLCODE2']);
-        
-        // This script attempts to redirect based on a code that could be from a *different* tool.
-        // For a more robust system, the target (e.g., 'lens.html') could be stored alongside the code.
-        (function() {
-            const storedCode = localStorage.getItem('languageFeaturesAccess'); // Checks for the Language Lens code specifically
-            if (languageLensCodes.has(storedCode)) {
-                window.location.href = 'lens.html';
-            }
-        })();
+        // Define unique storage keys for each tool
+        const ACCESS_KEYS = {
+            lens: 'languageLensAccessCode',
+            navigator: 'navigatorAccessCode',
+            reflections: 'reflectionsAccessCode'
+        };
+
+        // Define valid access codes for each product
+        const VALID_CODES = {
+            lens: new Set(['PC2025', 'O$2TE@7B']),
+            navigator: new Set(['NAVIGATOR2025']),
+            reflections: new Set(['REFLECT2025']),
+            suite: new Set(['SUITE2025'])
+        };
 
         function checkAccessCode() {
             const codeInput = document.getElementById('accessCode');
-            const code = codeInput.value.trim(); // Using non-uppercased for case-sensitive codes
+            const code = codeInput.value.trim(); // Case-sensitive
             const errorMessage = document.getElementById('errorMessage');
+            
+            // Hide error message on new attempt
+            errorMessage.classList.remove('show');
 
-            // Check for Language Lens codes
-            if (languageLensCodes.has(code)) {
-                localStorage.setItem('languageFeaturesAccess', code); // Use a specific key for this tool
+            // 1. Check for Suite Code
+            if (VALID_CODES.suite.has(code)) {
+                localStorage.setItem(ACCESS_KEYS.lens, code);
+                localStorage.setItem(ACCESS_KEYS.navigator, code);
+                localStorage.setItem(ACCESS_KEYS.reflections, code);
+                alert("Success! You've unlocked the entire Learner Threads Suite.");
+                window.location.href = 'index.html'; // Redirect to homepage after unlocking all
+                return;
+            }
+
+            // 2. Check for Language Lens Code
+            if (VALID_CODES.lens.has(code)) {
+                localStorage.setItem(ACCESS_KEYS.lens, code);
                 window.location.href = 'lens.html';
-            } 
-            // Check for other tool codes (example)
-            else if (hubCodes.has(code.toUpperCase())) { // Example of case-insensitive check
-                localStorage.setItem('hubAccessCode', code.toUpperCase());
-                window.location.href = 'hub.html';
+                return;
             }
-            // If no valid code is found
-            else {
-                errorMessage.classList.add('show');
-            }
-        }
 
-        document.getElementById('submitBtn').addEventListener('click', checkAccessCode);
-        document.getElementById('accessCode').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault(); // Prevents form submission if it were in a <form>
-                checkAccessCode();
+            // 3. Check for Navigator Code
+            if (VALID_CODES.navigator.has(code)) {
+                localStorage.setItem(ACCESS_KEYS.navigator, code);
+                window.location.href = 'navigator.html';
+                return;
             }
-        });
+
+            // 4. Check for Reflections Code
+            if (VALID_CODES.reflections.has(code)) {
+                localStorage.setItem(ACCESS_KEYS.reflections, code);
+                window.location.href = 'reflections.html';
+                return;
+            }
+            
+            // 5. If no code matches, show an error
+            errorMessage.classList.add('show');
+            codeInput.focus();
+        }
     </script>
-    
 </body>
 </html>
