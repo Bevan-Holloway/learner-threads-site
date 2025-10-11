@@ -15,19 +15,15 @@
             flex-direction: column;
             min-height: 100vh;
         }
-        main {
-            flex-grow: 1;
-        }
+        main { flex-grow: 1; }
         .container { max-width: 500px; margin: 0 auto; padding: 0 2rem; }
         a { color: #1e3a5f; text-decoration: none; }
-
         .global-header { padding: 1rem 2rem; border-bottom: 1px solid #e2e8f0; }
         .global-nav { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         .logo-link { display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 600; }
         .logo-link img { height: 40px; width: 40px; border-radius: 50%; }
         .nav-links a { color: #475569; font-weight: 500; margin-left: 2rem; font-size: 0.95rem; }
         .nav-links a:hover { color: #1e3a5f; }
-        
         .access-container { display: flex; align-items: center; justify-content: center; padding: 4rem 2rem; flex-grow: 1; }
         .hero { background: white; padding: 3rem; border-radius: 0.75rem; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); text-align: center; }
         h1 { color: #1e3a5f; font-size: 2.25rem; font-weight: 600; margin-bottom: 1rem; }
@@ -39,7 +35,6 @@
         .submit-btn:hover { background: #2c4a6f; transform: translateY(-1px); }
         .error-message { color: #dc2626; font-size: 0.9rem; margin-top: 0.5rem; display: none; }
         .error-message.show { display: block; }
-        
         .global-footer { text-align: center; padding: 3rem 1rem; border-top: 1px solid #e2e8f0; font-size: 0.9rem; color: #64748b; }
         .global-footer a { color: #1e3a5f; }
     </style>
@@ -94,51 +89,48 @@
             lens: new Set(['PC2025', 'O$2TE@7B']),
             navigator: new Set(['NAVIGATOR2025']),
             reflections: new Set(['REFLECT2025']),
-            suite: new Set(['SUITE2025'])
+            suite: new Set(['SUITE2025']),
+            // Example of a combo code for two products
+            lensAndHub: new Set(['COMBO2025']) 
         };
 
         function checkAccessCode() {
             const codeInput = document.getElementById('accessCode');
-            const code = codeInput.value.trim(); // Case-sensitive
+            const code = codeInput.value.trim();
             const errorMessage = document.getElementById('errorMessage');
             
-            // Hide error message on new attempt
             errorMessage.classList.remove('show');
 
-            // 1. Check for Suite Code
             if (VALID_CODES.suite.has(code)) {
                 localStorage.setItem(ACCESS_KEYS.lens, code);
                 localStorage.setItem(ACCESS_KEYS.navigator, code);
                 localStorage.setItem(ACCESS_KEYS.reflections, code);
-                alert("Success! You've unlocked the entire Learner Threads Suite.");
-                window.location.href = 'index.html'; // Redirect to homepage after unlocking all
-                return;
-            }
+                alert("Success! You've unlocked the entire Learner Threads Suite. You'll now be taken to your new dashboard.");
+                window.location.href = 'suite.html';
 
-            // 2. Check for Language Lens Code
-            if (VALID_CODES.lens.has(code)) {
+            } else if (VALID_CODES.lensAndHub.has(code)) {
+                localStorage.setItem(ACCESS_KEYS.lens, code);
+                localStorage.setItem(ACCESS_KEYS.navigator, code);
+                localStorage.setItem(ACCESS_KEYS.reflections, code);
+                alert("Success! You've unlocked Language Lens and the Dispositions Hub.");
+                window.location.href = 'dispositionshub.html';
+
+            } else if (VALID_CODES.lens.has(code)) {
                 localStorage.setItem(ACCESS_KEYS.lens, code);
                 window.location.href = 'lens.html';
-                return;
-            }
 
-            // 3. Check for Navigator Code
-            if (VALID_CODES.navigator.has(code)) {
+            } else if (VALID_CODES.navigator.has(code)) {
                 localStorage.setItem(ACCESS_KEYS.navigator, code);
                 window.location.href = 'navigator.html';
-                return;
-            }
 
-            // 4. Check for Reflections Code
-            if (VALID_CODES.reflections.has(code)) {
+            } else if (VALID_CODES.reflections.has(code)) {
                 localStorage.setItem(ACCESS_KEYS.reflections, code);
                 window.location.href = 'reflections.html';
-                return;
+
+            } else {
+                errorMessage.classList.add('show');
+                codeInput.focus();
             }
-            
-            // 5. If no code matches, show an error
-            errorMessage.classList.add('show');
-            codeInput.focus();
         }
     </script>
 </body>
