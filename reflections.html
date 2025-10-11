@@ -548,7 +548,7 @@
 
         .reflection-meta-label {
             font-weight: 600;
-            color: #1e3a5f
+            color: #1e3a5f;
             display: inline-block;
             width: 60px;
         }
@@ -1655,9 +1655,6 @@
                         </button>
                     </div>
                     <div class="nav-right">
-                        <button class="btn btn-secondary" onclick="goToHub()">
-                            🏠 Back to Hub
-                        </button>
                         <button class="btn btn-secondary" onclick="startNewReflection()">
                             🔄 Start New Reflection
                         </button>
@@ -1674,9 +1671,6 @@
                         </button>
                     </div>
                     <div class="nav-right">
-                        <button class="btn btn-secondary" onclick="goToHub()">
-                            🏠 Back to Hub
-                        </button>
                         <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">
                             ${currentStep === totalSteps - 2 ? 'Complete Reflection' : 'Next →'}
                         </button>
@@ -1920,10 +1914,6 @@
             };
             currentStep = 0;
             init();
-        }
-
-        function goToHub() {
-            window.location.href = 'index.html';
         }
 
         function scrollToElement(elementId) {
