@@ -682,6 +682,20 @@
                 font-size: 0.85rem;
                 padding: 0.6rem 1rem;
             }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
         }
     </style>
 </head>
@@ -849,7 +863,7 @@
                             After you try a strategy, reflect on how it helped you power up your learning.
                             <br><br>
                             <strong>Ready to create your learning story?</strong><br>
-                            Use the <a href="reflections.html" style="color: #1e3a5f; font-weight: 700; text-decoration: underline;">Learning Reflections tool</a> to capture:
+                            Use the <a href="#" onclick="checkReflectionsAccess(event)" style="color: #1e3a5f; font-weight: 700; text-decoration: underline;">Learning Reflections tool</a> to capture:
                             <br>• Which disposition you used (like Curiosity or Persistence)
                             <br>• How it helped you think and learn
                             <br>• Where this could take you next
@@ -1741,6 +1755,84 @@
                 // Redirect to index.html
                 window.location.href = 'index.html';
             }
+        }
+
+        function checkReflectionsAccess(event) {
+            event.preventDefault();
+            
+            const validReflectionsCodes = new Set([
+                'REFLECT2025',
+                'SUITE2025',
+                'COMBO2025',
+                'RFL-1E8F',
+                'CMB-5G3H',
+                'BND-6K4J'
+            ]);
+            
+            const storedCode = localStorage.getItem('reflectionsAccessCode');
+            
+            if (validReflectionsCodes.has(storedCode)) {
+                // They have access - go to reflections
+                window.location.href = 'reflections.html';
+            } else {
+                // They don't have access - show friendly message
+                showAccessModal();
+            }
+        }
+
+        function showAccessModal() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.6);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                animation: fadeIn 0.2s ease;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; border-radius: 1rem; padding: 2.5rem; max-width: 500px; margin: 1rem; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: slideUp 0.3s ease;">
+                    <div style="text-align: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 3rem; margin-bottom: 0.5rem;">📝</div>
+                        <h2 style="color: #1e3a5f; font-size: 1.5rem; margin-bottom: 0.5rem;">Learning Reflections</h2>
+                        <p style="color: #64748b; line-height: 1.6;">
+                            The Learning Reflections tool helps you create powerful learning stories to share with teachers and whānau.
+                        </p>
+                    </div>
+                    
+                    <div style="background: #f1f5f9; border-left: 4px solid #1e3a5f; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+                        <p style="color: #475569; font-size: 0.9rem; line-height: 1.5; margin: 0;">
+                            <strong style="color: #1e3a5f;">This tool is included in:</strong><br>
+                            • Learning Reflections access<br>
+                            • Learner Threads Bundle
+                        </p>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button onclick="this.closest('[style*=fixed]').remove()" 
+                                style="flex: 1; padding: 0.75rem 1.5rem; background: #cbd5e1; color: #475569; border: none; border-radius: 0.5rem; font-weight: 600; cursor: pointer; min-width: 120px;">
+                            Maybe Later
+                        </button>
+                        <a href="mailto:bevan@learnerthreads.com?subject=Interested in Learning Reflections" 
+                        style="flex: 1; padding: 0.75rem 1.5rem; background: #1e3a5f; color: white; border: none; border-radius: 0.5rem; font-weight: 600; text-decoration: none; text-align: center; min-width: 120px;">
+                            Get Access
+                        </a>
+                    </div>
+                </div>
+            `;
+            
+            // Close on background click
+            modal.onclick = (e) => {
+                if (e.target === modal) modal.remove();
+            };
+            
+            document.body.appendChild(modal);
         }
     </script>
     <footer class="global-footer">
