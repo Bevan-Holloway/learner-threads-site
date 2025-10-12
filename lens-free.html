@@ -4,7 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Language Lens (Sample)</title>
-    
+    <!-- Dispositions Explainer Modal -->
+    <div class="modal-overlay" id="dispositionsModal">
+        <div class="modal-content">
+            <div class="modal-inner">
+                <button class="modal-close" onclick="closeDispositionsModal()">&times;</button>
+                
+                <h2 style="color: #1e3a5f; font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; clear: both;">
+                    Three Ways to Think About Texts
+                </h2>
+                
+                <p style="color: #475569; line-height: 1.7; margin-bottom: 2rem; font-size: 1.05rem;">
+                    When analyzing language and literature, expert readers don't just look at what's on the page—they shift between different ways of thinking. The Language Lens helps you develop three powerful thinking dispositions that writers, critics, and scholars use to understand texts deeply.
+                </p>
+
+                <div style="background: #f8fafc; border-left: 4px solid #1e3a5f; padding: 1.25rem; margin-bottom: 1.25rem; border-radius: 0.5rem;">
+                    <div style="color: #1e3a5f; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">
+                        👁️ Pay Attention: Notice the Details
+                    </div>
+                    <div style="color: #334155; line-height: 1.6; font-size: 0.95rem;">
+                        What's actually there? What patterns, words, or techniques stand out? This is about careful observation—spotting what the writer is doing before you interpret why.
+                    </div>
+                </div>
+
+                <div style="background: #f8fafc; border-left: 4px solid #1e3a5f; padding: 1.25rem; margin-bottom: 1.25rem; border-radius: 0.5rem;">
+                    <div style="color: #1e3a5f; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">
+                        💭 Use Your Imagination: Explore Possibilities
+                    </div>
+                    <div style="color: #334155; line-height: 1.6; font-size: 0.95rem;">
+                        How does this make you feel? What images come to mind? What connections or memories does it spark? This is about engaging personally with the text and visualising its effects.
+                    </div>
+                </div>
+
+                <div style="background: #f8fafc; border-left: 4px solid #1e3a5f; padding: 1.25rem; margin-bottom: 1.25rem; border-radius: 0.5rem;">
+                    <div style="color: #1e3a5f; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">
+                        🔍 Think Critically: Analyse the Why
+                    </div>
+                    <div style="color: #334155; line-height: 1.6; font-size: 0.95rem;">
+                        Why did the writer make this choice? What effect does it create? What's the purpose or impact? This is about questioning and understanding the craft behind the writing.
+                    </div>
+                </div>
+
+                <div style="background: #e0f2fe; border: 1px solid #0c4a6e; padding: 1.25rem; border-radius: 0.5rem; margin: 1.5rem 0;">
+                    <div style="color: #0c4a6e; font-weight: 700; margin-bottom: 0.5rem; font-size: 1rem;">
+                        💡 The Power Move
+                    </div>
+                    <div style="color: #334155; line-height: 1.6; font-size: 0.95rem;">
+                        When you're stuck analysing a text, try switching dispositions. If careful observation isn't revealing much, engage your imagination. If you're lost in feelings, shift to critical analysis. Expert readers move fluidly between these ways of thinking.
+                    </div>
+                </div>
+
+                <p style="color: #64748b; font-size: 0.9rem; line-height: 1.6; margin-top: 1.5rem; font-style: italic;">
+                    These dispositions are part of the Learner Threads approach to learning, helping you develop the thinking habits of experts in any field.
+                </p>
+
+                <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
+                    <button onclick="closeDispositionsModal()" style="background: #1e3a5f; color: white; border: none; padding: 0.875rem 2rem; border-radius: 0.5rem; font-size: 1rem; font-weight: 600; cursor: pointer; width: 100%; transition: all 0.2s;">
+                        Got it!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <style>
         * {
             margin: 0;
@@ -224,6 +285,27 @@
             color: #1e3a5f;
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .help-btn {
+            background: #64748b;
+            color: white;
+            border: none;
+            padding: 0.875rem 1.5rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .help-btn:hover {
+            background: #475569;
+            transform: translateY(-1px);
         }
 
         /* Daily Quote Section - Collapsible */
@@ -702,6 +784,9 @@
                 <div class="search-box">
                     <span class="search-icon">🔍</span>
                     <input type="text" id="searchInput" placeholder="Search features...">
+                    <button class="help-btn" id="helpBtn" onclick="openDispositionsModal()">
+                        <span style="font-size: 1.2rem;">?</span> How to Use Dispositions
+                    </button>
                 </div>
             </div>
 
@@ -1301,25 +1386,50 @@
         `;
         modalOverlay.classList.add('active');
         document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal() {
-        modalOverlay.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    modalClose.addEventListener('click', closeModal);
-    modalOverlay.addEventListener('click', (e) => {
-        if (e.target === modalOverlay) closeModal();
-    });
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
-            closeModal();
         }
-    });
 
-    document.querySelector('[data-category="all"]').addEventListener('click', (e) => filterByCategory(e.target.dataset.category));
-</script>
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        modalClose.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        document.querySelector('[data-category="all"]').addEventListener('click', (e) => filterByCategory(e.target.dataset.category));
+        // Dispositions Modal Functions
+        function openDispositionsModal() {
+            const modal = document.getElementById('dispositionsModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDispositionsModal() {
+            const modal = document.getElementById('dispositionsModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            localStorage.setItem('lensDispositionsViewed', 'true');
+        }
+
+        // Auto-show on first visit
+        if (!localStorage.getItem('lensDispositionsViewed')) {
+            setTimeout(() => openDispositionsModal(), 800);
+        }
+
+        // Close dispositions modal on background click
+        document.getElementById('dispositionsModal').addEventListener('click', (e) => {
+            if (e.target.id === 'dispositionsModal') {
+                closeDispositionsModal();
+            }
+        });    
+    </script>
 </body>
 </html>
