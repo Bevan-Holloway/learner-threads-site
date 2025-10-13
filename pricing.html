@@ -134,15 +134,21 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
+            align-items: stretch; /* Make cards the same height */
             margin-bottom: 3rem;
             max-width: 900px;
             margin-left: auto;
             margin-right: auto;
         }
         .pricing-card {
-            background: white; border-radius: 1rem; padding: 2.5rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); display: flex;
-            flex-direction: column; position: relative; border: 2px solid transparent;
+            background: white;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border: 2px solid transparent;
             transition: all 0.3s;
         }
         .pricing-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); }
@@ -156,36 +162,18 @@
         .card-title { font-size: 1.75rem; color: #1e3a5f; margin-bottom: 1rem; font-weight: 700; }
         .card-price { font-size: 2.5rem; color: #1e3a5f; font-weight: 700; margin-bottom: 0.5rem; }
         .term { font-size: 1rem; color: #64748b; font-weight: 500; }
-        .card-description { color: #475569; margin-bottom: 1.5rem; font-size: 1rem; }
-        .features-list { list-style: none; margin-bottom: 2rem; flex-grow: 1; }
-        
-        /* MODIFICATION: REWRITTEN LIST ITEM STYLES */
-        .features-list li {
-            padding: 0.5rem 0; /* Adjusted padding */
-            color: #334155;
-            display: grid;
-            grid-template-columns: auto auto 1fr; /* 3 columns: icon, title, description */
-            gap: 0 1rem; /* Gap between columns */
-            align-items: start;
-        }
-        .features-list li::before {
-            content: "✓"; color: #1e3a5f; font-weight: bold;
-            font-size: 1.25rem; line-height: 1.6;
-            grid-column: 1 / 2; /* Checkmark in column 1 */
-        }
-        .features-list li strong {
-            grid-column: 2 / 3; /* Title in column 2 */
-            white-space: nowrap; /* Prevent title from wrapping */
-        }
-        .features-list li span {
-            grid-column: 3 / 4; /* Description in column 3 */
+        .card-description {
             color: #475569;
+            margin-bottom: 2rem; /* Increased margin to push button down */
+            font-size: 1rem;
+            flex-grow: 1; /* Allow description to take up space */
         }
-
+        
         .btn {
             display: block; text-align: center; padding: 1rem 2rem;
             border-radius: 0.5rem; text-decoration: none; font-weight: 600;
-            transition: all 0.2s; margin-top: auto;
+            transition: all 0.2s;
+            margin-top: auto; /* Pushes button to the bottom */
         }
         .btn-primary { background: #1e3a5f; color: white; }
         .btn-primary:hover {
@@ -193,10 +181,6 @@
             box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
         }
         .button-group { display: flex; flex-direction: column; gap: 0.75rem; margin-top: auto; }
-        .button-group-header {
-            font-size: 0.95rem; font-weight: 600; color: #475569;
-            margin-bottom: 1rem; text-align: center;
-        }
         .btn-secondary {
             background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0;
             padding: 0.75rem 1.5rem;
@@ -215,20 +199,6 @@
             .section-title { font-size: 2rem; }
             .pricing-grid { max-width: 100%; padding: 0 1rem; }
             .toggle-btn { padding: 0.625rem 1.25rem; font-size: 0.9rem; }
-            
-            /* MODIFICATION: Mobile list item styles */
-            .features-list li {
-                grid-template-columns: auto 1fr; /* Back to 2 columns for mobile */
-                gap: 0.5rem 0.75rem;
-            }
-            .features-list li strong {
-                grid-column: 2 / 3;
-            }
-            .features-list li span {
-                grid-column: 2 / 3; /* Move description to second row in column 2 */
-                grid-row: 2 / 3;
-                padding-left: 0; /* Remove padding if any */
-            }
         }
     </style>
 </head>
@@ -261,29 +231,15 @@
                     <div class="badge">Best Value ✨</div>
                     <h3 class="card-title">The Learner Threads Bundle</h3>
                     <p class="card-price">$299 <span class="term">NZD / year</span></p>
-                    <p class="card-description">Complete access to all three tools for your entire school community.</p>
-                    <ul class="features-list">
-                        <li><strong>Unlimited access</strong><span>for all students and staff</span></li>
-                        <li><strong>Language Lens</strong><span>— 50+ features, flashcards, bookmarking</span></li>
-                        <li><strong>Learning Navigator</strong><span>— 8 subjects, all dispositions</span></li>
-                        <li><strong>Learning Reflections</strong><span>— full reflection tool</span></li>
-                        <li><strong>Simple annual invoice</strong><span>for easy administration</span></li>
-                        <li><strong>Instant access</strong><span>to any future tools</span></li>
-                    </ul>
+                    <p class="card-description">Get unlimited access to the Language Lens, Learning Navigator, and Learning Reflections tools for your entire school community. Includes all future updates and tools.</p>
                     <a href="mailto:bevan@learnerthreads.com?subject=School%20Bundle%20Enquiry" class="btn btn-primary">Get in Touch</a>
                     <p class="note">Response within 24 hours</p>
                 </div>
+
                 <div class="pricing-card">
                     <h3 class="card-title">Individual Tools</h3>
                     <p class="card-price">$199 <span class="term">NZD / year / tool</span></p>
-                    <p class="card-description">Choose the specific tool your department needs most.</p>
-                    <ul class="features-list">
-                        <li><strong>Language Lens:</strong><span>Perfect for English departments</span></li>
-                        <li><strong>Learning Navigator:</strong><span>Works across all subjects</span></li>
-                        <li><strong>Learning Reflections:</strong><span>Great for growing metacognition</span></li>
-                        <li><strong>Unlimited access</strong><span>for students and staff</span></li>
-                        <li><strong>Simple annual invoice</strong><span>for easy administration</span></li>
-                    </ul>
+                    <p class="card-description">Choose the specific tool your department needs most, with unlimited access for all your students and staff members.</p>
                     <a href="mailto:bevan@learnerthreads.com?subject=School%20Individual%20Tool%20Enquiry" class="btn btn-primary">Get in Touch</a>
                     <p class="note">Response within 24 hours</p>
                 </div>
@@ -297,30 +253,19 @@
                     <div class="badge">Best Value ✨</div>
                     <h3 class="card-title">The Learner Threads Bundle</h3>
                     <p class="card-price">$35 <span class="term">NZD / year</span></p>
-                    <p class="card-description">Full access to all current and future tools.</p>
-                    <ul class="features-list">
-                        <li><strong>Language Lens</strong><span>(full version)</span></li>
-                        <li><strong>Learning Navigator</strong><span>(full version)</span></li>
-                        <li><strong>Learning Reflections</strong><span>(full version)</span></li>
-                        <li><strong>Instant access</strong><span>to all future tools</span></li>
-                    </ul>
+                    <p class="card-description">Your personal license for the complete suite, including the Language Lens, Learning Navigator, Learning Reflections, and all future tools.</p>
                     <a href="mailto:bevan@learnerthreads.com?subject=Individual%20Bundle%20Enquiry" class="btn btn-primary">Get in Touch</a>
                     <p class="note">Response within 24 hours</p>
                 </div>
+
                 <div class="pricing-card">
                     <h3 class="card-title">Individual Tools</h3>
                     <p class="card-price">$15 <span class="term">NZD / year / tool</span></p>
-                    <p class="card-description">Choose the tool you need most.</p>
-                    <ul class="features-list">
-                        <li><strong>Language Lens:</strong><span>All 50+ features</span></li>
-                        <li><strong>Learning Navigator:</strong><span>Full access</span></li>
-                        <li><strong>Learning Reflections:</strong><span>Full access</span></li>
-                    </ul>
-                    <p class="button-group-header">Get in touch to purchase:</p>
+                    <p class="card-description">Get a personal annual license for the specific tool you need most. Simple, focused, and powerful.</p>
                     <div class="button-group">
-                        <a href="mailto:bevan@learnerthreads.com?subject=Language%20Lens%20Enquiry" class="btn btn-secondary">Language Lens</a>
-                        <a href="mailto:bevan@learnerthreads.com?subject=Learning%20Navigator%20Enquiry" class="btn btn-secondary">Learning Navigator</a>
-                        <a href="mailto:bevan@learnerthreads.com?subject=Learning%20Reflections%20Enquiry" class="btn btn-secondary">Learning Reflections</a>
+                        <a href="mailto:bevan@learnerthreads.com?subject=Language%20Lens%20Enquiry" class="btn btn-secondary">Purchase Language Lens</a>
+                        <a href="mailto:bevan@learnerthreads.com?subject=Learning%20Navigator%20Enquiry" class="btn btn-secondary">Purchase Learning Navigator</a>
+                        <a href="mailto:bevan@learnerthreads.com?subject=Learning%20Reflections%20Enquiry" class="btn btn-secondary">Purchase Learning Reflections</a>
                     </div>
                     <p class="note">Response within 24 hours</p>
                 </div>
