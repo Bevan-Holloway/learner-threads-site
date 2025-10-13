@@ -159,29 +159,27 @@
         .card-description { color: #475569; margin-bottom: 1.5rem; font-size: 1rem; }
         .features-list { list-style: none; margin-bottom: 2rem; flex-grow: 1; }
         
-        /* MODIFICATION: Style for the list items */
+        /* MODIFICATION: REWRITTEN LIST ITEM STYLES */
         .features-list li {
-            padding: 0.75rem 0;
+            padding: 0.5rem 0; /* Adjusted padding */
             color: #334155;
-            display: grid; /* Use grid for alignment */
-            grid-template-columns: auto 1fr; /* Icon, Title, Description */
+            display: grid;
+            grid-template-columns: auto auto 1fr; /* 3 columns: icon, title, description */
             gap: 0 1rem; /* Gap between columns */
             align-items: start;
         }
-        /* MODIFICATION: Style for the checkmark */
         .features-list li::before {
             content: "✓"; color: #1e3a5f; font-weight: bold;
-            font-size: 1.25rem; line-height: 1.6; /* Align with text */
-            grid-column: 1 / 2; /* Place in the first column */
+            font-size: 1.25rem; line-height: 1.6;
+            grid-column: 1 / 2; /* Checkmark in column 1 */
         }
-        /* MODIFICATION: Target the strong and span inside the li */
         .features-list li strong {
-            grid-column: 2 / 3; /* Title in the second column */
-            display: block; /* Ensures it takes up its grid cell properly */
+            grid-column: 2 / 3; /* Title in column 2 */
+            white-space: nowrap; /* Prevent title from wrapping */
         }
         .features-list li span {
-            grid-column: 3 / 4; /* Description in the third column */
-            color: #475569; /* Slightly lighter text for description */
+            grid-column: 3 / 4; /* Description in column 3 */
+            color: #475569;
         }
 
         .btn {
@@ -217,17 +215,19 @@
             .section-title { font-size: 2rem; }
             .pricing-grid { max-width: 100%; padding: 0 1rem; }
             .toggle-btn { padding: 0.625rem 1.25rem; font-size: 0.9rem; }
-            /* MODIFICATION: Adjust grid for smaller screens */
+            
+            /* MODIFICATION: Mobile list item styles */
             .features-list li {
-                grid-template-columns: auto 1fr; /* Stack title and description */
+                grid-template-columns: auto 1fr; /* Back to 2 columns for mobile */
                 gap: 0.5rem 0.75rem;
             }
             .features-list li strong {
                 grid-column: 2 / 3;
             }
             .features-list li span {
-                grid-column: 2 / 3; /* Move description to second row, second column */
+                grid-column: 2 / 3; /* Move description to second row in column 2 */
                 grid-row: 2 / 3;
+                padding-left: 0; /* Remove padding if any */
             }
         }
     </style>
