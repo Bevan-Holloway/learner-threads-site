@@ -164,16 +164,16 @@
         .term { font-size: 1rem; color: #64748b; font-weight: 500; }
         .card-description {
             color: #475569;
-            margin-bottom: 2rem; /* Increased margin to push button down */
+            margin-bottom: 2rem;
             font-size: 1rem;
-            flex-grow: 1; /* Allow description to take up space */
+            flex-grow: 1;
         }
         
         .btn {
             display: block; text-align: center; padding: 1rem 2rem;
             border-radius: 0.5rem; text-decoration: none; font-weight: 600;
             transition: all 0.2s;
-            margin-top: auto; /* Pushes button to the bottom */
+            margin-top: auto;
         }
         .btn-primary { background: #1e3a5f; color: white; }
         .btn-primary:hover {
@@ -181,6 +181,14 @@
             box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
         }
         .button-group { display: flex; flex-direction: column; gap: 0.75rem; margin-top: auto; }
+        /* STYLE FOR THE BUTTON HEADER */
+        .button-group-header {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
         .btn-secondary {
             background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0;
             padding: 0.75rem 1.5rem;
@@ -262,6 +270,7 @@
                     <h3 class="card-title">Individual Tools</h3>
                     <p class="card-price">$15 <span class="term">NZD / year / tool</span></p>
                     <p class="card-description">Get a personal annual license for the specific tool you need most. Simple, focused, and powerful.</p>
+                    <p class="button-group-header">Get in touch to purchase:</p>
                     <div class="button-group">
                         <a href="mailto:bevan@learnerthreads.com?subject=Language%20Lens%20Enquiry" class="btn btn-secondary">Purchase Language Lens</a>
                         <a href="mailto:bevan@learnerthreads.com?subject=Learning%20Navigator%20Enquiry" class="btn btn-secondary">Purchase Learning Navigator</a>
