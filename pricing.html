@@ -134,7 +134,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
-            align-items: stretch; /* Make cards the same height */
+            align-items: stretch;
             margin-bottom: 3rem;
             max-width: 900px;
             margin-left: auto;
@@ -181,7 +181,6 @@
             box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
         }
         .button-group { display: flex; flex-direction: column; gap: 0.75rem; margin-top: auto; }
-        /* STYLE FOR THE BUTTON HEADER */
         .button-group-header {
             font-size: 0.95rem;
             font-weight: 600;
@@ -205,8 +204,23 @@
 
         @media (max-width: 768px) {
             .section-title { font-size: 2rem; }
-            .pricing-grid { max-width: 100%; }
             .toggle-btn { padding: 0.625rem 1.25rem; font-size: 0.9rem; }
+            
+            .pricing-container {
+                padding: 2.5rem 1rem;
+            }
+            .audience-toggle {
+                margin-bottom: 2rem;
+            }
+            .section-subtitle {
+                margin-bottom: 2rem;
+            }
+            
+            /* MODIFICATION: Forces a single column layout on mobile */
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                max-width: 100%;
+            }
         }
     </style>
 </head>
@@ -225,7 +239,7 @@
 
     <div class="pricing-container">
         <h2 class="section-title">Pricing</h2>
-        <p class="section-subtitle">Choose the option that works best for you</p>
+        <p class="section-subtitle">Choose the option that works best for you.</p>
 
         <div class="audience-toggle">
             <button class="toggle-btn active" onclick="showAudience('schools')" id="schoolsBtn">🏫 For Schools</button>
@@ -233,7 +247,7 @@
         </div>
 
         <div id="schoolsSection" class="pricing-section active">
-            <p class="section-subtitle">Equip your students and staff with powerful learning tools</p>
+            <p class="section-subtitle">Plans for your entire school community.</p>
             <div class="pricing-grid">
                 <div class="pricing-card recommended">
                     <div class="badge">Best Value ✨</div>
@@ -247,7 +261,7 @@
                 <div class="pricing-card">
                     <h3 class="card-title">Individual Tools</h3>
                     <p class="card-price">$199 <span class="term">NZD / year / tool</span></p>
-                    <p class="card-description">Choose the specific tool your department needs most, and get unlimited access for all your students and staff members.</p>
+                    <p class="card-description">Choose the specific tool your department needs most, with unlimited access for all your students and staff members.</p>
                     <a href="mailto:bevan@learnerthreads.com?subject=School%20Individual%20Tool%20Enquiry" class="btn btn-primary">Get in Touch</a>
                     <p class="note">Response within 24 hours</p>
                 </div>
@@ -255,7 +269,7 @@
         </div>
 
         <div id="individualsSection" class="pricing-section">
-            <p class="section-subtitle">Personal access for independent learners and tutors</p>
+            <p class="section-subtitle">Personal access for learners and tutors.</p>
             <div class="pricing-grid">
                 <div class="pricing-card recommended">
                     <div class="badge">Best Value ✨</div>
@@ -272,9 +286,9 @@
                     <p class="card-description">Get a personal annual license for the specific tool you need most. Simple, focused, and powerful.</p>
                     <p class="button-group-header">Get in touch to purchase:</p>
                     <div class="button-group">
-                        <a href="mailto:bevan@learnerthreads.com?subject=Language%20Lens%20Enquiry" class="btn btn-secondary">Language Lens</a>
-                        <a href="mailto:bevan@learnerthreads.com?subject=Learning%20Navigator%20Enquiry" class="btn btn-secondary">Learning Navigator</a>
-                        <a href="mailto:bevan@learnerthreads.com?subject=Learning%20Reflections%20Enquiry" class="btn btn-secondary">Learning Reflections</a>
+                        <a href="mailto:bevan@learnerthreads.com?subject=Language%20Lens%20Enquiry" class="btn btn-secondary">Purchase Language Lens</a>
+                        <a href="mailto:bevan@learnerthreads.com?subject=Learning%20Navigator%2DEnquiry" class="btn btn-secondary">Purchase Learning Navigator</a>
+                        <a href="mailto:bevan@learnerthreads.com?subject=Learning%20Reflections%20Enquiry" class="btn btn-secondary">Purchase Learning Reflections</a>
                     </div>
                     <p class="note">Response within 24 hours</p>
                 </div>
