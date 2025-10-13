@@ -81,14 +81,15 @@
 
         /* Toggle Buttons */
         .audience-toggle {
-            display: inline-flex;
+            display: flex;
             background: #f1f5f9;
             border-radius: 0.75rem;
             padding: 0.375rem;
             margin: 0 auto 3rem auto;
-            display: flex;
             justify-content: center;
             position: relative;
+            /* MODIFICATION: Constrains the width of the toggle */
+            max-width: fit-content;
         }
         .toggle-btn {
             padding: 0.75rem 2rem;
@@ -138,10 +139,12 @@
         }
         .pricing-grid {
             display: grid;
-            grid-template-columns: 1fr;
+            /* MODIFICATION: Allows for responsive columns */
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
             margin-bottom: 3rem;
-            max-width: 600px;
+            /* MODIFICATION: Increased width to fit two cards side-by-side */
+            max-width: 900px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -311,7 +314,6 @@
         <h2 class="section-title">Pricing</h2>
         <p class="section-subtitle">Choose the option that works best for you</p>
 
-        <!-- Audience Toggle -->
         <div class="audience-toggle">
             <button class="toggle-btn active" onclick="showAudience('schools')" id="schoolsBtn">
                 🏫 For Schools
@@ -321,12 +323,10 @@
             </button>
         </div>
 
-        <!-- SCHOOLS SECTION -->
         <div id="schoolsSection" class="pricing-section active">
             <p class="section-subtitle">Equip your students and staff with powerful learning tools</p>
             
             <div class="pricing-grid">
-                <!-- School Bundle -->
                 <div class="pricing-card recommended">
                     <div class="badge">Best Value ✨</div>
                     <h3 class="card-title">The Learner Threads Bundle</h3>
@@ -344,7 +344,6 @@
                     <p class="note">Response within 24 hours</p>
                 </div>
 
-                <!-- School Individual Tools -->
                 <div class="pricing-card">
                     <h3 class="card-title">Individual Tools</h3>
                     <p class="card-price">$199 <span class="term">NZD / year / tool</span></p>
@@ -362,12 +361,10 @@
             </div>
         </div>
 
-        <!-- INDIVIDUALS SECTION -->
         <div id="individualsSection" class="pricing-section">
             <p class="section-subtitle">Personal access for independent learners and tutors</p>
 
             <div class="pricing-grid">
-                <!-- Individual Bundle -->
                 <div class="pricing-card recommended">
                     <div class="badge">Best Value ✨</div>
                     <h3 class="card-title">The Learner Threads Bundle</h3>
@@ -383,7 +380,6 @@
                     <p class="note">Response within 24 hours</p>
                 </div>
 
-                <!-- Individual A La Carte -->
                 <div class="pricing-card">
                     <h3 class="card-title">Individual Tools</h3>
                     <p class="card-price">$15 <span class="term">NZD / year / tool</span></p>
