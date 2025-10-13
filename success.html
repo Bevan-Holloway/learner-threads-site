@@ -3,79 +3,434 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Purchase Successful! | Learner Threads</title>
+    <title>Pricing - Learner Threads</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
-            color: #2c3e50; line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh;
+            color: #2c3e50;
+            line-height: 1.6;
         }
-        main { flex-grow: 1; display: flex; align-items: center; justify-content: center; }
-        .container { max-width: 700px; width: 100%; margin: 0 auto; padding: 2rem; }
-        a { color: #1e3a5f; text-decoration: none; }
-        .global-header { width: 100%; padding: 1rem 2rem; border-bottom: 1px solid #e2e8f0; }
-        .global-nav { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo-link { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; font-size: 1.25rem; font-weight: 600; color: #1e3a5f; }
-        .logo-link img { max-height: 40px; border-radius: 50%; }
-        .nav-links { display: flex; gap: 2rem; }
-        .nav-links a { text-decoration: none; color: #475569; font-weight: 500; }
-        .nav-links a:hover { color: #1e3a5f; }
-        .global-footer { width: 100%; text-align: center; padding: 2rem; margin-top: 3rem; border-top: 1px solid #e2e8f0; }
-        .global-footer p { color: #64748b; font-size: 0.9rem; }
-        .global-footer a { color: #1e3a5f; }
-        .hero { background: white; padding: 3rem; border-radius: 0.75rem; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); text-align: center; }
-        h1 { color: #1e3a5f; font-size: 2.5rem; font-weight: 600; margin-bottom: 1rem; }
-        .subtitle { color: #64748b; font-size: 1.15rem; margin-bottom: 2.5rem; }
-        .temp-code-box { background: #f8fafc; border: 1.5px dashed #e2e8f0; border-radius: 0.5rem; padding: 1.5rem; margin: 2rem 0; }
-        .temp-code-box p { color: #475569; margin-bottom: 0.75rem; }
-        .temp-code { font-family: monospace; font-size: 1.5rem; font-weight: 700; color: #1e3a5f; background: #e0f2fe; padding: 0.5rem 1rem; border-radius: 0.375rem; display: inline-block; }
-        .info-text { color: #64748b; font-size: 0.95rem; margin-top: 2rem; line-height: 1.6; }
-        .action-btn { display: inline-block; background: #1e3a5f; color: white; border: none; padding: 1rem 2rem; border-radius: 0.5rem; font-size: 1.05rem; font-weight: 500; cursor: pointer; transition: all 0.2s; margin-top: 1rem; }
-        .action-btn:hover { background: #2c4a6f; transform: translateY(-1px); }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        /* Header */
+        .global-header {
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            background: white;
+        }
+        .global-nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e3a5f;
+        }
+        .logo-link img {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+        }
+        .nav-links a {
+            color: #475569;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 2rem;
+        }
+        .nav-links a:hover {
+            color: #1e3a5f;
+        }
+
+        /* Pricing Container */
+        .pricing-container {
+            padding: 4rem 2rem;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #1e3a5f;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.15rem;
+            color: #64748b;
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Toggle Buttons */
+        .audience-toggle {
+            display: inline-flex;
+            background: #f1f5f9;
+            border-radius: 0.75rem;
+            padding: 0.375rem;
+            margin: 0 auto 3rem auto;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+        .toggle-btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            background: transparent;
+            color: #475569;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+        .toggle-btn:hover {
+            color: #1e3a5f;
+        }
+        .toggle-btn.active {
+            color: #1e3a5f;
+        }
+        
+        /* Sliding background */
+        .audience-toggle::before {
+            content: '';
+            position: absolute;
+            top: 0.375rem;
+            left: 0.375rem;
+            width: calc(50% - 0.375rem);
+            height: calc(100% - 0.75rem);
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            z-index: 1;
+        }
+        
+        .audience-toggle.individuals-active::before {
+            transform: translateX(100%);
+        }
+
+        /* Pricing Sections */
+        .pricing-section {
+            display: none;
+        }
+        .pricing-section.active {
+            display: block;
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .pricing-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .pricing-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        .pricing-card.recommended {
+            border-color: #1e3a5f;
+            box-shadow: 0 8px 24px rgba(30, 58, 95, 0.15);
+        }
+        .badge {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: linear-gradient(135deg, #1e3a5f, #2c4a6f);
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+        }
+        .card-title {
+            font-size: 1.75rem;
+            color: #1e3a5f;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        .card-price {
+            font-size: 2.5rem;
+            color: #1e3a5f;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .term {
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+        .card-description {
+            color: #475569;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+        .features-list {
+            list-style: none;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+        }
+        .features-list li {
+            padding: 0.75rem 0;
+            color: #334155;
+            display: block;
+            line-height: 1.6;
+        }
+        .features-list li::before {
+            content: "✓ ";
+            color: #1e3a5f;
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+        .btn {
+            display: block;
+            text-align: center;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            margin-top: auto;
+        }
+        .btn-primary {
+            background: #1e3a5f;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #2c4a6f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+        }
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: auto;
+        }
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            padding: 0.75rem 1.5rem;
+        }
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+        }
+        
+        .note {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.95rem;
+            font-style: italic;
+            margin-top: 1rem;
+        }
+
+        /* Footer */
+        .global-footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 4rem;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        .global-footer a {
+            color: #475569;
+            text-decoration: none;
+        }
+        .global-footer a:hover {
+            color: #1e3a5f;
+        }
+
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 2rem;
+            }
+            .pricing-grid {
+                max-width: 100%;
+                padding: 0 1rem;
+            }
+            .toggle-btn {
+                padding: 0.625rem 1.25rem;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
     <header class="global-header">
         <nav class="global-nav">
-            <a href="index.html" class="logo-link"><img src="logo.png" alt="Learner Threads Logo"><span>Learner Threads</span></a>
-            <div class="nav-links"><a href="pricing.html">Pricing</a><a href="access.html">Access Tools</a></div>
+            <a href="index.html" class="logo-link">
+                <img src="logo.png" alt="Learner Threads Logo">
+                <span>Learner Threads</span>
+            </a>
+            <div class="nav-links">
+                <a href="access.html">Access Tools</a>
+            </div>
         </nav>
     </header>
-    <main>
-        <div class="container">
-            <div class="hero">
-                <h1>✅ Purchase Complete!</h1>
-                <p class="subtitle">You're ready to get started.</p>
-                <div class="temp-code-box">
-                    <p>Copy this temporary code for immediate access:</p>
-                    <span id="temp-code-display" class="temp-code">LOADING...</span>
+
+    <div class="pricing-container">
+        <h2 class="section-title">Pricing</h2>
+        <p class="section-subtitle">Choose the option that works best for you</p>
+
+        <!-- Audience Toggle -->
+        <div class="audience-toggle">
+            <button class="toggle-btn active" onclick="showAudience('schools')" id="schoolsBtn">
+                🏫 For Schools
+            </button>
+            <button class="toggle-btn" onclick="showAudience('individuals')" id="individualsBtn">
+                👤 For Individuals
+            </button>
+        </div>
+
+        <!-- SCHOOLS SECTION -->
+        <div id="schoolsSection" class="pricing-section active">
+            <p class="section-subtitle">Equip your students and staff with powerful learning tools</p>
+            
+            <div class="pricing-grid">
+                <!-- School Bundle -->
+                <div class="pricing-card recommended">
+                    <div class="badge">Best Value ✨</div>
+                    <h3 class="card-title">The Learner Threads Bundle</h3>
+                    <p class="card-price">$299 <span class="term">NZD / year</span></p>
+                    <p class="card-description">Complete access to all three tools for your entire school community.</p>
+                    <ul class="features-list">
+                        <li><strong>Unlimited access</strong> for all students and staff</li>
+                        <li><strong>Language Lens</strong> — 50+ features, flashcards, bookmarking</li>
+                        <li><strong>Learning Navigator</strong> — 8 subjects, all dispositions</li>
+                        <li><strong>Learning Reflections</strong> — full reflection tool</li>
+                        <li>Simple annual invoice for easy administration</li>
+                        <li>Instant access to any future tools</li>
+                    </ul>
+                    <a href="mailto:bevan@learnerthreads.com?subject=School%20Bundle%20Enquiry" class="btn btn-primary">Get in Touch</a>
+                    <p class="note">We'll respond within 24 hours</p>
                 </div>
-                <a href="access.html" class="action-btn">Enter Your Code Now</a>
-                <p class="info-text">Your unique, permanent access code will be delivered to your email address within 12 hours. When it arrives, simply enter it on the access page to unlock permanent access.</p>
+
+                <!-- School Individual Tools -->
+                <div class="pricing-card">
+                    <h3 class="card-title">Individual Tools</h3>
+                    <p class="card-price">$199 <span class="term">NZD / year / tool</span></p>
+                    <p class="card-description">Choose the specific tool your department needs most.</p>
+                    <ul class="features-list">
+                        <li><strong>Language Lens:</strong> Perfect for English departments</li>
+                        <li><strong>Learning Navigator:</strong> Works across all subjects</li>
+                        <li><strong>Learning Reflections:</strong> Great for pastoral care & advisory</li>
+                        <li>Unlimited student and staff access</li>
+                        <li>Simple annual invoice</li>
+                    </ul>
+                    <a href="mailto:bevan@learnerthreads.com?subject=School%20Individual%20Tool%20Enquiry" class="btn btn-primary">Get in Touch</a>
+                    <p class="note">We'll respond within 24 hours</p>
+                </div>
             </div>
         </div>
-    </main>
-    <footer class="global-footer"><p>&copy; 2025 Learner Threads | <a href="mailto:bevan@learnerthreads.com">Contact Support</a></p></footer>
+
+        <!-- INDIVIDUALS SECTION -->
+        <div id="individualsSection" class="pricing-section">
+            <p class="section-subtitle">Personal access for independent learners and tutors</p>
+
+            <div class="pricing-grid">
+                <!-- Individual Bundle -->
+                <div class="pricing-card recommended">
+                    <div class="badge">Best Value ✨</div>
+                    <h3 class="card-title">The Learner Threads Bundle</h3>
+                    <p class="card-price">$35 <span class="term">NZD / year</span></p>
+                    <p class="card-description">Full access to all current and future tools.</p>
+                    <ul class="features-list">
+                        <li>Language Lens (full version)</li>
+                        <li>Learning Navigator (full version)</li>
+                        <li>Learning Reflections (full version)</li>
+                        <li>Instant access to all future tools</li>
+                    </ul>
+                    <a href="mailto:bevan@learnerthreads.com?subject=Individual%20Bundle%20Enquiry" class="btn btn-primary">Get in Touch</a>
+                    <p class="note">We'll respond within 24 hours with your access code</p>
+                </div>
+
+                <!-- Individual A La Carte -->
+                <div class="pricing-card">
+                    <h3 class="card-title">Individual Tools</h3>
+                    <p class="card-price">$15 <span class="term">NZD / year / tool</span></p>
+                    <p class="card-description">Choose the tool you need most.</p>
+                    <ul class="features-list">
+                        <li><strong>Language Lens:</strong> All 50+ features</li>
+                        <li><strong>Learning Navigator:</strong> Full access</li>
+                        <li><strong>Learning Reflections:</strong> Full access</li>
+                    </ul>
+                    <div class="button-group">
+                        <a href="mailto:bevan@learnerthreads.com?subject=Language%20Lens%20Enquiry" class="btn btn-secondary">Language Lens</a>
+                        <a href="mailto:bevan@learnerthreads.com?subject=Learning%20Navigator%20Enquiry" class="btn btn-secondary">Learning Navigator</a>
+                        <a href="mailto:bevan@learnerthreads.com?subject=Learning%20Reflections%20Enquiry" class="btn btn-secondary">Learning Reflections</a>
+                    </div>
+                    <p class="note">We'll respond within 24 hours with your access code</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="global-footer">
+        <p>&copy; 2025 Learner Threads | <a href="mailto:bevan@learnerthreads.com">Contact Support</a></p>
+    </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Matching set of new, random-looking temporary codes
-            const tempCodes = {
-                lens: 'LNS-4A9B',
-                nav: 'NAV-7C2D',
-                reflect: 'RFL-1E8F',
-                combo: 'CMB-5G3H',
-                bundle: 'BND-6K4J',
-                default: 'BND-6K4J' // Fallback code
-            };
-            const codeDisplay = document.getElementById('temp-code-display');
-            const urlParams = new URLSearchParams(window.location.search);
-            const product = urlParams.get('product'); // Gets 'lens', 'bundle', etc. from URL
-
-            // Display the correct code based on the URL parameter
-            codeDisplay.textContent = tempCodes[product] || tempCodes.default;
-        });
+        function showAudience(audience) {
+            const toggle = document.querySelector('.audience-toggle');
+            
+            // Hide all sections
+            document.querySelectorAll('.pricing-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active state from all buttons
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected section and activate button
+            if (audience === 'schools') {
+                document.getElementById('schoolsSection').classList.add('active');
+                document.getElementById('schoolsBtn').classList.add('active');
+                toggle.classList.remove('individuals-active');
+            } else {
+                document.getElementById('individualsSection').classList.add('active');
+                document.getElementById('individualsBtn').classList.add('active');
+                toggle.classList.add('individuals-active');
+            }
+        }
     </script>
 </body>
 </html>
