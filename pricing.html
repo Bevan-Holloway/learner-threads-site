@@ -88,7 +88,6 @@
             margin: 0 auto 3rem auto;
             justify-content: center;
             position: relative;
-            /* MODIFICATION: Constrains the width of the toggle */
             max-width: fit-content;
         }
         .toggle-btn {
@@ -139,11 +138,9 @@
         }
         .pricing-grid {
             display: grid;
-            /* MODIFICATION: Allows for responsive columns */
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
             margin-bottom: 3rem;
-            /* MODIFICATION: Increased width to fit two cards side-by-side */
             max-width: 900px;
             margin-left: auto;
             margin-right: auto;
@@ -245,6 +242,14 @@
             flex-direction: column;
             gap: 0.75rem;
             margin-top: auto;
+        }
+        /* NEW STYLE FOR THE BUTTON HEADER */
+        .button-group-header {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 1rem;
+            text-align: center;
         }
         .btn-secondary {
             background: #f1f5f9;
@@ -389,6 +394,7 @@
                         <li><strong>Learning Navigator:</strong> Full access</li>
                         <li><strong>Learning Reflections:</strong> Full access</li>
                     </ul>
+                    <p class="button-group-header">Get in touch to purchase:</p>
                     <div class="button-group">
                         <a href="mailto:bevan@learnerthreads.com?subject=Language%20Lens%20Enquiry" class="btn btn-secondary">Language Lens</a>
                         <a href="mailto:bevan@learnerthreads.com?subject=Learning%20Navigator%20Enquiry" class="btn btn-secondary">Learning Navigator</a>
