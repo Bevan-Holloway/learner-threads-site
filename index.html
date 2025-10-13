@@ -23,152 +23,85 @@
 
         .global-header { padding: 1rem 2rem; border-bottom: 1px solid #e2e8f0; }
         .global-nav { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo-link { display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 600; }
+        .logo-link { display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 600; color: #1e3a5f; }
         .logo-link img { height: 40px; width: 40px; border-radius: 50%; }
-        .nav-links a { color: #475569; font-weight: 500; margin-left: 2rem; font-size: 0.95rem; }
+        .nav-links { display: flex; align-items: center; gap: 2rem; }
+        .nav-links a { color: #475569; font-weight: 500; }
         .nav-links a:hover { color: #1e3a5f; }
-
-        .hero { text-align: center; padding: 6rem 1rem; }
-        .hero h1 { font-size: 3.5rem; color: #1e3a5f; margin-bottom: 1rem; font-weight: 700; letter-spacing: -0.02em; }
-        .hero p { font-size: 1.25rem; color: #64748b; max-width: 650px; margin: 0 auto 2.5rem auto; }
-        .hero-buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
-        .btn { display: inline-block; padding: 1rem 2.5rem; border-radius: 0.5rem; font-weight: 600; transition: all 0.2s; text-decoration: none; }
+        .btn {
+            display: inline-block; padding: 0.75rem 1.5rem; border-radius: 0.5rem;
+            text-decoration: none; font-weight: 600; transition: all 0.2s;
+        }
         .btn-primary { background: #1e3a5f; color: white; }
-        .btn-primary:hover { background: #2c4a6f; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(30,58,95,0.2); }
-        .btn-secondary { background: white; color: #1e3a5f; border: 1px solid #e2e8f0; }
-        .btn-secondary:hover { background: #f8fafc; border-color: #cbd5e1; transform: translateY(-2px); }
-
-        .philosophy-section {
-            background: white;
-            border-radius: 1rem;
-            padding: 4rem 2rem;
+        .btn-primary:hover { background: #2c4a6f; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(30, 58, 95, 0.2); }
+        .btn-secondary { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+        .btn-secondary:hover { background: #e2e8f0; }
+        
+        .hero {
             text-align: center;
-            margin: 0 auto 4rem auto;
-            max-width: 900px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            padding: 6rem 2rem;
         }
-        .philosophy-icon {
-            font-size: 3rem;
-            line-height: 1;
-            margin-bottom: 1.5rem;
-        }
-        .philosophy-section h2 {
-            font-size: 2.25rem;
-            color: #1e3a5f;
-            margin-bottom: 1.5rem;
-            font-weight: 700;
-        }
-        .philosophy-section p {
-            font-size: 1.15rem;
-            color: #475569;
-            max-width: 650px;
-            margin: 0 auto;
+        .hero h1 { font-size: 3.5rem; color: #1e3a5f; margin-bottom: 1rem; }
+        .hero p {
+            font-size: 1.25rem; color: #475569; max-width: 750px;
+            margin: 0 auto 2.5rem auto; line-height: 1.7;
         }
 
-        .tools-section { padding: 4rem 0; }
-        .section-title { text-align: center; font-size: 2.5rem; color: #1e3a5f; margin-bottom: 3rem; font-weight: 700; }
-        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .section { padding: 4rem 0; }
+        .section-title { text-align: center; font-size: 2.5rem; color: #1e3a5f; margin-bottom: 1rem; }
+        .section-subtitle { text-align: center; font-size: 1.15rem; color: #64748b; max-width: 700px; margin: 0 auto 3rem auto; }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
         .tool-card {
-            background: white;
-            border-radius: 1rem;
-            padding: 2.5rem;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
+            background: white; border-radius: 1rem; padding: 2.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); text-align: center;
+            display: flex; flex-direction: column;
             transition: all 0.3s;
         }
-        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.1); }
-        .card-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            line-height: 1;
-        }
-        .tool-card h3 { font-size: 1.75rem; color: #1e3a5f; margin-bottom: 0.75rem; }
+        .tool-card:hover { transform: translateY(-5px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); }
+        .tool-card .icon { font-size: 3.5rem; margin-bottom: 1rem; }
+        .tool-card h3 { font-size: 1.75rem; color: #1e3a5f; margin-bottom: 1rem; }
         .tool-card p { color: #475569; margin-bottom: 2rem; flex-grow: 1; }
         .tool-card .btn { margin-top: auto; }
-
-        .global-footer { text-align: center; padding: 3rem 1rem; margin-top: 3rem; border-top: 1px solid #e2e8f0; font-size: 0.9rem; color: #64748b; }
+        
+        .global-footer {
+            text-align: center; padding: 2rem; border-top: 1px solid #e2e8f0;
+            margin-top: 4rem; color: #64748b; font-size: 0.9rem;
+        }
         .global-footer a { color: #475569; }
+        .global-footer a:hover { color: #1e3a5f; }
 
-        /* Mobile Menu Styles */
-        .mobile-menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #1e3a5f;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-
-        .mobile-nav-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 998;
-        }
-
-        .mobile-nav-overlay.active {
-            display: block;
-        }
-
-        .mobile-nav-menu {
-            display: none;
-            position: fixed;
-            top: 0;
-            right: -300px;
-            width: 280px;
-            height: 100vh;
-            background: white;
-            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 999;
-            transition: right 0.3s ease;
-            padding: 2rem;
-        }
-
-        .mobile-nav-menu.active {
-            right: 0;
-        }
-
-        .mobile-nav-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            font-size: 2rem;
-            color: #64748b;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-
-        .mobile-nav-links {
-            margin-top: 4rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .mobile-nav-links a {
-            color: #1e3a5f;
-            font-size: 1.1rem;
-            font-weight: 600;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
+        .mobile-menu-toggle, .mobile-nav-menu { display: none; }
+        
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .philosophy-section h2 { font-size: 1.75rem; }
-            
             .nav-links { display: none; }
-            .mobile-menu-toggle { display: block; }
-            .mobile-nav-menu { display: block; }
+            .mobile-menu-toggle {
+                display: block; background: none; border: none; font-size: 1.75rem; cursor: pointer; color: #1e3a5f;
+            }
+            .mobile-nav-overlay {
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.5); z-index: 998;
+                opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+            }
+            .mobile-nav-overlay.active { opacity: 1; pointer-events: auto; }
+            .mobile-nav-menu {
+                position: fixed; top: 0; right: -300px; width: 300px; height: 100%;
+                background: white; z-index: 999; padding: 2rem;
+                transition: right 0.3s ease-in-out;
+            }
+            .mobile-nav-menu.active { right: 0; }
+            .mobile-nav-header { display: flex; justify-content: flex-end; margin-bottom: 2rem; }
+            .mobile-nav-close { background: none; border: none; font-size: 2rem; cursor: pointer; }
+            .mobile-nav-links a {
+                display: block; padding: 1rem 0; font-size: 1.2rem;
+                color: #1e3a5f; text-decoration: none; border-bottom: 1px solid #e2e8f0;
+            }
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -180,63 +113,56 @@
                 <span>Learner Threads</span>
             </a>
             <div class="nav-links">
+                <a href="teachertoolkit.html">Teacher Toolkit</a>
                 <a href="pricing.html">Pricing</a>
-                <a href="access.html">Access Tools</a>
+                <a href="access.html" class="btn btn-primary">Access Tools</a>
             </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
         </nav>
     </header>
-
+    
     <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
-        <div class="mobile-nav-menu" id="mobileNavMenu">
-            <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">&times;</button>
-            <div class="mobile-nav-links">
-                <a href="pricing.html">Pricing</a>
-                <a href="access.html">Access Tools</a>
-            </div>
+    <div class="mobile-nav-menu" id="mobileNavMenu">
+        <div class="mobile-nav-header">
+            <button class="mobile-nav-close" id="mobileNavClose">&times;</button>
+        </div>
+        <div class="mobile-nav-links">
+            <a href="teachertoolkit.html">Teacher Toolkit</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="access.html">Access Tools</a>
+        </div>
     </div>
 
     <main>
         <div class="container">
             <section class="hero">
                 <h1>Tools for Deeper Learning</h1>
-                <p>A suite of powerful, interactive apps designed to deepen understanding and help learners weave together their learning paths.</p>
-                <div class="hero-buttons">
-                    <a href="#tools" class="btn btn-secondary">Explore The Tools</a>
-                    <a href="pricing.html" class="btn btn-primary">View All Pricing</a>
-                </div>
+                <p>Learning isn't a neat line; it's a woven, messy, brilliant story. We build powerful, interactive apps to help learners grab hold of those threads and deepen their understanding.</p>
+                <a href="#tools" class="btn btn-primary">Explore The Tools</a>
             </section>
 
-            <section class="philosophy-section">
-                <div class="philosophy-icon">🧵</div>
-                <h2>How Does Learning Really Happen?</h2>
-                <p>Not as a neat line, but as a woven, messy, brilliant story of becoming. These tools are designed to help students grab hold of those threads.</p>
-            </section>
-            <section class="tools-section" id="tools">
-                <h2 class="section-title">Explore The Tools</h2>
+            <section class="section" id="tools">
+                <h2 class="section-title">A Suite of Connected Apps</h2>
+                <p class="section-subtitle">Three powerful tools designed to work together, helping students unlock, nurture, and activate their inherent learning potential.</p>
+                
                 <div class="tools-grid">
                     <div class="tool-card">
-                        <div class="card-icon">📚</div>
+                        <div class="icon">🔎</div>
                         <h3>Language Lens</h3>
-                        <p>Grow students' close reading skills. 50+ literary devices, grammatical features, and sentence structures. Daily quote analysis example. Flashcards and pro analysis tips.</p>
-                        <a href="lens-free.html" class="btn btn-secondary">Use the Free Version</a>
+                        <p>An interactive toolkit with 50+ language features to help students analyse any text with precision and insight.</p>
+                        <a href="lens-free.html" class="btn btn-secondary">Try the Free Version</a>
                     </div>
                     <div class="tool-card">
-                        <div class="card-icon">🎯</div>
+                        <div class="icon">🧭</div>
                         <h3>Learning Navigator</h3>
-                        <p>Find the next learning move. Students select a learning disposition and a subject to get targeted, practical strategies for powering up their thinking.</p>
-                        <a href="navigator-free.html" class="btn btn-secondary">Use the Free Version</a>
+                        <p>Helps students overcome learning challenges by providing targeted, disposition-based strategies for any subject.</p>
+                        <a href="navigator-free.html" class="btn btn-secondary">Try the Free Version</a>
                     </div>
                     <div class="tool-card">
-                        <div class="card-icon">✨</div>
+                        <div class="icon">✨</div>
                         <h3>Learning Reflections</h3>
-                        <p>Transform learning moments into powerful learning stories. A guided tool for students to document their work, reflect on their growth, and build metacognition.</p>
-                        <a href="reflections-tour.html" class="btn btn-secondary">Take the Guided Tour</a>
-                    </div>
-                    <div class="tool-card">
-                        <div class="card-icon">🧑‍🏫</div>
-                        <h3>Teacher Toolkit</h3>
-                        <p>Explore the "Magnificent Seven" learning dispositions. A resource hub for educators dedicated to nurturing student agency.</p>
-                        <a href="teachertoolkit.html" class="btn btn-secondary">View the Toolkit</a>
+                        <p>A guided tool for students to create powerful learning stories, identify the dispositions they used, and document their growth.</p>
+                        <a href="dashboard.html" class="btn btn-secondary">View Your Dashboard</a>
                     </div>
                 </div>
             </section>
